@@ -1,0 +1,34 @@
+{
+  "version": "0.1.1",
+  "description": "An example Snap written in TypeScript.",
+  "proposedName": "Mina Example Snap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+  },
+  "source": {
+    "shasum": "PrKThD4g2v1yPOJAPHUn6CQsQ63HniRUlZUIOSW4XnQ=",
+    "location": {
+      "npm": {
+        "filePath": "dist/bundle.js",
+        "iconPath": "images/icon.svg",
+        "packageName": "test-mina-snap",
+        "registry": "https://registry.npmjs.org/"
+      }
+    }
+  },
+  "initialPermissions": {
+    "snap_confirm": {},
+    "snap_getBip32Entropy": [
+      {
+        "path": [
+          "m",
+          "44'",
+          "12586'"
+        ],
+        "curve": "secp256k1"
+      }
+    ]
+  },
+  "manifestVersion": "0.1"
+}
