@@ -1,80 +1,49 @@
-export const getTxSendWithRawSignature = () => {
-  return `
-mutation sendTx($fee:UInt64!, $amount:UInt64!,
-$to: PublicKey!, $from: PublicKey!, $nonce:UInt32, $memo: String,
-$validUntil: UInt32,$rawSignature: String!
+/* eslint-disable no-tabs */
+
+export const sendPaymentQuery = (isRawSignature: boolean) => `
+mutation sendPayment(
+	$fee: UInt64!, $amount: UInt64!, $to: PublicKey!, $from: PublicKey!, $nonce: UInt32, $memo: String, $validUntil: UInt32,
+	${
+    isRawSignature
+      ? '$rawSignature: String!'
+      : '$scalar: String!, $field: String!'
+  }
 ) {
-  sendPayment(
-    input: {
-      fee: $fee,
-      amount: $amount,
-      to: $to,
-      from: $from,
-      memo: $memo,
-      nonce: $nonce,
-      validUntil: $validUntil
+	sendPayment(
+		input: { fee: $fee, amount: $amount, to: $to, from: $from, memo: $memo, nonce: $nonce, validUntil: $validUntil },
+		signature: { ${
+      isRawSignature
+        ? 'rawSignature: $rawSignature'
+        : 'field: $field, scalar: $scalar'
+    } }
+	) {
+		payment {
+			amount
+			fee
+			feeToken
+			from
+			hash
+			id
+			isDelegation
+			memo
+			nonce
+			kind
+			to
+		}
+	}
+}
+`;
+
+export const getAccountInfoQuery = `
+query accountInfo($publicKey: PublicKey!) {
+  account(publicKey: $publicKey) {
+    balance {
+      total
     },
-    signature: {
-      rawSignature: $rawSignature
-    }) {
-    payment {
-      amount
-      fee
-      feeToken
-      from
-      hash
-      id
-      isDelegation
-      memo
-      nonce
-      kind
-      to
-    }
+    nonce
+    inferredNonce
+    delegate
+    publicKey
   }
 }
 `;
-};
-
-export const getTxSendWithScalarField = () => {
-  return `
-mutation sendTx($fee:UInt64!, $amount:UInt64!,
-$to: PublicKey!, $from: PublicKey!, $nonce:UInt32, $memo: String,
-$validUntil: UInt32,$scalar: String!, $field: String!
-) {
-  sendPayment(
-    input: {
-      fee: $fee,
-      amount: $amount,
-      to: $to,
-      from: $from,
-      memo: $memo,
-      nonce: $nonce,
-      validUntil: $validUntil
-    },
-    signature: {
-      field: $field, scalar: $scalar
-    }) {
-    payment {
-      amount
-      fee
-      feeToken
-      from
-      hash
-      id
-      isDelegation
-      memo
-      nonce
-      kind
-      to
-    }
-  }
-}
-`;
-};
-
-export const getTxSend = (isRawSignature) => {
-  if (isRawSignature) {
-    return getTxSendWithRawSignature();
-  }
-  return getTxSendWithScalarField();
-};

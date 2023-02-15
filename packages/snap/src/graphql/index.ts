@@ -1,43 +1,33 @@
-import {
-  getTxSend,
-  getTxSendWithRawSignature,
-  getTxSendWithScalarField,
-} from './gqlparams';
+import { GRAPHQL } from '../constants/config.constant';
+import { getOperationName } from '../util/helper';
 
-export const _getGQLVariables = (payload, signature, includeAmount = true) => {
-  const isRawSignature = Boolean(signature.rawSignature);
-  const variables: any = {
-    fee: payload.fee,
-    to: payload.to,
-    from: payload.from,
-    nonce: payload.nonce,
-    memo: payload.memo || '',
-    validUntil: payload.validUntil,
-  };
-  if (includeAmount) {
-    variables.amount = payload.amount;
-  }
-
-  if (isRawSignature) {
-    variables.rawSignature = signature.rawSignature;
-  } else {
-    variables.field = signature.field;
-    variables.scalar = signature.scalar;
-  }
-
-  for (const pro in variables) {
-    if ({}.hasOwnProperty.call(variables, pro)) {
-      variables[pro] = String(
-        typeof variables[pro] === 'undefined' ? '' : variables[pro],
-      );
+/**
+ * Send GraphQL request.
+ *
+ * @param query - GraphQL query.
+ * @param variables - GraphQL variables.
+ */
+export async function gql(query: string, variables = {}) {
+  try {
+    const response = await fetch(GRAPHQL.URL, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        operationName: getOperationName(query),
+        variables,
+      }),
+    });
+    const { data, errors } = await response.json();
+    if (errors) {
+      return { error: errors[0].message };
     }
-  }
-  return variables;
-};
 
-export const sendTx = async (payload, signature) => {
-  const variables = _getGQLVariables(payload, signature, true);
-  const txBody = getTxSend(!!variables.rawSignature);
-  const res = await startFetchMyMutation('sendTx', txBody, variables);
-  return res;
-};
+    return { data };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
