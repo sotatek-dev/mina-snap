@@ -1,15 +1,18 @@
 import { SLIP10Node } from '@metamask/key-tree';
 import { Keypair } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import bs58check from 'bs58check';
-import Client from 'mina-signer';
 import { Buffer } from 'safe-buffer';
+import { ESnapMethod } from '../constants/snap-method.constant';
 import { reverse } from '../util/helper';
+import { getMinaClient } from '../util/mina-client.util';
+import { getAccountInfoQuery } from '../graphql/gqlparams';
+import { gql } from '../graphql';
 
-const client = new Client({ network: 'mainnet' });
+const client = getMinaClient();
 
 export const getKeyPair = async () => {
   const bip32Node: any = await wallet.request({
-    method: 'snap_getBip32Entropy',
+    method: ESnapMethod.SNAP_GET_BIP32_ENTROPY,
     params: {
       path: ['m', "44'", "12586'"],
       curve: 'secp256k1',
@@ -31,10 +34,10 @@ export const getKeyPair = async () => {
   };
 };
 
-export const getMinaAddress = async () => {
-  const keyPair = await getKeyPair();
-  return keyPair.publicKey;
-};
+// export const getMinaAddress = async () => {
+//   const keyPair = await getKeyPair();
+//   return keyPair.publicKey;
+// };
 
 export const signMessage = (message: string, keypair: Keypair) => {
   const signed = client.signMessage(message, keypair);
@@ -45,3 +48,23 @@ export const signMessage = (message: string, keypair: Keypair) => {
   console.log('Failed to verify message');
   return null;
 };
+
+/**
+ * Get User balance and nonce.
+ *
+ * @param publicKey - User address.
+ * @returns `null` if get account info fail.
+ */
+export async function getAccountInfo(publicKey: string) {
+  const query = getAccountInfoQuery;
+  const variables = { publicKey };
+
+  const { data, error } = await gql(query, variables);
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return data;
+}

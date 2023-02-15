@@ -7,3 +7,19 @@ export const reverse = (bytes: any) => {
   }
   return reversed;
 };
+
+/**
+ * Get GraphQL operation name.
+ *
+ * @param query - GraphQL query.
+ * @returns `string`
+ */
+export function getOperationName(query: string) {
+  const queryMatch = query.match(/(query|mutation) (\w+)(?=[(\s{])/u);
+
+  if (queryMatch?.[2]) {
+    return queryMatch[2];
+  }
+
+  throw new Error('GQL not valid');
+}

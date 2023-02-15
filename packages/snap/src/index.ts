@@ -1,15 +1,10 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
-import { getKeyPair, signMessage } from './mina/account';
-import { signPayment } from './mina/transaction';
+import { EMinaMethod } from './constants/mina-method.constant';
+import { APIService } from './mina';
+import { TrxInput } from './types/transaction.type';
+import { popupConfirm } from './util/popup.util';
 
-/**
- * Get a message from the origin. For demonstration purposes only.
- *
- * @param originString - The origin string.
- * @returns A message based on the origin.
- */
-export const getMessage = (originString: string): string =>
-  `Hello, ${originString}!`;
+const apiService = new APIService();
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -18,7 +13,7 @@ export const getMessage = (originString: string): string =>
  * @param args.origin - The origin of the request, e.g., the website that
  * invoked the snap.
  * @param args.request - A validated JSON-RPC request object.
- * @returns `null` if the request succeeded.
+ * @returns .
  * @throws If the request method is not valid for this snap.
  * @throws If the `snap_confirm` call failed.
  */
@@ -28,31 +23,19 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   request,
 }) => {
   switch (request.method) {
-    case 'hello': {
-      const keypair = await getKeyPair(); // client.genKeys();
-      console.log(keypair);
-      // Sign and verify message
-      const signed = signMessage('hello Mina', keypair);
-      console.log('sign result:', signed);
-
-      await signPayment(
-        'B62qiwy4VoVLzBDdSC7dwN6agu6fe4QKqdzbFvWZ2dEmsiddX32A1tC',
-        '1000000',
-        '1000000',
-      );
-      return wallet.request({
-        method: 'snap_confirm',
-        params: [
-          {
-            prompt: getMessage(origin),
-            description:
-              'This custom confirmation is just for display purposes.',
-            textAreaContent:
-              'But you can edit the snap source code to make it do something, if you want to!',
-          },
-        ],
-      });
+    case EMinaMethod.HELLO: {
+      const message = apiService.hello();
+      return popupConfirm(origin, 'Description', message);
     }
+
+    case EMinaMethod.SEND_TRANSACTION: {
+      const payment = request.params as TrxInput;
+      const response = await apiService.sendTransaction(payment);
+      console.log('34 ---', response);
+
+      return response;
+    }
+
     default:
       throw new Error('Method not found.');
   }
