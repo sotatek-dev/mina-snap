@@ -14,9 +14,9 @@ module.exports = {
   ],
   rules: {
     'no-console': 'warn',
-    'no-unused-vars': 'off',
+    'no-unused-vars': 'warn',
     '@typescript-eslint/no-unused-vars': [
-      'error',
+      'warn',
       { ignoreRestSiblings: true },
     ],
     'react/jsx-uses-react': 'off',
