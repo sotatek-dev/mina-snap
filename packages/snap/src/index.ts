@@ -2,6 +2,7 @@ import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
 import { sendTransaction, getConfiguration } from './mina';
 import { TxInput } from './interfaces';
+import { popupConfirm } from './util/popup.util';
 import { getAccountInfo, getKeyPair } from './mina/account';
 
 /**
@@ -20,6 +21,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   const networkConfig = await getConfiguration(wallet);
   console.log(`-networkConfig:`, networkConfig);
   switch (request.method) {
+    case EMinaMethod.HELLO: {
+      return popupConfirm('Hello Mina', 'Hello', 'Hello');
+    }
+
     case EMinaMethod.ACCOUNT_INFO: {
       const { publicKey } = await getKeyPair(networkConfig);
       const { account } = await getAccountInfo(publicKey, networkConfig);
