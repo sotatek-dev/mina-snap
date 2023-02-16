@@ -1,10 +1,8 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
-import { APIService } from './mina';
-import { TrxInput } from './types/transaction.type';
-import { popupConfirm } from './util/popup.util';
-
-const apiService = new APIService();
+import { sendTransaction, getConfiguration } from './mina';
+import { TxInput } from './interfaces';
+import { getAccountInfo, getKeyPair } from './mina/account';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -18,20 +16,24 @@ const apiService = new APIService();
  * @throws If the `snap_confirm` call failed.
  */
 
-export const onRpcRequest: OnRpcRequestHandler = async ({
-  origin,
-  request,
-}) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
+  const networkConfig = await getConfiguration(wallet);
+  console.log(`-networkConfig:`, networkConfig);
   switch (request.method) {
-    case EMinaMethod.HELLO: {
-      const message = apiService.hello();
-      return popupConfirm(origin, 'Description', message);
+    case EMinaMethod.ACCOUNT_INFO: {
+      const { publicKey } = await getKeyPair(networkConfig);
+      const { account } = await getAccountInfo(publicKey, networkConfig);
+      return account;
+    }
+
+    case EMinaMethod.NETWORK_CONFIG: {
+      return networkConfig;
     }
 
     case EMinaMethod.SEND_TRANSACTION: {
-      const payment = request.params as TrxInput;
-      const response = await apiService.sendTransaction(payment);
-      console.log('34 ---', response);
+      const txInput = request.params as TxInput;
+      const response = await sendTransaction(txInput, networkConfig);
+      console.log('sendTxResponse:', response);
 
       return response;
     }

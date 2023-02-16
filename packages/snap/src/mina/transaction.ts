@@ -1,13 +1,10 @@
 import BigNumber from 'bignumber.js';
 import { Payment, Signed } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
-import { cointypes } from '../constants/config.constant';
 import { gql } from '../graphql';
 import { sendPaymentQuery } from '../graphql/gqlparams';
-import { TrxInput } from '../types/transaction.type';
+import { NetworkConfig, TxInput } from '../interfaces';
 import { getMinaClient } from '../util/mina-client.util';
 import { getAccountInfo } from './account';
-
-const client = getMinaClient();
 
 /**
  * Sign user payment.
@@ -22,18 +19,21 @@ const client = getMinaClient();
  * @param args.validUntil - The global slot since genesis after which this transaction cannot be applied.
  * @param publicKey - Sender address.
  * @param privateKey - User private key for signing payment.
+ * @param networkConfig - Selected network config.
  * @returns `null` if sign payment failed, else return signed payment.
  */
-export async function signPayment(
-  args: TrxInput,
+export const signPayment = async (
+  args: TxInput,
   publicKey: string,
   privateKey: string,
-) {
-  const { amount, fee, to, memo, validUntil } = args;
-  const { account } = await getAccountInfo(publicKey);
+  networkConfig: NetworkConfig,
+) => {
+  const client = getMinaClient(networkConfig);
+  const { amount, fee, to, memo, nonce } = args;
+  const { account } = await getAccountInfo(publicKey, networkConfig);
 
   try {
-    const decimal = new BigNumber(10).pow(cointypes.decimals);
+    const decimal = new BigNumber(10).pow(networkConfig.token.decimals);
     const sendFee = new BigNumber(fee).multipliedBy(decimal).toNumber();
     const sendAmount = new BigNumber(amount).multipliedBy(decimal).toNumber();
 
@@ -42,28 +42,31 @@ export async function signPayment(
       to,
       amount: sendAmount,
       fee: sendFee,
-      nonce: account.inferredNonce,
+      nonce: nonce || account.inferredNonce,
       memo,
-      validUntil,
     };
     return client.signPayment(payment, privateKey);
   } catch (err) {
     console.error('sign', err.message); // TODO - remove
     return null;
   }
-}
+};
 
 /**
  * Send payment.
  *
  * @param signedPayment - Signed payment.
+ * @param networkConfig - Selected network config.
  * @returns `null` if error.
  */
-export async function sendPayment(signedPayment: Signed<Payment>) {
+export async function sendPayment(
+  signedPayment: Signed<Payment>,
+  networkConfig: NetworkConfig,
+) {
   const query = sendPaymentQuery(false);
   const variables = { ...signedPayment.data, ...signedPayment.signature };
 
-  const { data, error } = await gql(query, variables);
+  const { data, error } = await gql(networkConfig, query, variables);
 
   if (error) {
     console.error('send', error); // TODO - remove
@@ -72,20 +75,3 @@ export async function sendPayment(signedPayment: Signed<Payment>) {
 
   return data;
 }
-
-// export const signPayment = async (to: string, amount: string, fee: string) => {
-//   const keyPair = await getKeyPair();
-//   const signedPayment = client.signPayment(
-//     {
-//       to,
-//       from: keyPair.publicKey,
-//       amount,
-//       fee,
-//       nonce: 0,
-//     },
-//     keyPair.privateKey,
-//   );
-//   if (client.verifyPayment(signedPayment)) {
-//     console.log('Payment was verified successfully:', signedPayment.signature);
-//   }
-// };
