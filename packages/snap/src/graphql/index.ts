@@ -1,15 +1,20 @@
-import { GRAPHQL } from '../constants/config.constant';
+import { NetworkConfig } from '../interfaces';
 import { getOperationName } from '../util/helper';
 
 /**
  * Send GraphQL request.
  *
+ * @param networkConfig - Selected network config.
  * @param query - GraphQL query.
  * @param variables - GraphQL variables.
  */
-export async function gql(query: string, variables = {}) {
+export async function gql(
+  networkConfig: NetworkConfig,
+  query: string,
+  variables = {},
+) {
   try {
-    const response = await fetch(GRAPHQL.URL, {
+    const response = await fetch(networkConfig.gqlUrl, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

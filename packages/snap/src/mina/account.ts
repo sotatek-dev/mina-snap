@@ -7,14 +7,15 @@ import { reverse } from '../util/helper';
 import { getMinaClient } from '../util/mina-client.util';
 import { getAccountInfoQuery } from '../graphql/gqlparams';
 import { gql } from '../graphql';
+import { NetworkConfig } from '../interfaces';
 
-const client = getMinaClient();
-
-export const getKeyPair = async () => {
+export const getKeyPair = async (networkConfig: NetworkConfig) => {
+  const client = getMinaClient(networkConfig);
+  const { coinType } = networkConfig.token;
   const bip32Node: any = await wallet.request({
     method: ESnapMethod.SNAP_GET_BIP32_ENTROPY,
     params: {
-      path: ['m', "44'", "12586'"],
+      path: ['m', "44'", `${coinType}'`],
       curve: 'secp256k1',
     },
   });
@@ -39,7 +40,12 @@ export const getKeyPair = async () => {
 //   return keyPair.publicKey;
 // };
 
-export const signMessage = (message: string, keypair: Keypair) => {
+export const signMessage = (
+  message: string,
+  keypair: Keypair,
+  networkConfig: NetworkConfig,
+) => {
+  const client = getMinaClient(networkConfig);
   const signed = client.signMessage(message, keypair);
   if (client.verifyMessage(signed)) {
     console.log('Message was verified successfully');
@@ -53,13 +59,17 @@ export const signMessage = (message: string, keypair: Keypair) => {
  * Get User balance and nonce.
  *
  * @param publicKey - User address.
+ * @param networkConfig - Selected network config.
  * @returns `null` if get account info fail.
  */
-export async function getAccountInfo(publicKey: string) {
+export async function getAccountInfo(
+  publicKey: string,
+  networkConfig: NetworkConfig,
+) {
   const query = getAccountInfoQuery;
   const variables = { publicKey };
 
-  const { data, error } = await gql(query, variables);
+  const { data, error } = await gql(networkConfig, query, variables);
 
   if (error) {
     console.error(error);
