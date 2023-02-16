@@ -1,1 +1,1 @@
-export * from './useStarkNetSnap';
+export * from './useMinaSnap';

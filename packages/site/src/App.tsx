@@ -14,7 +14,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
+      {/* <BrowserRouter>
 
      
         <Routes>
@@ -22,7 +22,8 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
      
-    </BrowserRouter>
+    </BrowserRouter> */}
+    <HomePage />
     </ThemeProvider>
   );
 }
