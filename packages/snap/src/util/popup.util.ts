@@ -1,4 +1,5 @@
-import { ESnapMethod } from '../constants/snap-method.constant';
+import { ESnapDialogType, ESnapMethod } from '../constants/snap-method.constant';
+import { panel, text, heading } from '@metamask/snaps-ui';
 
 /**
  * Handle popUpConfirm.
@@ -8,14 +9,20 @@ import { ESnapMethod } from '../constants/snap-method.constant';
  * @param textAreaContent - Test.
  * @returns Confirmation of user. In this case is boolean.
  */
-export async function popupConfirm(
+export async function popupDialog(
+  type: ESnapDialogType,
   prompt: string,
-  description: string,
   textAreaContent: string,
 ) {
-  const response = await wallet.request({
-    method: ESnapMethod.SNAP_CONFIRM,
-    params: [{ prompt, description, textAreaContent }],
+  const response = await snap.request({
+    method: ESnapMethod.SNAP_DIALOG,
+    params: {
+      type,
+      content: panel([
+        heading(prompt),
+        text(textAreaContent),
+      ])
+    }
   });
   return response;
 }
@@ -26,7 +33,7 @@ export async function popupConfirm(
  * @param message - Notify message.
  */
 export async function popupNotify(message: string) {
-  await wallet.request({
+  await snap.request({
     method: ESnapMethod.SNAP_NOTIFY,
     params: [{ type: 'native', message }],
   });

@@ -12,7 +12,7 @@ import { NetworkConfig } from '../interfaces';
 export const getKeyPair = async (networkConfig: NetworkConfig) => {
   const client = getMinaClient(networkConfig);
   const { coinType } = networkConfig.token;
-  const bip32Node: any = await wallet.request({
+  const bip32Node: any = await snap.request({
     method: ESnapMethod.SNAP_GET_BIP32_ENTROPY,
     params: {
       path: ['m', "44'", `${coinType}'`],
