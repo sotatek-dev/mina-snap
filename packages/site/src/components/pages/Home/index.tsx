@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from '../../common/modal/ModalInfor';
+import Modal from '../../common/modal/ModalCommon';
 
 const HomePage = () => {
   const { ethereum } = window as any;
@@ -25,6 +25,16 @@ const HomePage = () => {
   };
   const [openModal, setOpenModal] = useState(false);
 
+  const CustomActions = (
+    <button
+      onClick={() => {
+        alert('log xem chạy không');
+      }}
+    >
+      open modal
+    </button>
+  );
+
   return (
     <div>
       <div>HomePage</div>
@@ -37,6 +47,7 @@ const HomePage = () => {
         open modal
       </button>
       <Modal
+        FooterButton={CustomActions}
         title="Account Details"
         address="B62qirBtNT55AAjbsLQ2dQ6iSkj92FUddY4jiCqRtMhyJWHBPSFSMh2"
         open={openModal}

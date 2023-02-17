@@ -15,6 +15,7 @@ interface ModalInforProps {
   contentTitle?: string;
   address?: string;
   children?: React.ReactChild;
+  FooterButton?: React.ReactNode;
 }
 
 const Container = styled(Box)(() => ({
@@ -24,7 +25,7 @@ const Container = styled(Box)(() => ({
   top: '50%',
   background: '#FFFFFF',
   left: '50%',
-  height: '550px',
+  maxHeight: '550px',
   transform: 'translate(-50%, -50%)',
   boxSizing: 'border-box',
   width: '322px',
@@ -107,11 +108,12 @@ const ListItemTextCustom = styled(ListItemText)({
   },
 });
 
-const ModalInfor = ({ open, onClose, title, contentTitle, address }: ModalInforProps) => {
+const ModalInfor = ({ open, onClose, title, contentTitle, address, FooterButton }: ModalInforProps) => {
   const [openChangPass, setOpenChangPass] = useState(false);
+
   return (
     <Modal disableAutoFocus={true} open={open}>
-      <Container>
+      <Container sx={{ height: '100%' }}>
         <ContainerContent>
           <BoxTitleModal>
             <CloseIconWrapper onClick={onClose}>
@@ -142,6 +144,7 @@ const ModalInfor = ({ open, onClose, title, contentTitle, address }: ModalInforP
             <ListItemTextCustom primary={'Export Private Key'}></ListItemTextCustom>
           </ListItem>
         </List>
+        {FooterButton && FooterButton}
       </Container>
     </Modal>
   );
