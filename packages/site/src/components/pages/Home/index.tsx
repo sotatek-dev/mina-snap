@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Modal from '../../common/modal/ModalInfor';
 
 const HomePage = () => {
   const { ethereum } = window as any;
@@ -22,10 +23,30 @@ const HomePage = () => {
         console.log('not success');
       });
   };
+  const [openModal, setOpenModal] = useState(false);
+
   return (
     <div>
       <div>HomePage</div>
       <button onClick={handleInstallWallet}>wallet enable</button>
+      <button
+        onClick={() => {
+          setOpenModal(true);
+        }}
+      >
+        open modal
+      </button>
+      <Modal
+        title="Account Details"
+        address="B62qirBtNT55AAjbsLQ2dQ6iSkj92FUddY4jiCqRtMhyJWHBPSFSMh2"
+        open={openModal}
+        onClose={() => {
+          setOpenModal(false);
+        }}
+        contentTitle="Account Address"
+      >
+        ss
+      </Modal>
     </div>
   );
 };
