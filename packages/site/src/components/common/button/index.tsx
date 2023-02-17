@@ -1,35 +1,127 @@
 import styled from 'styled-components';
+import React from 'react';
 
-interface IButtonProps {
-  enabled?: boolean;
-  backgroundTransparent?: boolean;
-  backgroundColor?:string
-  color?:string;
-  borderVisible?: boolean;
-  width?:string;
-  height?:string;
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  size?: 'default' | 'small';
+  typeButton?:
+    | 'primary'
+    | 'secondary'
+    | 'danger'
+    | 'default'
+    | 'round'
+    | 'cancel'
+    | 'receive';
+  loading?: boolean;
 }
 
-export const Button = styled.button<IButtonProps>`
-  background: ${(props) =>
-    props.backgroundTransparent ? 'transparent' : props.backgroundColor};
-  color: ${(props) =>
-    props.color ? props.color: '#FFFFFF'};
-  opacity: ${(props) => (props.disabled ? '50%' : '100%')};
-  border-radius: 5px;
-  border-width: 2px;
-  border-style: ${(props) => (props.borderVisible ? 'solid' : 'none')};
-  border-color: #FFFFFF;
-  cursor: ${(props) => (props.disabled ? 'initial' : 'pointer')};
-  height: ${(props) => (props.height ? props.height : '34px')};
-  min-width: ${(props) => (props.width ? props.width : '270px')};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0px 26px;
-  transition: 0.1s all;
+const buttonStyle = (type:any, theme:any) => {
+  switch (type) {
+    case 'primary':
+      return `
+	  color: ${theme.palette.default.contrastText};
+	  background:  ${theme.palette.default.main};
+	  border-color: ${theme.palette.default.light};
+		`;
+    case 'secondary':
+      return `
+			color: ${theme.color.secondary};
+			background:  ${theme.bg.color.main};
+			border-color: ${theme.color.white};
+		`;
+    case 'danger':
+      return `
+		color: ${theme.color.danger};
+		background:  ${theme.bg.color.main};
+		border-color: ${theme.color.white};
+	`;
+    case 'round':
+      return `
+      color: ${theme.color.primary};
+      background:transparent;
+      border-color: ${theme.color.primary};
+      border-radius:20px;
+      font-weight: 400; 
+	`;
+    case 'cancel':
+      return `
+        color: ${theme.color.black};
+        background:${theme.bg.color.white};
+        border-color: ${theme.color.greyBorder};
+        border-radius:20px;
+        font-weight: 400; 
+      `;
+    case 'receive':
+      return `
+      color: ${theme.color.primary};
+      background:  ${theme.bg.color.white};
+      border-color: ${theme.color.primary};
+      border: 2px solid ${theme.color.primary};
+      `;
+    default:
+      return `
+      color: ${theme.palette.default.contrastText};
+      background:${theme.palette.default.main};
+      border-color: ${theme.palette.default.main};
+      border-width:2px;
+	`;
+  }
+};
 
-  :active {
+const fillBackgroundButtonTypes = ['primary'];
+const borderButtonTypes = ['receive', 'cancel', 'default'];
+
+const ButtonWrapper = styled.button<Props>`
+  font-family: 'Lexend', sans-serif;
+  font-weight: 500;
+  ${props => (props.size === 'small' ? 'padding: 0 30px' : 'width: 100%')};
+  padding: ${props => (props.size === 'small' ? '8px' : '12px')};
+  font-size: ${props => (props.size === 'small' ? '12px' : '14px')};
+  line-height: ${props => (props.size === 'small' ? '14px' : '20px')};
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid;
+  outline: none;
+  box-sizing: border-box;
+  height: 44px;
+  ${p => buttonStyle(p.typeButton, p.theme)}
+  &:focus-visible {
+    ${props => {
+      if (fillBackgroundButtonTypes.includes(props.typeButton as any)) {
+        return `
+          opacity: 0.8;
+        `;
+      } else if (borderButtonTypes.includes(props.typeButton as any)) {
+        return `
+        border-width: 3px;
+      `;
+      }
+    }};
+  }
+
+  &:disabled {
     opacity: 0.5;
+    background: ${p => p.theme.palette.grey.grey4};
   }
 `;
+
+const Button: React.FC<Props> = ({
+  size = 'default',
+  typeButton = 'default',
+  children,
+  loading,
+  disabled,
+  ...props
+}) => {
+  return (
+    <ButtonWrapper
+      size={size}
+      typeButton={typeButton}
+      {...props}
+      disabled={disabled || loading}
+    >
+      {children}
+    </ButtonWrapper>
+  );
+};
+
+export default Button;

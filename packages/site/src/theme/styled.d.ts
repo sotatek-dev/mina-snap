@@ -13,6 +13,12 @@ declare module 'styled-components' {
         grey4: string; //Background
         white: string;
       };
+      default: {
+        light: string;
+        main: string;
+        dark: string;
+        contrastText: string;
+      };
       primary: {
         light: string;
         main: string;
