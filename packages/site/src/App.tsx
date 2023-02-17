@@ -7,6 +7,7 @@ import { theme } from 'theme/default';
 import 'toastr2/dist/toastr.min.css';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from 'components/pages/Home';
+import CustomPage from 'components/pages/Custom';
 
 
 
@@ -14,16 +15,17 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <BrowserRouter>
+      <BrowserRouter>
 
      
         <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path='/custom' element={<CustomPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
      
-    </BrowserRouter> */}
-    <HomePage />
+    </BrowserRouter>
+    {/* <HomePage /> */}
     </ThemeProvider>
   );
 }
