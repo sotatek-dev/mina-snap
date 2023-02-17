@@ -10,6 +10,12 @@ export const theme: DefaultTheme = {
       grey4: '#F7F7F9', //Background
       white: '#FFFFFF',
     },
+    default: {
+      light: '#D4D4E2',
+      main: '#594AF1',
+      dark: '#212256',
+      contrastText: '#FFFFFF',
+    },
     primary: {
       light: '#D4D4E2',
       main: '#292A6C',
