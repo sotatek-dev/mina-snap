@@ -2,8 +2,9 @@ import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
 import { sendTransaction, getConfiguration } from './mina';
 import { TxInput } from './interfaces';
-import { popupConfirm } from './util/popup.util';
-import { getAccountInfo, getKeyPair } from './mina/account';
+import { popupDialog } from './util/popup.util';
+import { getAccountInfo, getKeyPair, signMessage } from './mina/account';
+import { ESnapDialogType } from './constants/snap-method.constant';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -18,11 +19,11 @@ import { getAccountInfo, getKeyPair } from './mina/account';
  */
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
-  const networkConfig = await getConfiguration(wallet);
+  const networkConfig = await getConfiguration(snap);
   console.log(`-networkConfig:`, networkConfig);
   switch (request.method) {
     case EMinaMethod.HELLO: {
-      return popupConfirm('Hello Mina', 'Hello', 'Hello');
+      return popupDialog(ESnapDialogType.CONFIRMATION, 'Hello Mina', 'Hello');
     }
 
     case EMinaMethod.ACCOUNT_INFO: {
@@ -41,6 +42,15 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       console.log('sendTxResponse:', response);
 
       return response;
+    }
+
+    case EMinaMethod.SIGN_MESSAGE: {
+      const keyPair = await getKeyPair(networkConfig);
+      const { message } = request.params as { message: string };
+      const signature = await signMessage(message, keyPair, networkConfig);
+      console.log('signature:', signature);
+
+      return signature;
     }
 
     default:

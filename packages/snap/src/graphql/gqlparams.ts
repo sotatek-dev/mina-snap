@@ -47,3 +47,9 @@ query accountInfo($publicKey: PublicKey!) {
   }
 }
 `;
+
+export const getTxStatusQuery = `
+query txStatus($paymentId:ID! ) {
+  transactionStatus(payment: $paymentId)
+}
+`;

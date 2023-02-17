@@ -1,5 +1,6 @@
+import { ESnapDialogType } from '../constants/snap-method.constant';
 import { NetworkConfig, TxInput } from '../interfaces';
-import { popupConfirm, popupNotify } from '../util/popup.util';
+import { popupDialog, popupNotify } from '../util/popup.util';
 import { getKeyPair } from './account';
 import { sendPayment, signPayment } from './transaction';
 
@@ -11,9 +12,9 @@ export const sendTransaction = async (
 ) => {
   const { publicKey, privateKey } = await getKeyPair(networkConfig);
 
-  const confirmation = await popupConfirm(
+  const confirmation = await popupDialog(
+    ESnapDialogType.CONFIRMATION,
     'Confirm transaction',
-    '',
     `From: ${publicKey}\nTo: ${args.to}\nAmount: ${args.amount} Mina\nFee: ${args.fee} Mina`,
   );
   if (!confirmation) {
