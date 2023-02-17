@@ -1,1 +1,0 @@
-export { ButtonView as Button } from './button.view';
