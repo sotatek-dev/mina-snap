@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import React, { useState } from 'react';
-import Modal from '../../common/modal/ModalCommon';
+import Modal from '../../common/modal';
 import IconBack from 'assets/icons/icon-back.svg';
 
 const HomePage = () => {
