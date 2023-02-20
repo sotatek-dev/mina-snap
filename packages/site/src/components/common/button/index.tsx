@@ -36,11 +36,13 @@ const buttonStyle = (type:any, theme:any) => {
 	`;
     case 'round':
       return `
-      color: ${theme.color.primary};
-      background:transparent;
-      border-color: ${theme.color.primary};
-      border-radius:20px;
-      font-weight: 400; 
+      color: ${theme.palette.default.contrastText};
+      background:${theme.palette.default.main};
+      border-color: ${theme.palette.default.main};
+      border-radius:50%;
+      font-weight: 400;
+      width:80px;
+      height:80px;
 	`;
     case 'cancel':
       return `
