@@ -3,10 +3,10 @@ import { DefaultTheme } from 'styled-components';
 export const theme: DefaultTheme = {
   palette: {
     grey: {
-      black: '#292A6C', //Text primary
+      black: '#535A61', //Text primary
       grey1: '#7F80A4', //Text secondary
-      grey2: '#A9AAC2',
-      grey3: '#D4D4E1',
+      grey2: '#BBC0C5', //Bg dropdown
+      grey3: '#F2F4F6', //Bg main
       grey4: '#F7F7F9', //Background
       white: '#FFFFFF',
     },
@@ -66,10 +66,10 @@ export const theme: DefaultTheme = {
   },
   typography: {
     p1: {
-      fontFamily: 'Roboto Regular',
-      fontWeight: 400,
-      fontSize: '16px',
-      lineHeight: '22.4px',
+      fontFamily: 'Inter',
+      fontWeight: 500,
+      fontSize: '14px',
+      lineHeight: '17px',
     },
     p2: {
       fontFamily: 'Roboto Regular',
@@ -176,7 +176,7 @@ export const theme: DefaultTheme = {
     none: '0px',
     tiny: '4px',
     small: '8px',
-    medium: '16px',
+    medium: '14px',
   },
   modal: {
     base: '328px',
