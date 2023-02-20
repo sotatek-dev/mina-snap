@@ -36,8 +36,6 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@mui/material": "^5.11.9",
-    "@mui/styled-engine-sc": "^5.11.9",
-    "styled-components": "^5.3.6"
+  
   }
 }

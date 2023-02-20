@@ -33,6 +33,9 @@
     ]
   },
   "dependencies": {
+    "@mui/material": "^5.11.9",
+    "@mui/styled-engine-sc": "^5.11.9",
+    
     "@consensys/starknet-snap": "^1.2.0",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
