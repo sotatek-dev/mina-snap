@@ -1,19 +1,20 @@
 export type NetworkConfig = {
-  network: string;
+  name: string;
   gqlUrl: string;
-  txUrl: string;
+  gqlTxUrl: string;
   token: {
     name: string;
     coinType: number;
     symbol: string;
     decimals: number;
   };
+  currentAccIndex: number;
+  generatedAccounts: any[];
+  isSelected: boolean;
 };
 
 export type SnapState = {
-  mina: {
-    config: NetworkConfig;
-  };
+  mina: SnapConfig;
 };
 
 export type TxInput = {
@@ -23,3 +24,8 @@ export type TxInput = {
   memo?: string;
   nonce?: number;
 };
+
+export type SnapConfig = {
+  networks: NetworkConfig[];
+  importedAccounts: any[];
+}

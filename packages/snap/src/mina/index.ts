@@ -4,30 +4,22 @@ import { popupDialog, popupNotify } from '../util/popup.util';
 import { getKeyPair } from './account';
 import { sendPayment, signPayment } from './transaction';
 
-export { getConfiguration } from './configuration';
+export { getSnapConfiguration, changeNetwork, getNetworkConfig, resetSnapConfiguration } from './configuration';
 
-export const sendTransaction = async (
-  args: TxInput,
-  networkConfig: NetworkConfig,
-) => {
+export const sendTransaction = async (args: TxInput, networkConfig: NetworkConfig) => {
   const { publicKey, privateKey } = await getKeyPair(networkConfig);
 
   const confirmation = await popupDialog(
     ESnapDialogType.CONFIRMATION,
     'Confirm transaction',
-    `From: ${publicKey}\nTo: ${args.to}\nAmount: ${args.amount} Mina\nFee: ${args.fee} Mina`,
+    `From: ${publicKey}\nTo: ${args.to}\nAmount: ${args.amount} MINA\nFee: ${args.fee} MINA`,
   );
   if (!confirmation) {
     popupNotify('Payment rejected');
     return null;
   }
 
-  const signedPayment = await signPayment(
-    args,
-    publicKey,
-    privateKey,
-    networkConfig,
-  );
+  const signedPayment = await signPayment(args, publicKey, privateKey, networkConfig);
   if (!signedPayment) {
     popupNotify('Sign payment error');
     return null;

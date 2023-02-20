@@ -1,37 +1,57 @@
-export const minaMainnetConfiguration = {
-  network: 'mainnet',
-  gqlUrl: 'https://proxy.minaexplorer.com/',
-  gqlTxUrl: 'https://graphql.minaexplorer.com/',
-  token: {
-    name: 'MINA',
-    coinType: 12586,
-    symbol: 'MINA',
-    decimals: 9,
-  },
-};
+import { SnapConfig } from "../interfaces";
 
-export const minaDevnetConfiguration = {
-  network: 'devnet',
-  gqlUrl: 'https://proxy.devnet.minaexplorer.com/',
-  gqlTxUrl: 'https://devnet.graphql.minaexplorer.com/',
-  token: {
-    name: 'MINA',
-    coinType: 1,
-    symbol: 'MINA',
-    decimals: 9,
-  },
-};
+export enum ENetworkName {
+  MAINNET = 'Mainnet',
+  DEVNET = 'Devnet',
+  BERKELEY = 'Berkeley',
+}
 
-export const minaBerkeleyConfiguration = {
-  network: 'berkeley',
-  gqlUrl: 'https://proxy.berkeley.minaexplorer.com',
-  gqlTxUrl: 'https://berkeley.graphql.minaexplorer.com/',
-  token: {
-    name: 'MINA',
-    coinType: 1,
-    symbol: 'MINA',
-    decimals: 9,
+const networks = [
+  {
+    name: ENetworkName.MAINNET,
+    gqlUrl: 'https://proxy.minaexplorer.com/',
+    gqlTxUrl: 'https://graphql.minaexplorer.com/',
+    token: {
+      name: 'MINA',
+      coinType: 12586,
+      symbol: 'MINA',
+      decimals: 9,
+    },
+    currentAccIndex: 0,
+    generatedAccounts: [],
+    isSelected: false,
   },
-};
+  {
+    name: ENetworkName.DEVNET,
+    gqlUrl: 'https://proxy.devnet.minaexplorer.com/',
+    gqlTxUrl: 'https://devnet.graphql.minaexplorer.com/',
+    token: {
+      name: 'MINA',
+      coinType: 1,
+      symbol: 'MINA',
+      decimals: 9,
+    },
+    currentAccIndex: 0,
+    generatedAccounts: [],
+    isSelected: false,
+  },
+  {
+    name: ENetworkName.BERKELEY,
+    gqlUrl: 'https://proxy.berkeley.minaexplorer.com',
+    gqlTxUrl: 'https://berkeley.graphql.minaexplorer.com/',
+    token: {
+      name: 'MINA',
+      coinType: 1,
+      symbol: 'MINA',
+      decimals: 9,
+    },
+    currentAccIndex: 0,
+    generatedAccounts: [],
+    isSelected: true, //Using Berkeley as default
+  },
+];
 
-export const defaultConfiguration = minaBerkeleyConfiguration;
+export const defaultSnapConfig: SnapConfig = {
+  networks,
+  importedAccounts: [],
+};

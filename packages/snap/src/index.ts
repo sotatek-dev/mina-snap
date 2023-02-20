@@ -1,10 +1,11 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
-import { sendTransaction, getConfiguration } from './mina';
+import { sendTransaction, getNetworkConfig, changeNetwork, resetSnapConfiguration } from './mina';
 import { TxInput } from './interfaces';
 import { popupDialog } from './util/popup.util';
-import { getAccountInfo, getKeyPair, signMessage } from './mina/account';
+import { changeAccount, getAccountInfo, getKeyPair, signMessage } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
+import { ENetworkName } from './constants/config.constant';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -19,7 +20,7 @@ import { ESnapDialogType } from './constants/snap-method.constant';
  */
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
-  const networkConfig = await getConfiguration(snap);
+  const networkConfig = await getNetworkConfig(snap);
   console.log(`-networkConfig:`, networkConfig);
   switch (request.method) {
     case EMinaMethod.HELLO: {
@@ -32,11 +33,27 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       return account;
     }
 
+    case EMinaMethod.CHANGE_NETWORK: {
+      const { networkName } = request.params as { networkName: ENetworkName };
+      const newNetwork = await changeNetwork(snap, networkName);
+      return newNetwork;
+    }
+
+    case EMinaMethod.CHANGE_ACCOUNT: {
+      const { accountIndex } = request.params as { accountIndex: number };
+      const accountInfo = await changeAccount(accountIndex);
+      return accountInfo;
+    }
+
+    // case EMinaMethod.IMPORT_ACCOUNT: {
+    //   const { privateKey } = request.params as { privateKey: string }
+    // }
+
     case EMinaMethod.NETWORK_CONFIG: {
       return networkConfig;
     }
 
-    case EMinaMethod.SEND_TRANSACTION: {
+    case EMinaMethod.SEND_PAYMENT: {
       const txInput = request.params as TxInput;
       const response = await sendTransaction(txInput, networkConfig);
       console.log('sendTxResponse:', response);
@@ -51,6 +68,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       console.log('signature:', signature);
 
       return signature;
+    }
+
+    case EMinaMethod.RESET_CONFIG: {
+      return resetSnapConfiguration(snap);
     }
 
     default:
