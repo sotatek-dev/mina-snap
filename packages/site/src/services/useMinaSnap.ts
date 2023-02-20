@@ -13,6 +13,7 @@ export const useMinaSnap = () => {
 
 
   return {
+
     connectToSnap,
 
   };
