@@ -36,6 +36,7 @@ const ConnectWallet: React.FC<Props> = () => {
   const handleConnectClick = async () => {
     await connectToSnap();
     const installedSnap = await getSnaps();
+    console.log(installedSnap);
     //  dispatch({
     //     type: MetamaskActions.SetInstalled,
     //     payload: installedSnap,
