@@ -1,9 +1,13 @@
 import React from 'react';
+import ConnectWallet from 'components/connect-wallet/index';
+import { useHasMetamaskFlask } from 'hooks/useHasMetamaskFlask';
 
 const HomePage = () => {
+  useHasMetamaskFlask();
+
   return (
     <div>
-      <div>HomePage</div>
+      <ConnectWallet></ConnectWallet>
     </div>
   );
 };

@@ -100,3 +100,19 @@ export const fetchWithTimeout = async (resource: string, options = { timeout: TI
   clearTimeout(id);
   return response;
 };
+
+export const isFlask = async () => {
+  const provider = window.ethereum as any;
+
+  try {
+    const clientVersion = await provider?.request({
+      method: 'web3_clientVersion',
+    });
+
+    const isFlaskDetected = (clientVersion as string[])?.includes('flask');
+
+    return Boolean(provider && isFlaskDetected);
+  } catch {
+    return false;
+  }
+};
