@@ -1,7 +1,7 @@
 import Button from 'components/common/button';
 import React from 'react';
 import logoMina from 'assets/logo/logo-mina.svg';
-import { useStarkNetSnap } from 'services/useMinaSnap';
+import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, styled } from '@mui/material';
 import { useAppSelector } from 'hooks/redux';
 
@@ -29,7 +29,7 @@ const BoxInsideMetamask = styled(Box)(() => ({
 type Props = {};
 
 const ConnectWallet: React.FC<Props> = () => {
-  const { connectToSnap, getSnaps } = useStarkNetSnap();
+  const { connectToSnap, getSnaps } = useMinaSnap();
 
   const { isInstalled } = useAppSelector((state) => state.wallet);
 
