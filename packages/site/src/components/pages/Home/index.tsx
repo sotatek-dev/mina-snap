@@ -1,10 +1,27 @@
+import { Box, styled } from '@mui/material';
 import React, { useState } from 'react';
 import Modal from '../../common/modal/ModalCommon';
+import IconBack from 'assets/icons/icon-back.svg';
 
 const HomePage = () => {
   const { ethereum } = window as any;
   const snapId = process.env.REACT_APP_SNAP_ID ? process.env.REACT_APP_SNAP_ID : 'local:http://localhost:8080/';
   const snapVersion = process.env.REACT_APP_SNAP_VERSION ? process.env.REACT_APP_SNAP_VERSION : '*';
+
+  const CloseIconWrapper = styled(Box)({
+    position: 'absolute',
+    left: 3,
+    alignSelf: 'flex-end',
+    cursor: 'pointer',
+  });
+
+  const IconBoxBack = styled(Box)({
+    '& img': {
+      animation: 'rotation 2s infinite linear',
+      width: '10px',
+      height: '10px',
+    },
+  });
 
   const handleInstallWallet = () => {
     ethereum
@@ -25,14 +42,16 @@ const HomePage = () => {
   };
   const [openModal, setOpenModal] = useState(false);
 
-  const CustomActions = (
-    <button
+  const ActionsBack = (
+    <CloseIconWrapper
       onClick={() => {
-        alert('log xem chạy không');
+        setOpenModal(false);
       }}
     >
-      open modal
-    </button>
+      <IconBoxBack>
+        <img src={IconBack} />
+      </IconBoxBack>
+    </CloseIconWrapper>
   );
 
   return (
@@ -46,18 +65,7 @@ const HomePage = () => {
       >
         open modal
       </button>
-      <Modal
-        FooterButton={CustomActions}
-        title="Account Details"
-        address="B62qirBtNT55AAjbsLQ2dQ6iSkj92FUddY4jiCqRtMhyJWHBPSFSMh2"
-        open={openModal}
-        onClose={() => {
-          setOpenModal(false);
-        }}
-        contentTitle="Account Address"
-      >
-        ss
-      </Modal>
+      <Modal ActionsBack={ActionsBack} title="Account Details" open={openModal}></Modal>
     </div>
   );
 };
