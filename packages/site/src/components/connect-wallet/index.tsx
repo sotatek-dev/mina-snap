@@ -29,17 +29,12 @@ const BoxInsideMetamask = styled(Box)(() => ({
 type Props = {};
 
 const ConnectWallet: React.FC<Props> = () => {
-  const { connectToSnap, getSnaps } = useMinaSnap();
+  const { connectToSnap } = useMinaSnap();
 
   const { isInstalled } = useAppSelector((state) => state.wallet);
 
   const handleConnectClick = async () => {
     await connectToSnap();
-    const installedSnap = await getSnaps();
-    //  dispatch({
-    //     type: MetamaskActions.SetInstalled,
-    //     payload: installedSnap,
-    //   });
   };
 
   return (
