@@ -1,9 +1,10 @@
 import Button from 'components/common/button';
-import React from 'react';
+import React, { useContext } from 'react';
 import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, styled } from '@mui/material';
 import { useAppSelector } from 'hooks/redux';
+import { MetamaskActions, MetaMaskContext } from 'hooks';
 
 const BoxCenter = styled(Box)(() => ({
   display: 'flex',
@@ -29,12 +30,22 @@ const BoxInsideMetamask = styled(Box)(() => ({
 type Props = {};
 
 const ConnectWallet: React.FC<Props> = () => {
-  const { connectToSnap } = useMinaSnap();
+  const [state, dispatch] = useContext(MetaMaskContext);
+  const { connectToSnap, getSnap } = useMinaSnap();
 
   const { isInstalled } = useAppSelector((state) => state.wallet);
 
   const handleConnectClick = async () => {
-    await connectToSnap();
+    try {
+      await connectToSnap();
+      const installedSnap = await getSnap();
+      dispatch({
+        type: MetamaskActions.SetInstalled,
+        payload: installedSnap,
+      });
+    } catch (e) {
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
   };
 
   return (
@@ -51,7 +62,7 @@ const ConnectWallet: React.FC<Props> = () => {
           {!isInstalled && <Button>Metamask Flask is required to run snap!</Button>}
         </BoxCenter>
         <BoxCenter>
-          <Button onClick={handleConnectClick}>CONNECT TO METAMASK</Button>
+          <Button onClick={handleConnectClick}>{state.installedSnap ? 'Reconnect' : 'CONNECT TO METAMASK'}</Button>
         </BoxCenter>
         {/* <Button onClick={handleTest}>CONNECT TO METAMASK</Button> */}
       </BoxContent>

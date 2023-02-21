@@ -9,12 +9,12 @@ import { getOperationName } from '../util/helper';
  * @param variables - GraphQL variables.
  */
 export async function gql(
-  networkConfig: NetworkConfig,
+  url: string,
   query: string,
   variables = {},
 ) {
   try {
-    const response = await fetch(networkConfig.gqlUrl, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
