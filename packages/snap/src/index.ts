@@ -20,7 +20,7 @@ import { ENetworkName } from './constants/config.constant';
  */
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
-  const networkConfig = await getNetworkConfig(snap);
+  const networkConfig = await getNetworkConfig();
   console.log(`-networkConfig:`, networkConfig);
   switch (request.method) {
     case EMinaMethod.HELLO: {
@@ -35,7 +35,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
 
     case EMinaMethod.CHANGE_NETWORK: {
       const { networkName } = request.params as { networkName: ENetworkName };
-      const newNetwork = await changeNetwork(snap, networkName);
+      const newNetwork = await changeNetwork(networkName);
       return newNetwork;
     }
 
@@ -71,7 +71,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.RESET_CONFIG: {
-      return resetSnapConfiguration(snap);
+      return resetSnapConfiguration();
     }
 
     default:

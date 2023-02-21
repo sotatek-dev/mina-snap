@@ -81,9 +81,8 @@ export async function getAccountInfo(
 }
 
 export const changeAccount = async (index: number) => {
-  const snapConfig = await getSnapConfiguration(snap);
-  const networkIndex = snapConfig.networks.findIndex(network => network.isSelected);
-  snapConfig.networks[networkIndex].currentAccIndex = index;
+  const snapConfig = await getSnapConfiguration();
+  snapConfig.networks[snapConfig.currentNetwork].currentAccIndex = index;
   await snap.request({
     method: ESnapMethod.SNAP_MANAGE_STATE,
     params: { operation: 'update', newState: { mina: snapConfig }},

@@ -6,7 +6,7 @@ import {
 import { ESnapMethod } from '../constants/snap-method.constant';
 import { NetworkConfig, SnapConfig, SnapState } from '../interfaces';
 
-export const getSnapConfiguration = async (snap: SnapProvider): Promise<SnapConfig> => {
+export const getSnapConfiguration = async (): Promise<SnapConfig> => {
   const state = (await snap.request({
     method: ESnapMethod.SNAP_MANAGE_STATE,
     params: { operation: 'get' },
@@ -25,34 +25,31 @@ export const getSnapConfiguration = async (snap: SnapProvider): Promise<SnapConf
   return state.mina;
 };
 
-export const getNetworkConfig = async (snap: SnapProvider): Promise<NetworkConfig> => {
-  const snapConfig = await getSnapConfiguration(snap);
-  const networkConfig = snapConfig.networks.find(network => network.isSelected);
+export const getNetworkConfig = async (): Promise<NetworkConfig> => {
+  const snapConfig = await getSnapConfiguration();
+  const networkConfig = snapConfig.networks[snapConfig.currentNetwork];
   return networkConfig as NetworkConfig;
 }
 
-export const changeNetwork = async (snap: SnapProvider, networkName: ENetworkName): Promise<NetworkConfig> => {
-  let snapConfig = await getSnapConfiguration(snap);
-  const selectingNetworkIndex = snapConfig.networks.findIndex(network => network.isSelected);
-  const newNetworkIndex = snapConfig.networks.findIndex(network => network.name === networkName);
-  if (selectingNetworkIndex && newNetworkIndex && selectingNetworkIndex != newNetworkIndex) {
-    snapConfig.networks[selectingNetworkIndex].isSelected = false;
-    snapConfig.networks[newNetworkIndex].isSelected = true;
+export const changeNetwork = async (networkName: ENetworkName): Promise<NetworkConfig> => {
+  let snapConfig = await getSnapConfiguration();
+  if (networkName != snapConfig.currentNetwork && snapConfig.networks[networkName]) {
+    snapConfig.currentNetwork = networkName;
     await snap.request({
       method: ESnapMethod.SNAP_MANAGE_STATE,
       params: { operation: 'update', newState: { mina: snapConfig } },
     });
   }
-  const networkConfig = await getNetworkConfig(snap);
+  const networkConfig = await getNetworkConfig();
   return networkConfig;
 };
 
 /**Clear state and reset to default network */
-export const resetSnapConfiguration = async (snap: SnapProvider): Promise<SnapConfig> => {
+export const resetSnapConfiguration = async (): Promise<SnapConfig> => {
   await snap.request({
     method: ESnapMethod.SNAP_MANAGE_STATE,
     params: { operation: 'clear' },
   });
 
-  return getSnapConfiguration(snap);
+  return getSnapConfiguration();
 };
