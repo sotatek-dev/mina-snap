@@ -10,7 +10,6 @@ export type NetworkConfig = {
   };
   currentAccIndex: number;
   generatedAccounts: any[];
-  isSelected: boolean;
 };
 
 export type SnapState = {
@@ -26,6 +25,7 @@ export type TxInput = {
 };
 
 export type SnapConfig = {
-  networks: NetworkConfig[];
+  currentNetwork: string;
+  networks: { [key: string]: NetworkConfig };
   importedAccounts: any[];
-}
+};
