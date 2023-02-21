@@ -1,10 +1,13 @@
 import React from 'react';
 import { Box, Modal, styled } from '@mui/material';
+import IconBack from 'assets/icons/icon-back.svg';
 
 interface ModalInforProps {
   open: boolean;
   ActionsBack?: React.ReactChild;
   title?: string;
+  setOpenModal: () => void;
+  children?: JSX.Element;
 }
 
 const Container = styled(Box)(() => ({
@@ -40,15 +43,35 @@ const BoxTitleModal = styled(Box)({
   color: '#000000',
 });
 
-const ModalInfor = ({ open, title, ActionsBack }: ModalInforProps) => {
+const CloseIconWrapper = styled(Box)({
+  position: 'absolute',
+  left: 3,
+  alignSelf: 'flex-end',
+  cursor: 'pointer',
+});
+
+const IconBoxBack = styled(Box)({
+  '& img': {
+    animation: 'rotation 2s infinite linear',
+    width: '10px',
+    height: '10px',
+  },
+});
+
+const ModalInfor = ({ open, title, setOpenModal, children }: ModalInforProps) => {
   return (
-    <Modal disableAutoFocus={true} open={open}>
+    <Modal onBackdropClick={setOpenModal} disableAutoFocus={true} open={open}>
       <Container sx={{ height: '100%' }}>
         <ContainerContent>
           <BoxTitleModal>
-            {ActionsBack && ActionsBack}
+            <CloseIconWrapper onClick={setOpenModal}>
+              <IconBoxBack>
+                <img src={IconBack} />
+              </IconBoxBack>
+            </CloseIconWrapper>
             {title}
           </BoxTitleModal>
+          {children && children}
         </ContainerContent>
       </Container>
     </Modal>
