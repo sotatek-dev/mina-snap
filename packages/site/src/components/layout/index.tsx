@@ -21,38 +21,48 @@ const Wrapper = styled.div`
 
 const Header = styled.div`
     background-color: ${(props) => props.theme.palette.grey.grey3};
+    position: fixed;
     width: 1040px;
     height: 124px;
-    margin: auto;
+    left: 50%;
+    transform: translate(-50%, 0);
     display:flex;
     justify-content: space-between;
-    .box-logo {
-        display:flex;
-        align-items: center;
-        height: 100%;
-        .logo {
-            padding-right: 4px;
-            width: 32px;
-        }
-    }
-    .drop-down {
-        display:flex;
-        align-items: center;
-        height: 100%;
-    }
-    
-
     @media (max-width: 1024px) {
         width: 896px;
     }
 `;
 
+const BoxLogo = styled.div`
+  display:flex;
+  align-items: center;
+  height: 100%;
+`;
+
+const Logo = styled.img.attrs(() => ({
+  src: logo,
+}))`
+  padding-right: 4px;
+  width: 32px;
+`
+
+const Title = styled.img.attrs(() => ({
+  src: mina,
+}))`
+`
+
+const WDropDown = styled.div`
+  display:flex;
+  align-items: center;
+  height: 100%;
+`;
+
 const ColMiddle = styled.div`
   width: 1040px;
+  max-height: 776px;
   margin: auto;
   background-color: ${(props) => props.theme.palette.grey.white};
-
-
+  
   @media (max-width: 1024px) {
     width: 896px;
   }
@@ -62,6 +72,17 @@ const Content = styled.div`
   box-shadow: 0px 50px 70px -28px rgba(106, 115, 125, 0.2);
   border-radius: ${(props) => props.theme.corner.small};
   overflow: hidden;
+  max-height: 580px;
+  overflow: auto;
+  margin-top: 124px;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const Transaction = styled.div`
+  height: 9999px;
 `;
 
  const Home = ({ connected, children }: Props) => {
@@ -69,15 +90,18 @@ const Content = styled.div`
   return (
     <Wrapper>
         <Header>
-            <div className='box-logo'>
-                <img className='logo' src={logo} alt="" />
-                <img src={mina} alt="" />
-            </div>
-            <div className='drop-down'><DropDown options={OPTIONS_NETWORK}></DropDown></div>
-
+            <BoxLogo >
+                <Logo />
+                <Title />
+            </BoxLogo>
+            <WDropDown>
+              <DropDown options={OPTIONS_NETWORK} />
+            </WDropDown>
         </Header>
         <ColMiddle>
-            <Content>Cotent</Content>
+            <Content>
+              <Transaction>Content</Transaction>
+            </Content>
         </ColMiddle>
     </Wrapper>
   );
