@@ -25,31 +25,26 @@ export enum MetamaskActions {
 }
 
 const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
-  console.log(action.type, 'console.log(action.type);');
   switch (action.type) {
     case MetamaskActions.SetInstalled:
-      console.log(action, 'SetInstalled');
       return {
         ...state,
         installedSnap: action.payload,
       };
 
     case MetamaskActions.SetFlaskDetected:
-      console.log(action, 'SetFlaskDetected');
       return {
         ...state,
         isFlask: action.payload,
       };
 
     case MetamaskActions.SetError:
-      console.log(action, 'SetError');
       return {
         ...state,
         error: action.payload,
       };
 
     default:
-      console.log(action, 'default');
       return state;
   }
 };

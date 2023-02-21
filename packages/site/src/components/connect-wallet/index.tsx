@@ -43,9 +43,7 @@ const ConnectWallet: React.FC<Props> = () => {
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
       });
-      console.log(installedSnap);
     } catch (e) {
-      console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
     }
   };
