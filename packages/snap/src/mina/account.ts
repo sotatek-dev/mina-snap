@@ -87,6 +87,6 @@ export const changeAccount = async (index: number) => {
     method: ESnapMethod.SNAP_MANAGE_STATE,
     params: { operation: 'update', newState: { mina: snapConfig }},
   });
-  const { publicKey } = await getKeyPair(snapConfig.networks[networkIndex]);
-  return { usingAddress: publicKey };
+  const { publicKey } = await getKeyPair(snapConfig.networks[snapConfig.currentNetwork]);
+  return { address: publicKey };
 }
