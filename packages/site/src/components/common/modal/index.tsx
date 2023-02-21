@@ -7,7 +7,7 @@ interface ModalInforProps {
   ActionsBack?: React.ReactChild;
   title?: string;
   setOpenModal: () => void;
-  children?: JSX.Element;
+  children?: React.ReactChild;
 }
 
 const Container = styled(Box)(() => ({
