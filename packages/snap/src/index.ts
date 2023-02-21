@@ -6,7 +6,7 @@ import { popupDialog } from './util/popup.util';
 import { changeAccount, getAccountInfo, getKeyPair, signMessage } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
-import { getHistory, getPayment } from './mina/transaction';
+import { getTxHistory, getTxDetail } from './mina/transaction';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -75,17 +75,17 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       return resetSnapConfiguration();
     }
 
-    case EMinaMethod.GET_HISTORY: {
+    case EMinaMethod.GET_TX_HISTORY: {
       const keyPair = await getKeyPair(networkConfig);
-      const history = await getHistory(networkConfig, request.params as HistoryOptions, keyPair.publicKey);
+      const history = await getTxHistory(networkConfig, request.params as HistoryOptions, keyPair.publicKey);
       console.log(history);
 
       return history;
     }
 
-    case EMinaMethod.GET_HISTORY: {
+    case EMinaMethod.GET_TX_DETAIL: {
       const { hash } = request.params as { hash: string };
-      const payment = await getPayment(networkConfig, hash);
+      const payment = await getTxDetail(networkConfig, hash);
       console.log(payment);
 
       return payment;

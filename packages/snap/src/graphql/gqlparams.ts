@@ -46,7 +46,7 @@ query txStatus($paymentId:ID! ) {
 }
 `;
 
-export const getHistoryQuery = `
+export const getTxHistoryQuery = `
 query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolean!, $address: String!) {
 	transactions(limit: $limit, sortBy: $sortBy, query: {canonical: $canonical, OR: [{from: $address}, {to: $address}]}) {
 		fee
@@ -63,8 +63,8 @@ query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolea
   }
 `;
 
-export const getPaymentQuery = `
-query payment($hash: String!) {
+export const getTxDetailQuery = `
+query transaction($hash: String!) {
 	transaction(query: {hash: $hash}) {
 	  amount
 	  to
