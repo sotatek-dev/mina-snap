@@ -1,13 +1,14 @@
 import React from 'react';
-import { Box, Modal, styled } from '@mui/material';
+import { Box, Modal, styled, ModalProps } from '@mui/material';
 import IconBack from 'assets/icons/icon-back.svg';
 
-interface ModalInforProps {
+interface ModalCommonProps extends ModalProps {
   open: boolean;
   ActionsBack?: React.ReactChild;
   title?: string;
   setOpenModal: () => void;
   children?: React.ReactChild;
+  clickOutSide?: boolean;
 }
 
 const Container = styled(Box)(() => ({
@@ -58,9 +59,15 @@ const IconBoxBack = styled(Box)({
   },
 });
 
-const ModalInfor = ({ open, title, setOpenModal, children }: ModalInforProps) => {
+const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide }: ModalCommonProps) => {
   return (
-    <Modal onBackdropClick={setOpenModal} disableAutoFocus={true} open={open}>
+    <Modal
+      onBackdropClick={() => {
+        clickOutSide ? setOpenModal : '';
+      }}
+      disableAutoFocus={true}
+      open={open}
+    >
       <Container sx={{ height: '100%' }}>
         <ContainerContent>
           <BoxTitleModal>
@@ -77,4 +84,4 @@ const ModalInfor = ({ open, title, setOpenModal, children }: ModalInforProps) =>
     </Modal>
   );
 };
-export default ModalInfor;
+export default ModalCommon;
