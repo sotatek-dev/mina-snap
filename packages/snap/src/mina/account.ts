@@ -8,11 +8,12 @@ import { getMinaClient } from '../util/mina-client.util';
 import { getAccountInfoQuery } from '../graphql/gqlparams';
 import { gql } from '../graphql';
 import { NetworkConfig } from '../interfaces';
+import { getNetworkConfig, getSnapConfiguration } from './configuration';
 
 export const getKeyPair = async (networkConfig: NetworkConfig) => {
   const client = getMinaClient(networkConfig);
   const { coinType } = networkConfig.token;
-  const bip32Node: any = await wallet.request({
+  const bip32Node: any = await snap.request({
     method: ESnapMethod.SNAP_GET_BIP32_ENTROPY,
     params: {
       path: ['m', "44'", `${coinType}'`],
@@ -20,7 +21,7 @@ export const getKeyPair = async (networkConfig: NetworkConfig) => {
     },
   });
   const minaSlip10Node = await SLIP10Node.fromJSON(bip32Node);
-  const accountKey0 = await minaSlip10Node.derive(["bip32:0'"]);
+  const accountKey0 = await minaSlip10Node.derive([`bip32:${networkConfig.currentAccIndex}'`]);
   if (accountKey0.privateKeyBytes) {
     // eslint-disable-next-line no-bitwise
     accountKey0.privateKeyBytes[0] &= 0x3f;
@@ -69,12 +70,23 @@ export async function getAccountInfo(
   const query = getAccountInfoQuery;
   const variables = { publicKey };
 
-  const { data, error } = await gql(networkConfig, query, variables);
+  const { data, error } = await gql(networkConfig.gqlUrl, query, variables);
 
   if (error) {
     console.error(error);
     return null;
   }
-
+  console.log(`-account data:`, data)
   return data;
+}
+
+export const changeAccount = async (index: number) => {
+  const snapConfig = await getSnapConfiguration();
+  snapConfig.networks[snapConfig.currentNetwork].currentAccIndex = index;
+  await snap.request({
+    method: ESnapMethod.SNAP_MANAGE_STATE,
+    params: { operation: 'update', newState: { mina: snapConfig }},
+  });
+  const { publicKey } = await getKeyPair(snapConfig.networks[snapConfig.currentNetwork]);
+  return { address: publicKey };
 }

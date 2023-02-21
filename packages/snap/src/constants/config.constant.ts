@@ -1,37 +1,55 @@
-export const minaMainnetConfiguration = {
-  network: 'mainnet',
-  gqlUrl: '',
-  txUrl: '',
-  token: {
-    name: 'MINA',
-    coinType: 12586,
-    symbol: 'MINA',
-    decimals: 9,
+import { SnapConfig } from "../interfaces";
+
+export enum ENetworkName {
+  MAINNET = 'Mainnet',
+  DEVNET = 'Devnet',
+  BERKELEY = 'Berkeley',
+}
+
+const networks ={
+  [ENetworkName.MAINNET]: {
+    name: ENetworkName.MAINNET,
+    gqlUrl: 'https://proxy.minaexplorer.com/',
+    gqlTxUrl: 'https://graphql.minaexplorer.com/',
+    token: {
+      name: 'MINA',
+      coinType: 12586,
+      symbol: 'MINA',
+      decimals: 9,
+    },
+    currentAccIndex: 0,
+    generatedAccounts: [],
+  },
+  [ENetworkName.DEVNET]: {
+    name: ENetworkName.DEVNET,
+    gqlUrl: 'https://proxy.devnet.minaexplorer.com/',
+    gqlTxUrl: 'https://devnet.graphql.minaexplorer.com/',
+    token: {
+      name: 'MINA',
+      coinType: 1,
+      symbol: 'MINA',
+      decimals: 9,
+    },
+    currentAccIndex: 0,
+    generatedAccounts: [],
+  },
+  [ENetworkName.BERKELEY]: {
+    name: ENetworkName.BERKELEY,
+    gqlUrl: 'https://proxy.berkeley.minaexplorer.com',
+    gqlTxUrl: 'https://berkeley.graphql.minaexplorer.com/',
+    token: {
+      name: 'MINA',
+      coinType: 1,
+      symbol: 'MINA',
+      decimals: 9,
+    },
+    currentAccIndex: 0,
+    generatedAccounts: [],
   },
 };
 
-export const minaDevnetConfiguration = {
-  network: 'devnet',
-  gqlUrl: '',
-  txUrl: '',
-  token: {
-    name: 'MINA',
-    coinType: 1,
-    symbol: 'MINA',
-    decimals: 9,
-  },
+export const defaultSnapConfig: SnapConfig = {
+  currentNetwork: ENetworkName.BERKELEY,
+  networks,
+  importedAccounts: [],
 };
-
-export const minaBerkeleyConfiguration = {
-  network: 'berkeley',
-  gqlUrl: 'https://proxy.berkeley.minaexplorer.com',
-  txUrl: 'https://berkeley.graphql.minaexplorer.com/',
-  token: {
-    name: 'MINA',
-    coinType: 1,
-    symbol: 'MINA',
-    decimals: 9,
-  },
-};
-
-export const defaultConfiguration = minaBerkeleyConfiguration;

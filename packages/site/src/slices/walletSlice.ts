@@ -5,6 +5,7 @@ import { Transaction } from 'types';
 import { ethers } from 'ethers';
 
 export interface WalletState {
+  isInstalled: boolean,
   connected: boolean;
   isLoading: boolean;
   forceReconnect: boolean;
@@ -16,6 +17,7 @@ export interface WalletState {
 }
 
 const initialState: WalletState = {
+  isInstalled: false,
   connected: false,
   isLoading: false,
   forceReconnect: false,
@@ -30,6 +32,9 @@ export const walletSlice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
+    setWalletInstalled: (state, { payload }) => {
+      state.isInstalled = payload;
+    },
     setWalletConnection: (state, { payload }) => {
       state.connected = payload;
     },
@@ -92,6 +97,7 @@ export const walletSlice = createSlice({
 });
 
 export const {
+  setWalletInstalled,
   setWalletConnection,
   setForceReconnect,
   setAccounts,

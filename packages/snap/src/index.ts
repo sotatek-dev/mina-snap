@@ -1,9 +1,12 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
-import { sendTransaction, getConfiguration } from './mina';
-import { TxInput } from './interfaces';
-import { popupConfirm } from './util/popup.util';
-import { getAccountInfo, getKeyPair } from './mina/account';
+import { sendTransaction, getNetworkConfig, changeNetwork, resetSnapConfiguration } from './mina';
+import { HistoryOptions, TxInput } from './interfaces';
+import { popupDialog } from './util/popup.util';
+import { changeAccount, getAccountInfo, getKeyPair, signMessage } from './mina/account';
+import { ESnapDialogType } from './constants/snap-method.constant';
+import { ENetworkName } from './constants/config.constant';
+import { getTxHistory, getTxDetail } from './mina/transaction';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -18,11 +21,11 @@ import { getAccountInfo, getKeyPair } from './mina/account';
  */
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
-  const networkConfig = await getConfiguration(wallet);
+  const networkConfig = await getNetworkConfig();
   console.log(`-networkConfig:`, networkConfig);
   switch (request.method) {
     case EMinaMethod.HELLO: {
-      return popupConfirm('Hello Mina', 'Hello', 'Hello');
+      return popupDialog(ESnapDialogType.CONFIRMATION, 'Hello Mina', 'Hello');
     }
 
     case EMinaMethod.ACCOUNT_INFO: {
@@ -31,16 +34,61 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       return account;
     }
 
+    case EMinaMethod.CHANGE_NETWORK: {
+      const { networkName } = request.params as { networkName: ENetworkName };
+      const newNetwork = await changeNetwork(networkName);
+      return newNetwork;
+    }
+
+    case EMinaMethod.CHANGE_ACCOUNT: {
+      const { accountIndex } = request.params as { accountIndex: number };
+      const accountInfo = await changeAccount(accountIndex);
+      return accountInfo;
+    }
+
+    // case EMinaMethod.IMPORT_ACCOUNT: {
+    //   const { privateKey } = request.params as { privateKey: string }
+    // }
+
     case EMinaMethod.NETWORK_CONFIG: {
       return networkConfig;
     }
 
-    case EMinaMethod.SEND_TRANSACTION: {
+    case EMinaMethod.SEND_PAYMENT: {
       const txInput = request.params as TxInput;
       const response = await sendTransaction(txInput, networkConfig);
       console.log('sendTxResponse:', response);
 
       return response;
+    }
+
+    case EMinaMethod.SIGN_MESSAGE: {
+      const keyPair = await getKeyPair(networkConfig);
+      const { message } = request.params as { message: string };
+      const signature = signMessage(message, keyPair, networkConfig);
+      console.log('signature:', signature);
+
+      return signature;
+    }
+
+    case EMinaMethod.RESET_CONFIG: {
+      return resetSnapConfiguration();
+    }
+
+    case EMinaMethod.GET_TX_HISTORY: {
+      const keyPair = await getKeyPair(networkConfig);
+      const history = await getTxHistory(networkConfig, request.params as HistoryOptions, keyPair.publicKey);
+      console.log(history);
+
+      return history;
+    }
+
+    case EMinaMethod.GET_TX_DETAIL: {
+      const { hash } = request.params as { hash: string };
+      const payment = await getTxDetail(networkConfig, hash);
+      console.log(payment);
+
+      return payment;
     }
 
     default:
