@@ -62,3 +62,18 @@ query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolea
 	}
   }
 `;
+
+export const getPaymentQuery = `
+query payment($hash: String!) {
+	transaction(query: {hash: $hash}) {
+	  amount
+	  to
+	  from
+	  fee
+	  nonce
+	  dateTime
+	  hash
+	}
+  }
+  
+`

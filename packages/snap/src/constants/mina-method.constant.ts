@@ -9,4 +9,5 @@ export enum EMinaMethod {
   SEND_PAYMENT = 'mina_sendPayment',
   SIGN_MESSAGE = 'mina_signMessage',
   GET_HISTORY = 'mina_getHistory',
+  GET_PAYMENT_DETAIL = 'mina_getPaymentDetail',
 }

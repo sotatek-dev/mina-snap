@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { Payment, Signed } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import { gql } from '../graphql';
-import { getHistoryQuery, sendPaymentQuery } from '../graphql/gqlparams';
+import { getHistoryQuery, getPaymentQuery, sendPaymentQuery } from '../graphql/gqlparams';
 import { HistoryOptions, NetworkConfig, TxInput } from '../interfaces';
 import { getMinaClient } from '../util/mina-client.util';
 import { getAccountInfo } from './account';
@@ -75,9 +75,21 @@ export async function sendPayment(signedPayment: Signed<Payment>, networkConfig:
 
 export async function getHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
   const query = getHistoryQuery;
-  const variables = { ...options, address: address };
-  console.log('79 ---', variables);
-  
+  const variables = { ...options, address };
+
+  const { data, error } = await gql(networkConfig.gqlTxUrl, query, variables);
+
+  if (error) {
+    console.error('send', error); // TODO - remove
+    return null;
+  }
+
+  return data;
+}
+
+export async function getPayment(networkConfig: NetworkConfig, hash: string) {
+  const query = getPaymentQuery;
+  const variables = { hash };
 
   const { data, error } = await gql(networkConfig.gqlTxUrl, query, variables);
 

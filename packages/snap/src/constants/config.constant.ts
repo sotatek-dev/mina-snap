@@ -6,8 +6,8 @@ export enum ENetworkName {
   BERKELEY = 'Berkeley',
 }
 
-const networks = [
-  {
+const networks ={
+  [ENetworkName.MAINNET]: {
     name: ENetworkName.MAINNET,
     gqlUrl: 'https://proxy.minaexplorer.com/',
     gqlTxUrl: 'https://graphql.minaexplorer.com/',
@@ -19,9 +19,8 @@ const networks = [
     },
     currentAccIndex: 0,
     generatedAccounts: [],
-    isSelected: false,
   },
-  {
+  [ENetworkName.DEVNET]: {
     name: ENetworkName.DEVNET,
     gqlUrl: 'https://proxy.devnet.minaexplorer.com/',
     gqlTxUrl: 'https://devnet.graphql.minaexplorer.com/',
@@ -33,9 +32,8 @@ const networks = [
     },
     currentAccIndex: 0,
     generatedAccounts: [],
-    isSelected: false,
   },
-  {
+  [ENetworkName.BERKELEY]: {
     name: ENetworkName.BERKELEY,
     gqlUrl: 'https://proxy.berkeley.minaexplorer.com',
     gqlTxUrl: 'https://berkeley.graphql.minaexplorer.com/',
@@ -47,11 +45,11 @@ const networks = [
     },
     currentAccIndex: 0,
     generatedAccounts: [],
-    isSelected: true, //Using Berkeley as default
   },
-];
+};
 
 export const defaultSnapConfig: SnapConfig = {
+  currentNetwork: ENetworkName.BERKELEY,
   networks,
   importedAccounts: [],
 };

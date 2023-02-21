@@ -6,7 +6,7 @@ import { popupDialog } from './util/popup.util';
 import { changeAccount, getAccountInfo, getKeyPair, signMessage } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
-import { getHistory } from './mina/transaction';
+import { getHistory, getPayment } from './mina/transaction';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -21,7 +21,7 @@ import { getHistory } from './mina/transaction';
  */
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
-  const networkConfig = await getNetworkConfig(snap);
+  const networkConfig = await getNetworkConfig();
   console.log(`-networkConfig:`, networkConfig);
   switch (request.method) {
     case EMinaMethod.HELLO: {
@@ -36,7 +36,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
 
     case EMinaMethod.CHANGE_NETWORK: {
       const { networkName } = request.params as { networkName: ENetworkName };
-      const newNetwork = await changeNetwork(snap, networkName);
+      const newNetwork = await changeNetwork(networkName);
       return newNetwork;
     }
 
@@ -72,19 +72,23 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.RESET_CONFIG: {
-      return resetSnapConfiguration(snap);
+      return resetSnapConfiguration();
     }
 
     case EMinaMethod.GET_HISTORY: {
       const keyPair = await getKeyPair(networkConfig);
-      const history = await getHistory(
-        networkConfig,
-        { limit: 10, sortBy: 'DATETIME_DESC', canonical: true } as HistoryOptions,
-        keyPair.publicKey,
-      );
+      const history = await getHistory(networkConfig, request.params as HistoryOptions, keyPair.publicKey);
       console.log(history);
 
       return history;
+    }
+
+    case EMinaMethod.GET_HISTORY: {
+      const { hash } = request.params as { hash: string };
+      const payment = await getPayment(networkConfig, hash);
+      console.log(payment);
+
+      return payment;
     }
 
     default:
