@@ -5,6 +5,7 @@ import { persistStore } from 'redux-persist';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import App from './App';
+import { MetaMaskProvider } from './hooks';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -13,7 +14,9 @@ let persistor = persistStore(store);
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <App />
+      <MetaMaskProvider>
+        <App />
+      </MetaMaskProvider>
     </PersistGate>
   </Provider>,
 );
