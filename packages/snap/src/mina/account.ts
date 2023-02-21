@@ -70,7 +70,7 @@ export async function getAccountInfo(
   const query = getAccountInfoQuery;
   const variables = { publicKey };
 
-  const { data, error } = await gql(networkConfig, query, variables);
+  const { data, error } = await gql(networkConfig.gqlUrl, query, variables);
 
   if (error) {
     console.error(error);

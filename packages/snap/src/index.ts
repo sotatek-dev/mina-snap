@@ -1,11 +1,12 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
 import { sendTransaction, getNetworkConfig, changeNetwork, resetSnapConfiguration } from './mina';
-import { TxInput } from './interfaces';
+import { HistoryOptions, TxInput } from './interfaces';
 import { popupDialog } from './util/popup.util';
 import { changeAccount, getAccountInfo, getKeyPair, signMessage } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
+import { getHistory } from './mina/transaction';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -64,7 +65,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.SIGN_MESSAGE: {
       const keyPair = await getKeyPair(networkConfig);
       const { message } = request.params as { message: string };
-      const signature = await signMessage(message, keyPair, networkConfig);
+      const signature = signMessage(message, keyPair, networkConfig);
       console.log('signature:', signature);
 
       return signature;
@@ -72,6 +73,18 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
 
     case EMinaMethod.RESET_CONFIG: {
       return resetSnapConfiguration(snap);
+    }
+
+    case EMinaMethod.GET_HISTORY: {
+      const keyPair = await getKeyPair(networkConfig);
+      const history = await getHistory(
+        networkConfig,
+        { limit: 10, sortBy: 'DATETIME_DESC', canonical: true } as HistoryOptions,
+        keyPair.publicKey,
+      );
+      console.log(history);
+
+      return history;
     }
 
     default:

@@ -8,4 +8,5 @@ export enum EMinaMethod {
   RESET_CONFIG = 'mina_resetSnapConfig',
   SEND_PAYMENT = 'mina_sendPayment',
   SIGN_MESSAGE = 'mina_signMessage',
+  GET_HISTORY = 'mina_getHistory',
 }
