@@ -29,6 +29,7 @@ export type TxInput = {
 export type SnapConfig = {
   currentNetwork: ENetworkName;
   networks: { [key: string] : NetworkConfig };
+  selectedImportAccount: string;
   importedAccounts: any[];
 };
 

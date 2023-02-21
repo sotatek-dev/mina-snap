@@ -41,11 +41,7 @@ export const getKeyPair = async (networkConfig: NetworkConfig) => {
 //   return keyPair.publicKey;
 // };
 
-export const signMessage = (
-  message: string,
-  keypair: Keypair,
-  networkConfig: NetworkConfig,
-) => {
+export const signMessage = (message: string, keypair: Keypair, networkConfig: NetworkConfig) => {
   const client = getMinaClient(networkConfig);
   const signed = client.signMessage(message, keypair);
   if (client.verifyMessage(signed)) {
@@ -63,10 +59,7 @@ export const signMessage = (
  * @param networkConfig - Selected network config.
  * @returns `null` if get account info fail.
  */
-export async function getAccountInfo(
-  publicKey: string,
-  networkConfig: NetworkConfig,
-) {
+export async function getAccountInfo(publicKey: string, networkConfig: NetworkConfig) {
   const query = getAccountInfoQuery;
   const variables = { publicKey };
 
@@ -76,7 +69,19 @@ export async function getAccountInfo(
     console.error(error);
     return null;
   }
-  console.log(`-account data:`, data)
+  /**return default data if the account does not have any tx */
+  if (!data.account) {
+    data.account = {
+      balance: {
+        total: '0',
+      },
+      nonce: '0',
+      inferredNonce: '0',
+      delegate: publicKey,
+      publicKey,
+    };
+  }
+  console.log(`-account data:`, data);
   return data;
 }
 
@@ -85,8 +90,8 @@ export const changeAccount = async (index: number) => {
   snapConfig.networks[snapConfig.currentNetwork].currentAccIndex = index;
   await snap.request({
     method: ESnapMethod.SNAP_MANAGE_STATE,
-    params: { operation: 'update', newState: { mina: snapConfig }},
+    params: { operation: 'update', newState: { mina: snapConfig } },
   });
   const { publicKey } = await getKeyPair(snapConfig.networks[snapConfig.currentNetwork]);
   return { address: publicKey };
-}
+};
