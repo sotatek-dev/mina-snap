@@ -10,11 +10,12 @@ export const useMinaSnap = () => {
     await ethereum.request({ method: 'wallet_requestSnaps', params: { [snapId]: { snapVersion } } })
   };
 
-
+  const getSnap = async () => {
+    return await ethereum.request({ method: 'wallet_getSnaps' });
+  };
 
   return {
-
     connectToSnap,
-
+    getSnap
   };
 };
