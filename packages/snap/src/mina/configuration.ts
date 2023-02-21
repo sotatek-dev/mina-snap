@@ -45,11 +45,11 @@ export const changeNetwork = async (networkName: ENetworkName): Promise<NetworkC
 };
 
 /**Clear state and reset to default network */
-export const resetSnapConfiguration = async (): Promise<SnapConfig> => {
+export const resetSnapConfiguration = async (): Promise<NetworkConfig> => {
   await snap.request({
     method: ESnapMethod.SNAP_MANAGE_STATE,
     params: { operation: 'clear' },
   });
-
-  return getSnapConfiguration();
+  const networkConfig = await getNetworkConfig();
+  return networkConfig;
 };

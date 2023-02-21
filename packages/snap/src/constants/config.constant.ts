@@ -51,5 +51,6 @@ const networks ={
 export const defaultSnapConfig: SnapConfig = {
   currentNetwork: ENetworkName.BERKELEY,
   networks,
+  selectedImportAccount: '',
   importedAccounts: [],
 };
