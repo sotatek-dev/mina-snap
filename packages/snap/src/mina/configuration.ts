@@ -1,4 +1,3 @@
-import { SnapProvider } from '@metamask/snap-types';
 import {
   ENetworkName,
   defaultSnapConfig,
@@ -7,6 +6,7 @@ import { ESnapMethod } from '../constants/snap-method.constant';
 import { NetworkConfig, SnapConfig, SnapState } from '../interfaces';
 
 export const getSnapConfiguration = async (): Promise<SnapConfig> => {
+
   const state = (await snap.request({
     method: ESnapMethod.SNAP_MANAGE_STATE,
     params: { operation: 'get' },

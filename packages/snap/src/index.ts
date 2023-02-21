@@ -1,11 +1,12 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
 import { sendTransaction, getNetworkConfig, changeNetwork, resetSnapConfiguration } from './mina';
-import { TxInput } from './interfaces';
+import { HistoryOptions, TxInput } from './interfaces';
 import { popupDialog } from './util/popup.util';
 import { changeAccount, getAccountInfo, getKeyPair, signMessage } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
+import { getTxHistory, getTxDetail } from './mina/transaction';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -72,6 +73,22 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
 
     case EMinaMethod.RESET_CONFIG: {
       return resetSnapConfiguration();
+    }
+
+    case EMinaMethod.GET_TX_HISTORY: {
+      const keyPair = await getKeyPair(networkConfig);
+      const history = await getTxHistory(networkConfig, request.params as HistoryOptions, keyPair.publicKey);
+      console.log(history);
+
+      return history;
+    }
+
+    case EMinaMethod.GET_TX_DETAIL: {
+      const { hash } = request.params as { hash: string };
+      const payment = await getTxDetail(networkConfig, hash);
+      console.log(payment);
+
+      return payment;
     }
 
     default:
