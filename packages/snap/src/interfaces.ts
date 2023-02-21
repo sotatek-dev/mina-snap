@@ -1,3 +1,5 @@
+import { ENetworkName } from "./constants/config.constant";
+
 export type NetworkConfig = {
   name: string;
   gqlUrl: string;
@@ -25,7 +27,7 @@ export type TxInput = {
 };
 
 export type SnapConfig = {
-  currentNetwork: string;
-  networks: { [key: string]: NetworkConfig };
+  currentNetwork: ENetworkName;
+  networks: { [key: string] : NetworkConfig };
   importedAccounts: any[];
 };
