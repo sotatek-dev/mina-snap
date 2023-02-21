@@ -58,10 +58,14 @@ const WDropDown = styled.div`
 `;
 
 const ColMiddle = styled.div`
-  width: 1040px;
-  max-height: 776px;
+  max-width: 1040px;
+  max-height: 100vh;
   margin: auto;
   background-color: ${(props) => props.theme.palette.grey.white};
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
   
   @media (max-width: 1024px) {
     width: 896px;
@@ -71,18 +75,9 @@ const ColMiddle = styled.div`
 const Content = styled.div`
   box-shadow: 0px 50px 70px -28px rgba(106, 115, 125, 0.2);
   border-radius: ${(props) => props.theme.corner.small};
-  overflow: hidden;
-  max-height: 580px;
-  overflow: auto;
-  margin-top: 124px;
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const Transaction = styled.div`
   height: 9999px;
+  padding-top: 124px;
+
 `;
 
  const Home = ({ connected, children }: Props) => {
@@ -100,7 +95,7 @@ const Transaction = styled.div`
         </Header>
         <ColMiddle>
             <Content>
-              <Transaction>Content</Transaction>
+              Content
             </Content>
         </ColMiddle>
     </Wrapper>
