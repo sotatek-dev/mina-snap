@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import mina from 'assets/logo/mina-sm.svg';
 import logo from 'assets/logo/logo.png';
 import DropDown from 'components/common/dropdown';
+import wallet from 'assets/icons/wallet.png';
 import { OPTIONS_NETWORK } from 'utils/constants';
 
 interface Props {
@@ -57,6 +58,15 @@ const WDropDown = styled.div`
   height: 100%;
 `;
 
+const Wallet = styled.img.attrs(() => ({
+  src: wallet
+}))`
+  margin-left: 20px;
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 const ColMiddle = styled.div`
   max-width: 1040px;
   max-height: 100vh;
@@ -91,6 +101,7 @@ const Content = styled.div`
             </BoxLogo>
             <WDropDown>
               <DropDown options={OPTIONS_NETWORK} />
+              <Wallet />
             </WDropDown>
         </Header>
         <ColMiddle>
