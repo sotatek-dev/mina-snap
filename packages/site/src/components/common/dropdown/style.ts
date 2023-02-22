@@ -22,8 +22,6 @@ export const DropDown = styled.select<IDropDown>``;
 export const DropdownStyled = styled(Dropdown)<IDropDown>`
   .Dropdown-control {
     border-radius: ${(props) => props.theme.corner.medium};
-    width: 170px;
-    height: 32px;
     box-sizing: border-box;
     border: 0.7px solid ${(props) => props.theme.palette.grey.grey2};
     font-size: ${(props) => props.theme.typography.p1.fontSize};
