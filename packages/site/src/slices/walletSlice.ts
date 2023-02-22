@@ -1,11 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Account } from 'types';
 import { Erc20TokenBalance } from 'types';
 import { Transaction } from 'types';
 import { ethers } from 'ethers';
 
 export interface WalletState {
-  isInstalled: boolean,
+  isInstalledWallet: boolean,
+  isInstalledSnap: boolean,
   connected: boolean;
   isLoading: boolean;
   forceReconnect: boolean;
@@ -17,7 +18,8 @@ export interface WalletState {
 }
 
 const initialState: WalletState = {
-  isInstalled: false,
+  isInstalledWallet: false,
+  isInstalledSnap: false,
   connected: false,
   isLoading: false,
   forceReconnect: false,
@@ -28,17 +30,35 @@ const initialState: WalletState = {
   transactionDeploy: undefined,
 };
 
+type ConnectWalletParams = {
+  publicKey: string,
+  isInstalledSnap: boolean
+}
+
 export const walletSlice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
-    setWalletInstalled: (state, { payload }) => {
-      state.isInstalled = payload;
+    setSnapInstalled: (state, { payload }: PayloadAction<boolean>) => {
+      state.isInstalledSnap = payload;
     },
-    setWalletConnection: (state, { payload }) => {
+    setWalletInstalled: (state, { payload }: PayloadAction<boolean>) => {
+      state.isInstalledWallet = payload;
+    },
+    setWalletConnection: (state, { payload }: PayloadAction<boolean>) => {
       state.connected = payload;
     },
-    setForceReconnect: (state, { payload }) => {
+    setIsLoading: (state, { payload }: PayloadAction<boolean>) => {
+      state.isLoading = payload;
+    },
+    connectWallet: (state, { payload }: PayloadAction<ConnectWalletParams>) => {
+      state.connected = true;
+      state.isInstalledWallet = true;
+      state.isInstalledSnap = true
+      state.accounts.push({ publicKey: payload.publicKey });
+      return state;
+    },
+    setForceReconnect: (state, { payload }: PayloadAction<boolean>) => {
       state.forceReconnect = payload;
     },
     setAccounts: (state, { payload }) => {
@@ -97,6 +117,8 @@ export const walletSlice = createSlice({
 });
 
 export const {
+  setIsLoading,
+  connectWallet,
   setWalletInstalled,
   setWalletConnection,
   setForceReconnect,

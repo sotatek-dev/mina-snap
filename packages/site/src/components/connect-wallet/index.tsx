@@ -1,10 +1,11 @@
 import Button from 'components/common/button';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, styled } from '@mui/material';
-import { useAppSelector } from 'hooks/redux';
-import { MetamaskActions, MetaMaskContext } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+
+import { connectWallet, setIsLoading } from 'slices/walletSlice';
 
 const BoxCenter = styled(Box)(() => ({
   display: 'flex',
@@ -30,21 +31,29 @@ const BoxInsideMetamask = styled(Box)(() => ({
 type Props = {};
 
 const ConnectWallet: React.FC<Props> = () => {
-  const [state, dispatch] = useContext(MetaMaskContext);
-  const { connectToSnap, getSnap } = useMinaSnap();
+  const reduxDispatch = useAppDispatch();
+  const { connectToSnap, getSnap, getAccountInfors } = useMinaSnap();
 
-  const { isInstalled } = useAppSelector((state) => state.wallet);
+  const { isInstalledWallet, isLoading } = useAppSelector((state) => state.wallet);
 
   const handleConnectClick = async () => {
+    if (isLoading) return;
     try {
+      reduxDispatch(setIsLoading(true));
       await connectToSnap();
-      const installedSnap = await getSnap();
-      dispatch({
-        type: MetamaskActions.SetInstalled,
-        payload: installedSnap,
-      });
+      const isInstalledSnap = await getSnap();
+      const accountInfors = await getAccountInfors();
+
+      reduxDispatch(
+        connectWallet({
+          publicKey: accountInfors.publicKey,
+          isInstalledSnap,
+        }),
+      );
     } catch (e) {
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+      console.log(e);
+    } finally {
+      reduxDispatch(setIsLoading(false));
     }
   };
 
@@ -59,12 +68,11 @@ const ConnectWallet: React.FC<Props> = () => {
         </BoxCenter>
 
         <BoxCenter sx={{ paddingBottom: '25px' }}>
-          {!isInstalled && <Button>Metamask Flask is required to run snap!</Button>}
+          {!isInstalledWallet && <Button>Metamask Flask is required to run snap!</Button>}
         </BoxCenter>
         <BoxCenter>
-          <Button onClick={handleConnectClick}>{state.installedSnap ? 'Reconnect' : 'CONNECT TO METAMASK'}</Button>
+          <Button onClick={handleConnectClick}>{isLoading ? <>CONNECTING</> : 'CONNECT TO METAMASK'}</Button>
         </BoxCenter>
-        {/* <Button onClick={handleTest}>CONNECT TO METAMASK</Button> */}
       </BoxContent>
     </>
   );
