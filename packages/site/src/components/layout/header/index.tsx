@@ -149,7 +149,6 @@ const Header = () => {
             <WDropDown>
                 <DropDownNetwork options={OPTIONS_NETWORK} />
                 <AccountDetails
-                arrowVisible={false}
                 closeTrigger="click"
                 offSet={[-140, 10]}
                 content={
