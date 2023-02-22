@@ -1,9 +1,10 @@
 import BigNumber from 'bignumber.js';
 import { Payment, Signed } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import { gql } from '../graphql';
-import { getTxHistoryQuery, getTxDetailQuery, sendPaymentQuery } from '../graphql/gqlparams';
+import { getTxHistoryQuery, getTxDetailQuery, sendPaymentQuery, getTxStatusQuery } from '../graphql/gqlparams';
 import { HistoryOptions, NetworkConfig, TxInput } from '../interfaces';
 import { getMinaClient } from '../util/mina-client.util';
+import { popupNotify } from '../util/popup.util';
 import { getAccountInfo } from './account';
 
 /**
@@ -70,6 +71,8 @@ export async function sendPayment(signedPayment: Signed<Payment>, networkConfig:
     return null;
   }
 
+  await popupNotify(`Payment ${data.sendPayment.payment.hash.substring(0, 10)}... has been submitted`);
+
   return data;
 }
 
@@ -95,6 +98,20 @@ export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
 
   if (error) {
     console.error('send', error); // TODO - remove
+    return null;
+  }
+
+  return data;
+}
+
+export async function getTxStatus(networkConfig: NetworkConfig, paymentId: string) {
+  const query = getTxStatusQuery;
+  const variables = { paymentId };
+
+  const { data, error } = await gql(networkConfig.gqlUrl, query, variables);
+
+  if (error) {
+    console.log(error);
     return null;
   }
 

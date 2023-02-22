@@ -10,4 +10,5 @@ export enum EMinaMethod {
   SIGN_MESSAGE = 'mina_signMessage',
   GET_TX_HISTORY = 'mina_getTxHistory',
   GET_TX_DETAIL = 'mina_getTxDetail',
+  GET_TX_STATUS = 'mina_getTxStatus',
 }

@@ -1,4 +1,3 @@
-import { NetworkConfig } from '../interfaces';
 import { getOperationName } from '../util/helper';
 
 /**
@@ -8,11 +7,7 @@ import { getOperationName } from '../util/helper';
  * @param query - GraphQL query.
  * @param variables - GraphQL variables.
  */
-export async function gql(
-  url: string,
-  query: string,
-  variables = {},
-) {
+export async function gql(url: string, query: string, variables = {}) {
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -20,11 +15,7 @@ export async function gql(
         Accept: 'application/json',
         'content-type': 'application/json',
       },
-      body: JSON.stringify({
-        query,
-        operationName: getOperationName(query),
-        variables,
-      }),
+      body: JSON.stringify({ query, operationName: getOperationName(query), variables }),
     });
     const { data, errors } = await response.json();
     if (errors) {
