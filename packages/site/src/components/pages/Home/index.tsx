@@ -5,12 +5,12 @@ import Home from 'components/layout/index';
 import { EMinaMethod } from 'test-mina-snap/src/constants/mina-method.constant';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
-import { connectWallet, setIsLoading } from 'slices/walletSlice';
+import { connectWallet, setIsLoading, setActiveAccount } from 'slices/walletSlice';
 
 const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
-  const { getAccountInfors, getSnap } = useMinaSnap();
+  const { getSnap, AccountList, getAccountInfors } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState(false);
   const { connected } = useAppSelector((state) => state.wallet);
 
@@ -21,14 +21,16 @@ const HomePage = () => {
       setIsUnlocked(isUnlocked);
       if (isUnlocked) {
         const isInstalledSnap = await getSnap();
-        const account = await getAccountInfors();
+        const accountList = await AccountList();
+        const accountInfor = await getAccountInfors();
 
         reduxDispatch(
           connectWallet({
-            account,
+            accountList,
             isInstalledSnap,
           }),
         );
+        reduxDispatch(setActiveAccount(accountInfor.publicKey));
       }
     };
     a();

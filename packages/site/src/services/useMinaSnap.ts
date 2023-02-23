@@ -1,5 +1,5 @@
 
-import { Account } from 'types/account';
+import { Account, ResultCreateAccount, ResultAccountList } from 'types/account';
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
@@ -27,7 +27,38 @@ export const useMinaSnap = () => {
     });
   };
 
+  const CreateAccount = async (name: string): Promise<ResultCreateAccount> => {
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_createAccount',
+          params: {
+            name: name
+          }
+        },
+      },
+    });
+  };
+  // mina_accountList
+
+  const AccountList = async (): Promise<Array<ResultAccountList>> => {
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_accountList',
+
+        },
+      },
+    });
+  };
+
   return {
+    AccountList,
+    CreateAccount,
     getAccountInfors,
     connectToSnap,
     getSnap

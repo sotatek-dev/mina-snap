@@ -10,7 +10,7 @@ import thunk from 'redux-thunk';
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['wallet', 'modals', 'networks'],
+  blacklist: ['modals', 'networks'],
 };
 
 const walletPersistConfig = {

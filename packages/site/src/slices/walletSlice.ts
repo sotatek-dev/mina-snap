@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Account } from 'types/account';
+import { Account, ResultAccountList } from 'types/account';
 import { Erc20TokenBalance } from 'types';
 import { Transaction } from 'types';
 import { ethers } from 'ethers';
@@ -7,12 +7,13 @@ import { ethers } from 'ethers';
 
 
 export interface WalletState {
+  activeAccount: string
   isInstalledWallet: boolean,
   isInstalledSnap: boolean,
   connected: boolean;
   isLoading: boolean;
   forceReconnect: boolean;
-  accounts: Account[];
+  accounts: Array<ResultAccountList>;
   erc20TokenBalances: Erc20TokenBalance[];
   erc20TokenBalanceSelected: Erc20TokenBalance;
   transactions: Transaction[];
@@ -20,6 +21,7 @@ export interface WalletState {
 }
 
 const initialState: WalletState = {
+  activeAccount: '',
   isInstalledWallet: false,
   isInstalledSnap: false,
   connected: false,
@@ -33,7 +35,7 @@ const initialState: WalletState = {
 };
 
 type ConnectWalletParams = {
-  account: Account,
+  accountList: Array<ResultAccountList>,
   isInstalledSnap: boolean
 }
 
@@ -45,6 +47,9 @@ export const walletSlice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
+    setActiveAccount: (state, { payload }: PayloadAction<string>) => {
+      state.activeAccount = payload;
+    },
     setSnapInstalled: (state, { payload }: PayloadAction<boolean>) => {
       state.isInstalledSnap = payload;
     },
@@ -61,7 +66,12 @@ export const walletSlice = createSlice({
       state.connected = true;
       state.isInstalledWallet = true;
       state.isInstalledSnap = true
-      state.accounts.push(payload.account);
+      state.accounts = payload.accountList
+      return state;
+    },
+
+    setListAccounts: (state, { payload }: PayloadAction<Array<ResultAccountList>>) => {
+      state.accounts = payload
       return state;
     },
     setForceReconnect: (state, { payload }: PayloadAction<boolean>) => {
@@ -123,6 +133,8 @@ export const walletSlice = createSlice({
 });
 
 export const {
+  setListAccounts,
+  setActiveAccount,
   setIsLoading,
   connectWallet,
   setWalletInstalled,

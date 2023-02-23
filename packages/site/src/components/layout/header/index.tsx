@@ -9,9 +9,13 @@ import ButtonCommon from 'components/common/button';
 import iconCreate from 'assets/icons/icon-create.svg';
 import iconImport from 'assets/icons/icon-import.svg';
 import CardAccount from 'components/modules/CardAccount';
-import { useAppSelector } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Box } from '@mui/material';
 import React from 'react';
+import { useMinaSnap } from 'services';
+import ModalCommon from 'components/common/modal';
+import CreatAccount from 'components/children/CreatAccount';
+import { setActiveAccount } from 'slices/walletSlice';
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.palette.grey.grey3};
@@ -131,64 +135,81 @@ const Wallet = styled.img.attrs(() => ({
 `;
 
 const Header = () => {
-  const { accounts } = useAppSelector((state) => state.wallet);
+  const { accounts, activeAccount } = useAppSelector((state) => state.wallet);
+  const dispatch = useAppDispatch();
+  // const [activeAccount, setActiveAccount] = React.useState<string>('');
 
-  const [indexAccount, setIndexAccount] = React.useState(0);
+  const [openModal, setOpenModal] = React.useState(false);
 
   return (
-    <Wrapper>
-      <BoxLogo>
-        <Logo />
-        <Title />
-      </BoxLogo>
-      <WDropDown>
-        <DropDownNetwork options={OPTIONS_NETWORK} />
-        <AccountDetails
-          closeTrigger="click"
-          offSet={[-140, 10]}
-          content={
-            <AccountDetailsContent>
-              <Label>Account Management</Label>
-              <WAccount>
-                {accounts.map((item, index) => {
-                  return (
-                    <Box
-                      key={index}
-                      onClick={() => {
-                        setIndexAccount(index);
-                      }}
-                    >
-                      <CardAccount active={indexAccount == index} data={item}></CardAccount>
-                    </Box>
-                  );
-                })}
-                {/* <CardAccount active imported></CardAccount>
-                <CardAccount active imported></CardAccount>
-                <CardAccount active imported></CardAccount>
-                <CardAccount active imported></CardAccount>
-                <CardAccount active imported></CardAccount>
-                <CardAccount active imported></CardAccount>
-                <CardAccount active imported></CardAccount>
-                <CardAccount active imported></CardAccount>
-                <CardAccount active imported></CardAccount> */}
-              </WAccount>
-              <WButton>
-                <ButtonCreate>
-                  <ICreate />
-                  Create
-                </ButtonCreate>
-                <ButtonImport>
-                  <IImport />
-                  Import
-                </ButtonImport>
-              </WButton>
-            </AccountDetailsContent>
-          }
-        >
-          <Wallet />
-        </AccountDetails>
-      </WDropDown>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <BoxLogo>
+          <Logo />
+          <Title />
+        </BoxLogo>
+        <WDropDown>
+          <DropDownNetwork options={OPTIONS_NETWORK} />
+          <AccountDetails
+            closeTrigger="click"
+            offSet={[-140, 10]}
+            content={
+              <AccountDetailsContent>
+                <Label>Account Management</Label>
+                <WAccount>
+                  {accounts.map((item, index) => {
+                    return (
+                      <Box
+                        key={index}
+                        onClick={() => {
+                          dispatch(setActiveAccount(item.address));
+                        }}
+                      >
+                        <CardAccount
+                          active={activeAccount === item.address}
+                          data={item}
+                          imported={item.isImported}
+                        ></CardAccount>
+                      </Box>
+                    );
+                  })}
+                </WAccount>
+                <WButton>
+                  <ButtonCreate
+                    onClick={() => {
+                      setOpenModal(true);
+                    }}
+                  >
+                    <ICreate />
+                    Create
+                  </ButtonCreate>
+                  <ButtonImport>
+                    <IImport />
+                    Import
+                  </ButtonImport>
+                </WButton>
+              </AccountDetailsContent>
+            }
+          >
+            <Wallet />
+          </AccountDetails>
+        </WDropDown>
+      </Wrapper>
+      <ModalCommon
+        open={openModal}
+        title="Account Name"
+        setOpenModal={() => {
+          setOpenModal(false);
+        }}
+      >
+        <CreatAccount
+          onCloseModal={(accounts) => {
+            setOpenModal(false);
+            dispatch(setActiveAccount(accounts.address));
+          }}
+        ></CreatAccount>
+      </ModalCommon>
+    </>
   );
 };
 
