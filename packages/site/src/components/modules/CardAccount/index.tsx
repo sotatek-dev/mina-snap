@@ -6,6 +6,7 @@ import pointMenuDark from 'assets/icons/pointMenu_dark.svg';
 import { Account } from 'types/account';
 
 import { formatAccountAddress } from 'helpers/formatAccountAddress';
+import React from 'react';
 
 interface Props {
   active?: boolean;

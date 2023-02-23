@@ -13,10 +13,6 @@ import { useAppSelector } from 'hooks/redux';
 import { Box } from '@mui/material';
 import React from 'react';
 
-interface CardAccount {
-  active?: boolean;
-}
-
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.palette.grey.grey3};
   position: fixed;
