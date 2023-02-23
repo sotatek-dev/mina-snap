@@ -158,12 +158,12 @@ export const importAccount = async (name: string, privateKey: string) => {
   try {
     const snapConfig = await getSnapConfiguration();
     const { networks, currentNetwork } = snapConfig;
-    let { importedAccounts, selectedImportedAccount } = networks[currentNetwork];
+    let { importedAccounts, selectedImportedAccount, generatedAccounts } = networks[currentNetwork];
     const client = getMinaClient(snapConfig.networks[snapConfig.currentNetwork]);
-    const importedAddresses = Object.values(importedAccounts).map(account => account.address);
+    const existingAddresses = [...Object.values(generatedAccounts).map(account => account.address), ...Object.values(importedAccounts).map(account => account.address)];
     const publicKey = client.derivePublicKey(privateKey);
-    const existedAddress = importedAddresses.find(address => address === publicKey);
-    if (existedAddress) {
+    const duplicateAddress = existingAddresses.find(address => address === publicKey);
+    if (duplicateAddress) {
       return popupDialog(ESnapDialogType.ALERT, 'Cannot import account', 'The account you are trying to import is a duplicate')
     }
     let newAccountIndex;
@@ -196,7 +196,7 @@ export const getAccounts = async () => {
       ...account,
       index,
       isImported: false,
-    }
+    } as any
   }) : [];
   const importedAccountsArr = Object.keys(importedAccounts).length > 0 ? Object.entries(importedAccounts).map(([index, account]) => {
     const  { name, address } = account;
@@ -205,9 +205,15 @@ export const getAccounts = async () => {
       address,
       index,
       isImported: true,
-    }
+    } as any
   }) : [];
-  return [...generatedAccountsArr, ...importedAccountsArr];
+  const allAccounts = [...generatedAccountsArr, ...importedAccountsArr];
+  await Promise.all(allAccounts.map(account => {
+    return getAccountInfo(account.address, networks[currentNetwork]).then(data => {
+      account.balance = data.account.balance;
+    });
+  }));
+  return allAccounts;
 }
 
 export const editAccountName = async (index: number, name: string, isImported?: boolean) => {
