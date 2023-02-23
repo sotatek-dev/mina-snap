@@ -3,7 +3,7 @@ import iconActive from 'assets/icons/icon-active.svg';
 import ButtonCommon from 'components/common/button';
 import pointMenu from 'assets/icons/pointMenu.svg';
 import pointMenuDark from 'assets/icons/pointMenu_dark.svg';
-import { Account } from 'types/account';
+import { Account, ResultAccountList } from 'types/account';
 
 import { formatAccountAddress } from 'helpers/formatAccountAddress';
 import React from 'react';
@@ -11,7 +11,7 @@ import React from 'react';
 interface Props {
   active?: boolean;
   imported?: boolean;
-  data?: Account | null | undefined;
+  data?: ResultAccountList | null | undefined;
 }
 
 const Wrapper = styled.div<Props>`
@@ -114,16 +114,18 @@ const CardAccount: React.FC<Props> = ({ active, imported, data }) => {
     <Wrapper active={active}>
       <AccountName active={active}>
         <Label>
-          Account 1
-          <Imported active={active} imported={imported}>
-            Imported
-          </Imported>
+          {data?.name}
+          {data?.isImported && (
+            <Imported active={active} imported={imported}>
+              Imported
+            </Imported>
+          )}
         </Label>
         <IconActive active={active} />
       </AccountName>
-      <Address active={active}>{data && formatAccountAddress(data.publicKey)}</Address>
+      <Address active={active}>{data && formatAccountAddress(data.address)}</Address>
       <Balance active={active}>
-        {data && data.balance.total} MINA
+        0 MINA
         <More active={active} typeButton="round">
           <PointMenu src={active ? pointMenu : pointMenuDark} />
         </More>

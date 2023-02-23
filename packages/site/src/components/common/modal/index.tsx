@@ -2,14 +2,15 @@ import React from 'react';
 import { Box, Modal, styled, ModalProps } from '@mui/material';
 import IconBack from 'assets/icons/icon-back.svg';
 
-interface ModalCommon extends ModalProps {
+interface ModalCommons extends ModalProps {
   open: boolean;
   ActionsBack?: React.ReactChild;
   title?: string;
   setOpenModal: () => void;
+  fixedheight?: boolean;
   clickOutSide?: boolean;
 }
-type ModalCommonProps = React.PropsWithChildren<ModalCommon>;
+type ModalCommonProps = React.PropsWithChildren<ModalCommons>;
 
 const Container = styled(Box)(() => ({
   position: 'absolute',
@@ -59,7 +60,7 @@ const IconBoxBack = styled(Box)({
   },
 });
 
-const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide }: ModalCommonProps) => {
+const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide, fixedheight }: ModalCommonProps) => {
   return (
     <Modal
       onBackdropClick={() => {
@@ -68,7 +69,7 @@ const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide }: Moda
       disableAutoFocus={true}
       open={open}
     >
-      <Container sx={{ height: '100%' }}>
+      <Container sx={{ height: fixedheight ? '100%' : 'auto' }}>
         <ContainerContent>
           <BoxTitleModal>
             <CloseIconWrapper onClick={setOpenModal}>
@@ -78,7 +79,7 @@ const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide }: Moda
             </CloseIconWrapper>
             {title}
           </BoxTitleModal>
-          {children && children}
+          {children}
         </ContainerContent>
       </Container>
     </Modal>

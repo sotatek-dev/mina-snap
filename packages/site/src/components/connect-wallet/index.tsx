@@ -5,7 +5,7 @@ import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 
-import { connectWallet, setIsLoading } from 'slices/walletSlice';
+import { connectWallet, setActiveAccount, setIsLoading } from 'slices/walletSlice';
 
 const BoxCenter = styled(Box)(() => ({
   display: 'flex',
@@ -32,7 +32,7 @@ type Props = {};
 
 const ConnectWallet: React.FC<Props> = () => {
   const reduxDispatch = useAppDispatch();
-  const { connectToSnap, getSnap, getAccountInfors } = useMinaSnap();
+  const { connectToSnap, getSnap, AccountList, getAccountInfors } = useMinaSnap();
 
   const { isInstalledWallet, isLoading } = useAppSelector((state) => state.wallet);
 
@@ -42,14 +42,15 @@ const ConnectWallet: React.FC<Props> = () => {
       reduxDispatch(setIsLoading(true));
       await connectToSnap();
       const isInstalledSnap = await getSnap();
-      const account = await getAccountInfors();
-
+      const accountList = await AccountList();
+      const accountInfor = await getAccountInfors();
       reduxDispatch(
         connectWallet({
-          account,
+          accountList,
           isInstalledSnap,
         }),
       );
+      reduxDispatch(setActiveAccount(accountInfor.publicKey));
     } catch (e) {
       console.log(e);
     } finally {
