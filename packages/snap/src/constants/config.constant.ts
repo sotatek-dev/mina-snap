@@ -18,7 +18,9 @@ const networks ={
       decimals: 9,
     },
     currentAccIndex: 0,
-    generatedAccounts: [],
+    generatedAccounts: {},
+    selectedImportedAccount: null,
+    importedAccounts: {},
   },
   [ENetworkName.DEVNET]: {
     name: ENetworkName.DEVNET,
@@ -31,7 +33,9 @@ const networks ={
       decimals: 9,
     },
     currentAccIndex: 0,
-    generatedAccounts: [],
+    generatedAccounts: {},
+    selectedImportedAccount: null,
+    importedAccounts: {},
   },
   [ENetworkName.BERKELEY]: {
     name: ENetworkName.BERKELEY,
@@ -44,13 +48,13 @@ const networks ={
       decimals: 9,
     },
     currentAccIndex: 0,
-    generatedAccounts: [],
+    generatedAccounts: {},
+    selectedImportedAccount: null,
+    importedAccounts: {},
   },
 };
 
 export const defaultSnapConfig: SnapConfig = {
   currentNetwork: ENetworkName.BERKELEY,
   networks,
-  selectedImportAccount: '',
-  importedAccounts: [],
 };

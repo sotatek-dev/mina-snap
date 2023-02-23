@@ -6,16 +6,12 @@ import { ESnapMethod } from '../constants/snap-method.constant';
 import { NetworkConfig, SnapConfig, SnapState } from '../interfaces';
 
 export const getSnapConfiguration = async (): Promise<SnapConfig> => {
-
   const state = (await snap.request({
     method: ESnapMethod.SNAP_MANAGE_STATE,
     params: { operation: 'get' },
   })) as SnapState;
-  if (!state?.mina) {
-    await snap.request({
-      method: ESnapMethod.SNAP_MANAGE_STATE,
-      params: { operation: 'update', newState: { mina: defaultSnapConfig } },
-    });
+  if (!state?.mina ||Object.keys(state.mina).length != 2) {
+    await updateSnapConfig(defaultSnapConfig)
     const newState = (await snap.request({
       method: ESnapMethod.SNAP_MANAGE_STATE,
       params: { operation: 'get' },
@@ -35,10 +31,7 @@ export const changeNetwork = async (networkName: ENetworkName): Promise<NetworkC
   let snapConfig = await getSnapConfiguration();
   if (networkName != snapConfig.currentNetwork && snapConfig.networks[networkName]) {
     snapConfig.currentNetwork = networkName;
-    await snap.request({
-      method: ESnapMethod.SNAP_MANAGE_STATE,
-      params: { operation: 'update', newState: { mina: snapConfig } },
-    });
+    await updateSnapConfig(snapConfig)
   }
   const networkConfig = await getNetworkConfig();
   return networkConfig;
@@ -53,3 +46,10 @@ export const resetSnapConfiguration = async (): Promise<NetworkConfig> => {
   const networkConfig = await getNetworkConfig();
   return networkConfig;
 };
+
+export const updateSnapConfig = async (snapConfig: SnapConfig) => {
+  await snap.request({
+    method: ESnapMethod.SNAP_MANAGE_STATE,
+    params: { operation: 'update', newState: { mina: snapConfig } },
+  });
+}

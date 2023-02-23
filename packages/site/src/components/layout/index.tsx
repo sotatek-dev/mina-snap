@@ -1,10 +1,6 @@
 import { ReactNode, useState } from 'react';
 import styled from 'styled-components';
-import mina from 'assets/logo/mina-sm.svg';
-import logo from 'assets/logo/logo.png';
-import DropDown from 'components/common/dropdown';
-import wallet from 'assets/icons/wallet.png';
-import { OPTIONS_NETWORK } from 'utils/constants';
+import Header from './header';
 
 interface Props {
   connected: boolean;
@@ -18,53 +14,6 @@ const Wrapper = styled.div`
   right: 0px;
   bottom: 0px;
   left: 0px;
-`;
-
-const Header = styled.div`
-    background-color: ${(props) => props.theme.palette.grey.grey3};
-    position: fixed;
-    width: 1040px;
-    height: 124px;
-    left: 50%;
-    transform: translate(-50%, 0);
-    display:flex;
-    justify-content: space-between;
-    @media (max-width: 1024px) {
-        width: 896px;
-    }
-`;
-
-const BoxLogo = styled.div`
-  display:flex;
-  align-items: center;
-  height: 100%;
-`;
-
-const Logo = styled.img.attrs(() => ({
-  src: logo,
-}))`
-  padding-right: 4px;
-  width: 32px;
-`
-
-const Title = styled.img.attrs(() => ({
-  src: mina,
-}))`
-`
-
-const WDropDown = styled.div`
-  display:flex;
-  align-items: center;
-  height: 100%;
-`;
-
-const Wallet = styled.img.attrs(() => ({
-  src: wallet
-}))`
-  margin-left: 20px;
-  :hover {
-    cursor: pointer;
-  }
 `;
 
 const ColMiddle = styled.div`
@@ -91,19 +40,9 @@ const Content = styled.div`
 `;
 
  const Home = ({ connected, children }: Props) => {
-  const [bannerOpen, setBannerOpen] = useState(true);
   return (
     <Wrapper>
-        <Header>
-            <BoxLogo >
-                <Logo />
-                <Title />
-            </BoxLogo>
-            <WDropDown>
-              <DropDown options={OPTIONS_NETWORK} />
-              <Wallet />
-            </WDropDown>
-        </Header>
+        <Header />
         <ColMiddle>
             <Content>
               Content
