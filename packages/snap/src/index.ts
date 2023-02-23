@@ -1,12 +1,13 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
-import { sendTransaction, getNetworkConfig, changeNetwork, resetSnapConfiguration } from './mina';
+import { sendTransaction, getNetworkConfig, changeNetwork, resetSnapConfiguration, getSnapConfiguration } from './mina';
 import { HistoryOptions, TxInput } from './interfaces';
 import { popupDialog } from './util/popup.util';
-import { changeAccount, getAccountInfo, getKeyPair, signMessage } from './mina/account';
+import { changeAccount, createAccount, editAccountName, getAccountInfo, getAccounts, getKeyPair, importAccount, signMessage } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
 import { getTxHistory, getTxDetail } from './mina/transaction';
+import { updateSnapConfig } from './mina/configuration';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -21,16 +22,42 @@ import { getTxHistory, getTxDetail } from './mina/transaction';
  */
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
-  const networkConfig = await getNetworkConfig();
+  const snapConfig = await getSnapConfiguration();
+  const { networks, currentNetwork } = snapConfig;
+  const networkConfig = networks[currentNetwork];
   console.log(`-networkConfig:`, networkConfig);
+  if (Object.keys(networks[currentNetwork].generatedAccounts).length === 0) {
+    await createAccount('Account 1');
+  }
   switch (request.method) {
     case EMinaMethod.HELLO: {
       return popupDialog(ESnapDialogType.CONFIRMATION, 'Hello Mina', 'Hello');
     }
 
     case EMinaMethod.ACCOUNT_INFO: {
-      const { publicKey } = await getKeyPair(networkConfig);
+      const { publicKey, name } = await getKeyPair();
       const { account } = await getAccountInfo(publicKey, networkConfig);
+      account.name = name;
+      return account;
+    }
+
+    case EMinaMethod.ACCOUNT_LIST: {
+      const accounts = await getAccounts();
+      console.log(`-accounts:`, accounts);
+      return accounts;
+    }
+
+    case EMinaMethod.CREATE_ACCOUNT: {
+      const { name, index } = request.params as { name: string; index?: number };
+      const account = await createAccount(name, index);
+      console.log(`-new account:`, account);
+      return account;
+    }
+
+    case EMinaMethod.EDIT_ACCOUNT_NAME: {
+      const { index, name, isImported } = request.params as { index: number; name: string; isImported?: boolean };
+      const account = await editAccountName(index, name, isImported);
+      console.log(`-edited account:`, account);
       return account;
     }
 
@@ -41,14 +68,17 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.CHANGE_ACCOUNT: {
-      const { accountIndex } = request.params as { accountIndex: number };
-      const accountInfo = await changeAccount(accountIndex);
+      const { accountIndex, isImported } = request.params as { accountIndex: number; isImported?: boolean };
+      const accountInfo = await changeAccount(accountIndex, isImported);
       return accountInfo;
     }
 
-    // case EMinaMethod.IMPORT_ACCOUNT: {
-    //   const { privateKey } = request.params as { privateKey: string }
-    // }
+    case EMinaMethod.IMPORT_ACCOUNT_PK: {
+      const { name, privateKey } = request.params as { name: string; privateKey: string }
+      const accountInfo = await importAccount(name, privateKey);
+      console.log(`-Imported account:`, accountInfo);
+      return accountInfo;
+    }
 
     case EMinaMethod.NETWORK_CONFIG: {
       return networkConfig;
@@ -63,7 +93,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.SIGN_MESSAGE: {
-      const keyPair = await getKeyPair(networkConfig);
+      const keyPair = await getKeyPair();
       const { message } = request.params as { message: string };
       const signature = signMessage(message, keyPair, networkConfig);
       console.log('signature:', signature);
@@ -76,7 +106,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.GET_TX_HISTORY: {
-      const keyPair = await getKeyPair(networkConfig);
+      const keyPair = await getKeyPair();
       const history = await getTxHistory(networkConfig, request.params as HistoryOptions, keyPair.publicKey);
       console.log(history);
 
