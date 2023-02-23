@@ -182,27 +182,31 @@ export const importAccount = async (name: string, privateKey: string) => {
     await updateSnapConfig(snapConfig);
     return { name, address: publicKey };
   } catch (error) {
-    return error;
+    console.error(`Failed to import account:`, error);
+    return popupDialog(ESnapDialogType.ALERT, 'Cannot import account', 'Error happened')
   }
 }
 
 export const getAccounts = async () => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
-  const generatedAccountsArr = Object.values(networks[currentNetwork].generatedAccounts).map(account => {
+  const { generatedAccounts, importedAccounts } = networks[currentNetwork];
+  const generatedAccountsArr = Object.keys(generatedAccounts).length > 0 ? Object.entries(generatedAccounts).map(([index, account]) => {
     return {
       ...account,
+      index,
       isImported: false,
     }
-  });
-  const importedAccountsArr = Object.values(networks[currentNetwork].importedAccounts).map(account => {
+  }) : [];
+  const importedAccountsArr = Object.keys(importedAccounts).length > 0 ? Object.entries(importedAccounts).map(([index, account]) => {
     const  { name, address } = account;
     return {
       name,
       address,
+      index,
       isImported: true,
     }
-  });
+  }) : [];
   return [...generatedAccountsArr, ...importedAccountsArr];
 }
 
