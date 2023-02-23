@@ -1,5 +1,20 @@
 import { ENetworkName } from "./constants/config.constant";
 
+export type NormalAccountOptions = {
+  [index: number] : {
+    name: string;
+    address: string;
+  }
+}
+
+export type ImportedAccountOptions = {
+  [index: number] : {
+    name: string;
+    address: string;
+    privateKey: string;
+  }
+}
+
 export type NetworkConfig = {
   name: string;
   gqlUrl: string;
@@ -11,7 +26,9 @@ export type NetworkConfig = {
     decimals: number;
   };
   currentAccIndex: number;
-  generatedAccounts: any[];
+  generatedAccounts: NormalAccountOptions;
+  selectedImportedAccount: number | null;
+  importedAccounts: ImportedAccountOptions;
 };
 
 export type SnapState = {
@@ -29,8 +46,6 @@ export type TxInput = {
 export type SnapConfig = {
   currentNetwork: ENetworkName;
   networks: { [key: string] : NetworkConfig };
-  selectedImportAccount: string;
-  importedAccounts: any[];
 };
 
 export type HistoryOptions = {

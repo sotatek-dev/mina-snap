@@ -7,7 +7,7 @@ import { sendPayment, signPayment } from './transaction';
 export { getSnapConfiguration, changeNetwork, getNetworkConfig, resetSnapConfiguration } from './configuration';
 
 export const sendTransaction = async (args: TxInput, networkConfig: NetworkConfig) => {
-  const { publicKey, privateKey } = await getKeyPair(networkConfig);
+  const { publicKey, privateKey } = await getKeyPair();
 
   const confirmation = await popupDialog(
     ESnapDialogType.CONFIRMATION,
