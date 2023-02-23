@@ -42,11 +42,11 @@ const ConnectWallet: React.FC<Props> = () => {
       reduxDispatch(setIsLoading(true));
       await connectToSnap();
       const isInstalledSnap = await getSnap();
-      const accountInfors = await getAccountInfors();
+      const account = await getAccountInfors();
 
       reduxDispatch(
         connectWallet({
-          publicKey: accountInfors.publicKey,
+          account,
           isInstalledSnap,
         }),
       );

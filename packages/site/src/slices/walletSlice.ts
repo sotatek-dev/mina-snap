@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Account } from 'types';
+import { Account } from 'types/account';
 import { Erc20TokenBalance } from 'types';
 import { Transaction } from 'types';
 import { ethers } from 'ethers';
+
+
 
 export interface WalletState {
   isInstalledWallet: boolean,
@@ -31,9 +33,13 @@ const initialState: WalletState = {
 };
 
 type ConnectWalletParams = {
-  publicKey: string,
+  account: Account,
   isInstalledSnap: boolean
 }
+
+
+
+
 
 export const walletSlice = createSlice({
   name: 'wallet',
@@ -55,7 +61,7 @@ export const walletSlice = createSlice({
       state.connected = true;
       state.isInstalledWallet = true;
       state.isInstalledSnap = true
-      state.accounts.push({ publicKey: payload.publicKey });
+      state.accounts.push(payload.account);
       return state;
     },
     setForceReconnect: (state, { payload }: PayloadAction<boolean>) => {

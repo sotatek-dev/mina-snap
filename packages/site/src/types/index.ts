@@ -1,6 +1,7 @@
 import * as Types from '@consensys/starknet-snap/src/types/snapState';
 import { BigNumber } from 'ethers';
 
+
 export type Account = Pick<Types.AccContract, 'publicKey'>;
 export type Network = Pick<Types.Network, 'name' | 'chainId' | 'baseUrl' | 'nodeUrl' | 'useOldAccounts'>;
 
