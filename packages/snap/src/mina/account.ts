@@ -112,7 +112,10 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
     if (account) {
       selectedImportedAccount = index;
       await updateSnapConfig(snapConfig);
-      return account;
+      return {
+        name: account.name,
+        address: account.address,
+      };
     } else {
       return popupDialog(ESnapDialogType.ALERT, 'Invalid account index', 'The account index is invalid')
     }
