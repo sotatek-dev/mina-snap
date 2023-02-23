@@ -41,8 +41,8 @@ query accountInfo($publicKey: PublicKey!) {
 `;
 
 export const getTxStatusQuery = `
-query txStatus($paymentId:ID! ) {
-  transactionStatus(payment: $paymentId)
+query txStatus($paymentId:ID!) {
+  	transactionStatus(payment: $paymentId)
 }
 `;
 
@@ -60,7 +60,7 @@ query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolea
 		dateTime
 		failureReason
 	}
-  }
+}
 `;
 
 export const getTxDetailQuery = `
@@ -74,6 +74,5 @@ query transaction($hash: String!) {
 	  dateTime
 	  hash
 	}
-  }
-  
-`
+}
+`;

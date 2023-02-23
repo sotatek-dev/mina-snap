@@ -15,19 +15,19 @@ export const sendTransaction = async (args: TxInput, networkConfig: NetworkConfi
     `From: ${publicKey}\nTo: ${args.to}\nAmount: ${args.amount} MINA\nFee: ${args.fee} MINA`,
   );
   if (!confirmation) {
-    popupNotify('Payment rejected');
+    await popupNotify('Payment rejected');
     return null;
   }
 
   const signedPayment = await signPayment(args, publicKey, privateKey, networkConfig);
   if (!signedPayment) {
-    popupNotify('Sign payment error');
+    await popupNotify('Sign payment error');
     return null;
   }
 
   const payment = await sendPayment(signedPayment, networkConfig);
   if (!payment) {
-    popupNotify('Send payment error');
+    await popupNotify('Send payment error');
     return null;
   }
 

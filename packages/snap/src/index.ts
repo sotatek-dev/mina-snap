@@ -6,7 +6,7 @@ import { popupDialog } from './util/popup.util';
 import { changeAccount, createAccount, editAccountName, getAccountInfo, getAccounts, getKeyPair, importAccount, signMessage } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
-import { getTxHistory, getTxDetail } from './mina/transaction';
+import { getTxHistory, getTxDetail, getTxStatus } from './mina/transaction';
 import { updateSnapConfig } from './mina/configuration';
 
 /**
@@ -119,6 +119,14 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       console.log(payment);
 
       return payment;
+    }
+
+    case EMinaMethod.GET_TX_STATUS: {
+      const { paymentId } = request.params as { paymentId: string };
+      const status = await getTxStatus(networkConfig, paymentId);
+      console.log(status);
+
+      return status;
     }
 
     default:
