@@ -16,3 +16,17 @@ export type ResultAccountList = {
     index: number
     isImported: boolean
 }
+
+export type PayloadChangeAccount = {
+    accountIndex: number,
+    isImported?: boolean
+}
+
+
+export type TypeImportAccount = {
+    name: string
+    privateKey: string
+}
+
+
+

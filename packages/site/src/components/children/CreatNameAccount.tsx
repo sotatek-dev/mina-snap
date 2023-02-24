@@ -1,9 +1,11 @@
 import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
+import ModalCommon from 'components/common/modal';
 import { useAppDispatch } from 'hooks/redux';
 import React, { useState } from 'react';
 import { useMinaSnap } from 'services';
 import { setListAccounts } from 'slices/walletSlice';
 import { ResultCreateAccount } from 'types/account';
+import ImportPrivateKey from './ImportPrivateKey';
 
 const Container = styled(Box)(() => ({
   paddingTop: '16px',
@@ -39,23 +41,33 @@ const ButtonCustom = styled(Button)<ButtonProps>({
 
 type Props = {
   onCloseModal: (data: ResultCreateAccount) => void;
+  type: string;
 };
 
-const CreatAccountInput = ({ onCloseModal }: Props) => {
-  const [state, setState] = useState('');
+const CreateNameAccount = ({ onCloseModal, type }: Props) => {
+  const [nameAccount, setNameAccount] = useState('');
   const { CreateAccount, AccountList } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
+  const [openModal, setOpenModal] = useState(false);
 
   const sendRequest = async () => {
-    try {
-      const account = await CreateAccount(state);
-      const accountList = await AccountList();
-      await reduxDispatch(setListAccounts(accountList));
-      onCloseModal(account);
-    } catch (error) {
-      console.log(error);
+    switch (type) {
+      case 'create':
+        try {
+          const account = await CreateAccount(nameAccount);
+          const accountList = await AccountList();
+          await reduxDispatch(setListAccounts(accountList));
+          onCloseModal(account);
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+      case 'import':
+        setOpenModal(true);
+        break;
     }
   };
+
   return (
     <>
       <Container>
@@ -65,24 +77,46 @@ const CreatAccountInput = ({ onCloseModal }: Props) => {
             sx={{ paddingTop: '5px' }}
             variant={'outlined'}
             placeholder="Search"
-            value={state}
+            value={nameAccount}
             onChange={(e) => {
-              setState(e.target.value);
+              setNameAccount(e.target.value);
             }}
           />
         </Box>
         <ButtonCustom
           variant="contained"
           disableElevation
+          disabled={!nameAccount}
           onClick={() => {
             sendRequest();
           }}
         >
-          Confirm
+          {(() => {
+            switch (type) {
+              case 'create':
+                return 'Confirm';
+              case 'import':
+                return 'Next';
+            }
+          })()}
         </ButtonCustom>
       </Container>
+      <ModalCommon
+        open={openModal}
+        title="Account Name"
+        setOpenModal={() => {
+          setOpenModal(false);
+        }}
+      >
+        <ImportPrivateKey
+          onCloseModal={(account) => {
+            onCloseModal(account), setOpenModal(false);
+          }}
+          AccountName={nameAccount}
+        ></ImportPrivateKey>
+      </ModalCommon>
     </>
   );
 };
 
-export default CreatAccountInput;
+export default CreateNameAccount;

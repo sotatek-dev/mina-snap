@@ -14,7 +14,7 @@ import { Box } from '@mui/material';
 import React from 'react';
 import { useMinaSnap } from 'services';
 import ModalCommon from 'components/common/modal';
-import CreatAccount from 'components/children/CreatAccount';
+import CreatNameAccount from 'components/children/CreatNameAccount';
 import { setActiveAccount } from 'slices/walletSlice';
 
 const Wrapper = styled.div`
@@ -135,11 +135,28 @@ const Wallet = styled.img.attrs(() => ({
 `;
 
 const Header = () => {
+  const { ChangeAccount, getAccountInfors } = useMinaSnap();
   const { accounts, activeAccount } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
-  // const [activeAccount, setActiveAccount] = React.useState<string>('');
 
   const [openModal, setOpenModal] = React.useState(false);
+
+  const [typeModal, setTypeModal] = React.useState('create');
+
+  const handleChangeAccount = async (item: any) => {
+    const payload = {
+      accountIndex: item.index,
+      isImported: item.isImported,
+    };
+    await ChangeAccount(payload).then(async () => {
+      try {
+        const accountInfor = await getAccountInfors();
+        dispatch(setActiveAccount(accountInfor.publicKey));
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
 
   return (
     <>
@@ -162,7 +179,7 @@ const Header = () => {
                       <Box
                         key={index}
                         onClick={() => {
-                          dispatch(setActiveAccount(item.address));
+                          handleChangeAccount(item);
                         }}
                       >
                         <CardAccount
@@ -178,12 +195,18 @@ const Header = () => {
                   <ButtonCreate
                     onClick={() => {
                       setOpenModal(true);
+                      setTypeModal('create');
                     }}
                   >
                     <ICreate />
                     Create
                   </ButtonCreate>
-                  <ButtonImport>
+                  <ButtonImport
+                    onClick={() => {
+                      setOpenModal(true);
+                      setTypeModal('import');
+                    }}
+                  >
                     <IImport />
                     Import
                   </ButtonImport>
@@ -202,12 +225,13 @@ const Header = () => {
           setOpenModal(false);
         }}
       >
-        <CreatAccount
+        <CreatNameAccount
+          type={typeModal}
           onCloseModal={(accounts) => {
             setOpenModal(false);
             dispatch(setActiveAccount(accounts.address));
           }}
-        ></CreatAccount>
+        ></CreatNameAccount>
       </ModalCommon>
     </>
   );

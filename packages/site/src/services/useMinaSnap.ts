@@ -1,5 +1,5 @@
 
-import { Account, ResultCreateAccount, ResultAccountList } from 'types/account';
+import { Account, ResultCreateAccount, ResultAccountList, PayloadChangeAccount, TypeImportAccount } from 'types/account';
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
@@ -41,7 +41,23 @@ export const useMinaSnap = () => {
       },
     });
   };
-  // mina_accountList
+
+
+  const ChangeAccount = async (payload: PayloadChangeAccount): Promise<Array<ResultCreateAccount>> => {
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_changeAccount',
+          params: {
+            accountIndex: payload.accountIndex,
+            isImported: payload.isImported
+          }
+        },
+      },
+    });
+  };
 
   const AccountList = async (): Promise<Array<ResultAccountList>> => {
     return await ethereum.request({
@@ -55,8 +71,26 @@ export const useMinaSnap = () => {
       },
     });
   };
+  const ImportAccount = async (payload: TypeImportAccount): Promise<ResultCreateAccount> => {
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_importAccountByPrivateKey',
+          params: {
+            name: payload.name,
+            privateKey: payload.privateKey
+          }
+        },
+      },
+    });
+  };
+
 
   return {
+    ImportAccount,
+    ChangeAccount,
     AccountList,
     CreateAccount,
     getAccountInfors,
