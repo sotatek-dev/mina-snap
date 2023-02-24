@@ -22,3 +22,11 @@ export type PayloadChangeAccount = {
     isImported?: boolean
 }
 
+
+export type TypeImportAccount = {
+    name: string
+    privateKey: string
+}
+
+
+

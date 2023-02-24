@@ -14,7 +14,7 @@ import { Box } from '@mui/material';
 import React from 'react';
 import { useMinaSnap } from 'services';
 import ModalCommon from 'components/common/modal';
-import CreatAccount from 'components/children/CreatAccount';
+import CreatNameAccount from 'components/children/CreatNameAccount';
 import { setActiveAccount } from 'slices/walletSlice';
 
 const Wrapper = styled.div`
@@ -141,6 +141,8 @@ const Header = () => {
 
   const [openModal, setOpenModal] = React.useState(false);
 
+  const [typeModal, setTypeModal] = React.useState('create');
+
   const handleChangeAccount = async (item: any) => {
     const payload = {
       accountIndex: item.index,
@@ -193,12 +195,18 @@ const Header = () => {
                   <ButtonCreate
                     onClick={() => {
                       setOpenModal(true);
+                      setTypeModal('create');
                     }}
                   >
                     <ICreate />
                     Create
                   </ButtonCreate>
-                  <ButtonImport>
+                  <ButtonImport
+                    onClick={() => {
+                      setOpenModal(true);
+                      setTypeModal('import');
+                    }}
+                  >
                     <IImport />
                     Import
                   </ButtonImport>
@@ -217,12 +225,13 @@ const Header = () => {
           setOpenModal(false);
         }}
       >
-        <CreatAccount
+        <CreatNameAccount
+          type={typeModal}
           onCloseModal={(accounts) => {
             setOpenModal(false);
             dispatch(setActiveAccount(accounts.address));
           }}
-        ></CreatAccount>
+        ></CreatNameAccount>
       </ModalCommon>
     </>
   );
