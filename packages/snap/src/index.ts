@@ -3,7 +3,16 @@ import { EMinaMethod } from './constants/mina-method.constant';
 import { sendTransaction, getNetworkConfig, changeNetwork, resetSnapConfiguration, getSnapConfiguration } from './mina';
 import { HistoryOptions, TxInput } from './interfaces';
 import { popupDialog } from './util/popup.util';
-import { changeAccount, createAccount, editAccountName, getAccountInfo, getAccounts, getKeyPair, importAccount, signMessage } from './mina/account';
+import {
+  changeAccount,
+  createAccount,
+  editAccountName,
+  getAccountInfo,
+  getAccounts,
+  getKeyPair,
+  importAccount,
+  signMessage,
+} from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
 import { getTxHistory, getTxDetail, getTxStatus } from './mina/transaction';
@@ -70,14 +79,21 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.CHANGE_ACCOUNT: {
       const { accountIndex, isImported } = request.params as { accountIndex: number; isImported?: boolean };
       const accountInfo = await changeAccount(accountIndex, isImported);
+      console.log(`-account changed to:`, accountInfo);
       return accountInfo;
     }
 
     case EMinaMethod.IMPORT_ACCOUNT_PK: {
-      const { name, privateKey } = request.params as { name: string; privateKey: string }
+      const { name, privateKey } = request.params as { name: string; privateKey: string };
       const accountInfo = await importAccount(name, privateKey);
       console.log(`-Imported account:`, accountInfo);
       return accountInfo;
+    }
+
+    case EMinaMethod.EXPORT_PRIVATE_KEY: {
+      const { privateKey } = await getKeyPair();
+      console.log('-privateKey:', privateKey);
+      return { privateKey };
     }
 
     case EMinaMethod.NETWORK_CONFIG: {

@@ -106,11 +106,12 @@ export async function getAccountInfo(publicKey: string, networkConfig: NetworkCo
 export const changeAccount = async (index: number, isImported?: boolean) => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
-  let { generatedAccounts, importedAccounts, selectedImportedAccount } = networks[currentNetwork];
+  const { generatedAccounts, importedAccounts } = networks[currentNetwork];
   if (isImported) {
     const account = importedAccounts[index];
     if (account) {
-      selectedImportedAccount = index;
+      snapConfig.networks[currentNetwork].selectedImportedAccount = index;
+      console.log(`115:`, snapConfig);
       await updateSnapConfig(snapConfig);
       return {
         name: account.name,
@@ -123,7 +124,7 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
   const account = generatedAccounts[index]
   if (account) {
     snapConfig.networks[snapConfig.currentNetwork].currentAccIndex = index;
-    selectedImportedAccount = null;
+    snapConfig.networks[currentNetwork].selectedImportedAccount = null;
     await updateSnapConfig(snapConfig);
     return account;
   } else {
@@ -158,7 +159,7 @@ export const importAccount = async (name: string, privateKey: string) => {
   try {
     const snapConfig = await getSnapConfiguration();
     const { networks, currentNetwork } = snapConfig;
-    let { importedAccounts, selectedImportedAccount, generatedAccounts } = networks[currentNetwork];
+    const { importedAccounts, generatedAccounts } = networks[currentNetwork];
     const client = getMinaClient(snapConfig.networks[snapConfig.currentNetwork]);
     const existingAddresses = [...Object.values(generatedAccounts).map(account => account.address), ...Object.values(importedAccounts).map(account => account.address)];
     const publicKey = client.derivePublicKey(privateKey);
@@ -173,8 +174,8 @@ export const importAccount = async (name: string, privateKey: string) => {
     } else {
       newAccountIndex = 0;
     }
-    selectedImportedAccount = newAccountIndex;
-    importedAccounts[newAccountIndex] = {
+    snapConfig.networks[currentNetwork].selectedImportedAccount = newAccountIndex;
+    snapConfig.networks[currentNetwork].importedAccounts[newAccountIndex] = {
       name,
       address: publicKey,
       privateKey
