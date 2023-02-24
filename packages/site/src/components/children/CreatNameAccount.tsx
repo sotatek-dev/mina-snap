@@ -86,6 +86,7 @@ const CreateNameAccount = ({ onCloseModal, type }: Props) => {
         <ButtonCustom
           variant="contained"
           disableElevation
+          disabled={!nameAccount}
           onClick={() => {
             sendRequest();
           }}

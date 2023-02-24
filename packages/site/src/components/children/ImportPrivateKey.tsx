@@ -83,6 +83,7 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
           />
         </Box>
         <ButtonCustom
+          disabled={!privateKey}
           variant="contained"
           disableElevation
           onClick={() => {
