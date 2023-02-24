@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import iconActive from 'assets/icons/icon-active.svg';
-import ButtonCommon from 'components/common/button';
-import pointMenu from 'assets/icons/pointMenu.svg';
-import pointMenuDark from 'assets/icons/pointMenu_dark.svg';
-import { Account, ResultAccountList } from 'types/account';
+import styled from "styled-components";
+import iconActive from "assets/icons/icon-active.svg";
+import ButtonCommon from "components/common/button";
+import pointMenu from "assets/icons/pointMenu.svg";
+import pointMenuDark from "assets/icons/pointMenu_dark.svg";
+import  React from 'react';
 
 import { formatAccountAddress } from 'helpers/formatAccountAddress';
 import React from 'react';

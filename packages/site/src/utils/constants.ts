@@ -58,6 +58,12 @@ export const TIMEOUT_DURATION = 10000;
 
 export const OPTIONS_NETWORK = ['Mainnet', 'Devnet', 'Berkeley'];
 
+export const GAS_FEE = {
+  slow: 0.0011,
+  default: 0.0101,
+  fast: 0.2001
+}
+
 
 export enum ENetworkName {
   MAINNET = 'Mainnet',

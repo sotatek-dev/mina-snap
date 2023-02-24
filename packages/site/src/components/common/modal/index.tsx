@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Modal, styled, ModalProps } from '@mui/material';
 import IconBack from 'assets/icons/icon-back.svg';
 
-interface ModalCommons extends ModalProps {
+interface IModalCommon extends ModalProps {
   open: boolean;
   ActionsBack?: React.ReactChild;
   title?: string;
@@ -10,7 +10,7 @@ interface ModalCommons extends ModalProps {
   fixedheight?: boolean;
   clickOutSide?: boolean;
 }
-type ModalCommonProps = React.PropsWithChildren<ModalCommons>;
+type ModalCommonProps = React.PropsWithChildren<IModalCommon>;
 
 const Container = styled(Box)(() => ({
   position: 'absolute',

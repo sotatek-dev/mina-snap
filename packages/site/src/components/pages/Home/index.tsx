@@ -42,7 +42,7 @@ const HomePage = () => {
     }
   }, [connected]);
 
-  return <div>{isUnlocked ? <Home connected></Home> : <ConnectWallet></ConnectWallet>}</div>;
+  return <div>{isUnlocked ? <Home></Home> : <ConnectWallet></ConnectWallet>}</div>;
 };
 
 export default HomePage;
