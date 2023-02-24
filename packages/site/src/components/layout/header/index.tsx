@@ -135,11 +135,26 @@ const Wallet = styled.img.attrs(() => ({
 `;
 
 const Header = () => {
+  const { ChangeAccount, getAccountInfors } = useMinaSnap();
   const { accounts, activeAccount } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
-  // const [activeAccount, setActiveAccount] = React.useState<string>('');
 
   const [openModal, setOpenModal] = React.useState(false);
+
+  const handleChangeAccount = async (item: any) => {
+    const payload = {
+      accountIndex: item.index,
+      isImported: item.isImported,
+    };
+    await ChangeAccount(payload).then(async () => {
+      try {
+        const accountInfor = await getAccountInfors();
+        dispatch(setActiveAccount(accountInfor.publicKey));
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
 
   return (
     <>
@@ -162,7 +177,7 @@ const Header = () => {
                       <Box
                         key={index}
                         onClick={() => {
-                          dispatch(setActiveAccount(item.address));
+                          handleChangeAccount(item);
                         }}
                       >
                         <CardAccount
