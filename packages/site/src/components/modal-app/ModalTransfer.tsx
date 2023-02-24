@@ -6,11 +6,13 @@ import styled from "styled-components";
 import { GAS_FEE } from "utils/constants";
 import IAdvanced from "assets/icons/icon-advance.svg";
 import Button from "components/common/button";
+import ModalConfirm from "./ModalConfirm";
 
 interface ModalProps {
     open:boolean;
     clickOutSide: boolean;
     setOpenModal: () => void;
+    // infoTransaction: object
 }
 
 interface Props {
@@ -135,9 +137,30 @@ const ButtonNext = styled(Button)`
 
 const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
     const balance = 200;
+    const [address, setAddress] = useState('');
+    const [amount, setAmount] = useState("");
+    const [memo, setMemo] = useState("");
     const [gasFee, setGasFee] = useState(GAS_FEE.default);
-    const [maxAmount, setMaxAmount] = useState(0);
     const [isShowCotent, setIsShowContent] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleAmount = (value:any) => {
+        if(value > balance) {
+            setAmount(balance.toString());
+        }
+        else {
+            setAmount(value);
+        }
+
+    }
+
+    const handleClick = () => {
+        setShowModal(true)
+    }
+    const handleClickOutSide = () => {
+        setShowModal(false)
+
+    }
 
     return(
         <Modal 
@@ -153,6 +176,8 @@ const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
                 <RequiredBox>
                     <Tittle>To</Tittle>
                     <Input
+                        value={address}
+                        onChange={event => setAddress(event.target.value)}
                         variant="outlined"
                         placeholder="Address"
                         fullWidth
@@ -167,13 +192,14 @@ const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
                     <WTitle>
                         <Tittle>Amount</Tittle>
                         <Balance>Balance: {balance}</Balance>
-                        <MaxAmount onClick = {()=>setMaxAmount(balance)}>Max</MaxAmount>
+                        <MaxAmount onClick = {()=>setAmount(balance.toString())}>Max</MaxAmount>
                     </WTitle>
                     <Input
-                        value={maxAmount}
+                        value={amount}
                         type="number"
                         variant="outlined"
-                        placeholder={maxAmount.toString()}
+                        placeholder="0"
+                        onChange={event => handleAmount(event.target.value)}
                         fullWidth
                         size="small"
                         inputProps={{
@@ -246,7 +272,12 @@ const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
                         />
                     </AdvancedContent>}
                 </AdvancedBox>
-                <ButtonNext type="submit" >Next</ButtonNext>
+                <ButtonNext onClick={handleClick} type="submit" >Next</ButtonNext>
+                 <ModalConfirm
+                    open={showModal}
+                    clickOutSide={true}
+                    setOpenModal={handleClickOutSide}
+                />
             </FormControl>
         </Modal>
     )
