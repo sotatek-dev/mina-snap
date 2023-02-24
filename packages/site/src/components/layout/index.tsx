@@ -1,11 +1,9 @@
-import { ReactNode, useState } from 'react';
+import Button from 'components/common/button';
+import ModalTransfer from 'components/modal-app/ModalTransfer';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Header from './header';
 
-interface Props {
-  connected: boolean;
-  children?: ReactNode;
-}
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.palette.grey.grey3};
@@ -39,13 +37,31 @@ const Content = styled.div`
 
 `;
 
- const Home = ({ connected, children }: Props) => {
+
+ const Home = () => {
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleClick = () => {
+    setShowModal(true)
+    
+
+  }
+  const handleClickOutSide = () => {
+    setShowModal(false)
+
+  }
   return (
     <Wrapper>
         <Header />
         <ColMiddle>
             <Content>
-              Content
+              <Button onClick={handleClick}>Click</Button>
+            <ModalTransfer
+              open={showModal}
+              clickOutSide={true}
+              setOpenModal={handleClickOutSide}
+            />
             </Content>
         </ColMiddle>
     </Wrapper>

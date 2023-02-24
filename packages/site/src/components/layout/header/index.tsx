@@ -10,10 +10,6 @@ import iconCreate from "assets/icons/icon-create.svg";
 import iconImport from "assets/icons/icon-import.svg";
 import CardAccount from "components/modules/CardAccount";
 
-interface CardAccount {
-  active?:boolean;
-}
-
 
 const Wrapper = styled.div`
     background-color: ${(props) => props.theme.palette.grey.grey3};
