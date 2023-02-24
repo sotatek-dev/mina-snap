@@ -93,7 +93,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.EXPORT_PRIVATE_KEY: {
       const { privateKey } = await getKeyPair();
       console.log('-privateKey:', privateKey);
-      return privateKey;
+      return { privateKey };
     }
 
     case EMinaMethod.NETWORK_CONFIG: {
