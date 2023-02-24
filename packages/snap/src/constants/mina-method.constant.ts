@@ -13,5 +13,6 @@ export enum EMinaMethod {
   GET_TX_DETAIL = 'mina_getTxDetail',
   GET_TX_STATUS = 'mina_getTxStatus',
   EDIT_ACCOUNT_NAME = 'mina_editAccountName',
-  ACCOUNT_LIST = 'mina_accountList'
+  ACCOUNT_LIST = 'mina_accountList',
+  EXPORT_PRIVATE_KEY = 'mina_exportPrivateKey',
 }
