@@ -4,9 +4,9 @@ import ButtonCommon from 'components/common/button';
 import pointMenu from 'assets/icons/pointMenu.svg';
 import pointMenuDark from 'assets/icons/pointMenu_dark.svg';
 import { Account, ResultAccountList } from 'types/account';
+import  React from 'react';
 
 import { formatAccountAddress } from 'helpers/formatAccountAddress';
-import React from 'react';
 
 interface Props {
   active?: boolean;
