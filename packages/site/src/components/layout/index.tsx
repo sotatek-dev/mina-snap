@@ -1,5 +1,6 @@
 import Button from 'components/common/button';
 import ModalTransfer from 'components/modal-app/ModalTransfer';
+import ModalTransactionDetail from 'components/modal-app/ModalTranstionDetail';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Header from './header';
@@ -41,15 +42,21 @@ const Content = styled.div`
  const Home = () => {
 
   const [showModal, setShowModal] = useState(false);
+  const [showTxDetail, setShowTxDetail] = useState(false);
 
   const handleClick = () => {
     setShowModal(true)
-    
-
   }
   const handleClickOutSide = () => {
     setShowModal(false)
+  }
 
+  const showTransactionDetails = () => {
+    setShowTxDetail(true)
+  }
+
+  const handleClickOutSideTxDetail = () => {
+    setShowTxDetail(false)
   }
   return (
     <Wrapper>
@@ -57,11 +64,17 @@ const Content = styled.div`
         <ColMiddle>
             <Content>
               <Button onClick={handleClick}>Click</Button>
-            <ModalTransfer
-              open={showModal}
-              clickOutSide={true}
-              setOpenModal={handleClickOutSide}
-            />
+              <ModalTransfer
+                open={showModal}
+                clickOutSide={true}
+                setOpenModal={handleClickOutSide}
+              />
+              <Button onClick={showTransactionDetails}>Transaction Detail</Button>
+              <ModalTransactionDetail
+                open={showTxDetail}
+                clickOutSide={true}
+                setOpenModal={handleClickOutSideTxDetail}
+              />
             </Content>
         </ColMiddle>
     </Wrapper>

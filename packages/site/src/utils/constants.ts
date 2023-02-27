@@ -1,4 +1,7 @@
 import { constants } from 'starknet';
+import success from 'assets/images/success.png';
+import pending from 'assets/images/pending.png'
+import fail from 'assets/images/fail.png'
 
 export const TOKENS: any = {
   [constants.StarknetChainId.MAINNET]: {
@@ -34,15 +37,15 @@ export const DECIMALS_DISPLAYED_MAX_LENGTH = 11;
 
 export const COINGECKO_API = 'https://api.coingecko.com/api/v3/';
 
-export const STARKNET_MAINNET_EXPLORER = 'https://voyager.online/';
+export const MINA_MAINNET_EXPLORER = 'https://minaexplorer.com/';
 
-export const STARKNET_TESTNET_EXPLORER = 'https://goerli.voyager.online/';
+export const MINA_TESTNET_EXPLORER = 'https://devnet.minaexplorer.com/';
 
-export const STARKNET_TESTNET2_EXPLORER = 'https://goerli-2.voyager.online/';
+export const MINA_BERKELEY_EXPLORER = 'https://berkeley.minaexplorer.com/';
 
 export const SNAPS_DOC_URL = 'https://docs.metamask.io/guide/snaps.html';
 
-export const STARKNET_ADDRESS_LENGTH = 66;
+export const MINA_ADDRESS_LENGTH = 55;
 
 export const ASSETS_PRICE_REFRESH_FREQUENCY = 120000;
 
@@ -64,6 +67,11 @@ export const GAS_FEE = {
   fast: 0.2001
 }
 
+export const TRANSACTION_STATUS = {
+  Success: success,
+  Pending: pending,
+  Fail: fail
+}
 
 export enum ENetworkName {
   MAINNET = 'Mainnet',

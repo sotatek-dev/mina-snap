@@ -39,8 +39,8 @@ const ContainerContent = styled(Box)(() => ({
 const BoxTitleModal = styled(Box)({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
-  fontSize: '14px',
+  fontWeight: '600',
+  fontSize: '16px',
   lineHeight: '17px',
   textAlign: 'center',
   color: '#000000',
