@@ -2,9 +2,9 @@ import { KeyboardEvent } from 'react';
 import { ethers } from 'ethers';
 import {
   DECIMALS_DISPLAYED_MAX_LENGTH,
-  STARKNET_MAINNET_EXPLORER,
-  STARKNET_TESTNET2_EXPLORER,
-  STARKNET_TESTNET_EXPLORER,
+  MINA_MAINNET_EXPLORER,
+  MINA_TESTNET_EXPLORER,
+  MINA_BERKELEY_EXPLORER,
   TIMEOUT_DURATION,
 } from './constants';
 import { Erc20Token, Erc20TokenBalance } from 'types';
@@ -20,16 +20,16 @@ export const openExplorerTab = (
   type = 'contract',
   chainId = constants.StarknetChainId.TESTNET as string,
 ) => {
-  let explorerUrl = STARKNET_TESTNET_EXPLORER;
+  let explorerUrl = MINA_BERKELEY_EXPLORER;
   switch (chainId) {
     case constants.StarknetChainId.MAINNET:
-      explorerUrl = STARKNET_MAINNET_EXPLORER;
+      explorerUrl = MINA_MAINNET_EXPLORER;
       break;
     case constants.StarknetChainId.TESTNET:
-      explorerUrl = STARKNET_TESTNET_EXPLORER;
+      explorerUrl = MINA_BERKELEY_EXPLORER;
       break;
     case constants.StarknetChainId.TESTNET2:
-      explorerUrl = STARKNET_TESTNET2_EXPLORER;
+      explorerUrl = MINA_TESTNET_EXPLORER;
       break;
   }
   window.open(explorerUrl + type + '/' + address, '_blank')?.focus();
