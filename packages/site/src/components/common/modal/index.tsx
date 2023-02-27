@@ -48,7 +48,7 @@ const BoxTitleModal = styled(Box)({
 
 const CloseIconWrapper = styled(Box)({
   position: 'absolute',
-  left: 3,
+  left: 15,
   alignSelf: 'flex-end',
   cursor: 'pointer',
 });
@@ -80,6 +80,7 @@ const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide, fixedh
             </CloseIconWrapper>
             {title}
           </BoxTitleModal>
+
           {children}
         </ContainerContent>
       </Container>

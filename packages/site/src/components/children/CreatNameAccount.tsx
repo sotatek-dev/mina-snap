@@ -30,6 +30,9 @@ const InputCustom = styled(TextField)<TextFieldProps>({
     padding: '0.5rem 1rem',
     color: '#707D96',
   },
+  '& input': {
+    fontSize: '10px',
+  },
 });
 
 const ButtonCustom = styled(Button)<ButtonProps>({
