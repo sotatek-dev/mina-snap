@@ -33,3 +33,18 @@
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+.MuiButtonBase-root.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.MuiListItem-button.css-bshv44-MuiButtonBase-root-MuiListItem-root {
+
+  padding: 0px 0px 5px 0px;
+}
+
+.disable{
+  opacity: 0.5;
+  pointer-events: none;
+  
+}
+
+.disableButton{
+  opacity: 0.5;
+  pointer-events: none;
+}
