@@ -1,5 +1,5 @@
 
-import { Account, ResultCreateAccount, ResultAccountList, PayloadChangeAccount, TypeImportAccount, TypePayloadEditAccountName } from 'types/account';
+import { Account, ResultCreateAccount, ResultAccountList, PayloadChangeAccount, TypeImportAccount, TypePayloadEditAccountName, ResponseExportPrivateKey } from 'types/account';
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
@@ -105,8 +105,21 @@ export const useMinaSnap = () => {
     });
   };
 
+  const ExportPrivateKey = async (): Promise<ResponseExportPrivateKey> => {
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_exportPrivateKey',
+        },
+      },
+    });
+  };
+
 
   return {
+    ExportPrivateKey,
     EditAccountName,
     ImportAccount,
     ChangeAccount,

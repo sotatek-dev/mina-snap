@@ -9,11 +9,23 @@ import { useAppSelector } from 'hooks/redux';
 import React, { useEffect } from 'react';
 import { ResultAccountList } from 'types/account';
 import ChangeAccountName from './ChangeAccountName';
+import ModalCommon from 'components/common/modal';
+import { useMinaSnap } from 'services';
+import DataExportPrivateKey from './DataExportPrivateKey';
 
 const DetailsAccount = () => {
   const { detailsAccount } = useAppSelector((state) => state.wallet);
   const [openChangeAccountName, setOpenChangeAccountName] = React.useState<boolean>(false);
   const [state, setState] = React.useState<ResultAccountList | undefined>(undefined);
+  const [openModal, setOpenModal] = React.useState<boolean>(false);
+  const [privateKey, setPrivateKey] = React.useState<string>('');
+  const { ExportPrivateKey } = useMinaSnap();
+
+  const handelExportPrivateKey = async () => {
+    const res = await ExportPrivateKey();
+    setPrivateKey(res.privateKey);
+    setOpenModal(true);
+  };
 
   useEffect(() => {
     setState(detailsAccount);
@@ -36,7 +48,7 @@ const DetailsAccount = () => {
               <img src={IconMore} />
             </ListItemAvatar>
           </ListItem>
-          <ListItem button onClick={() => {}}>
+          <ListItem button onClick={handelExportPrivateKey}>
             <ListItemTextCustom primary={'Export Private Key'}></ListItemTextCustom>
           </ListItem>
         </ListCustom>
@@ -51,6 +63,23 @@ const DetailsAccount = () => {
         }}
         open={openChangeAccountName}
       ></ChangeAccountName>
+      <ModalCommon
+        open={openModal}
+        title="Export Private Key"
+        setOpenModal={() => {
+          setOpenModal(false);
+        }}
+        fixedWidth={true}
+        fixedheight={false}
+      >
+        <DataExportPrivateKey
+          onDone={() => {
+            setOpenModal(false);
+          }}
+          address={state?.address}
+          privateKey={privateKey}
+        ></DataExportPrivateKey>
+      </ModalCommon>
     </>
   );
 };
