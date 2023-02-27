@@ -35,4 +35,8 @@ export type TypePayloadEditAccountName = {
     isImported: boolean
 }
 
+export type ResponseExportPrivateKey = {
+    privateKey: string
+}
+
 
