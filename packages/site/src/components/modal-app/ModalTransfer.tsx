@@ -1,7 +1,7 @@
-import { FormControl, FormHelperText, InputLabel, TextField } from "@mui/material";
+import { FormControl, FormHelperText, TextField } from "@mui/material";
 import ButtonCommon from "components/common/button";
-import ModalCommon from "components/common/modal";
-import React, { useState } from "react";
+import Modal from "components/common/modal";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { GAS_FEE } from "utils/constants";
 import IAdvanced from "assets/icons/icon-advance.svg";
@@ -12,17 +12,14 @@ interface ModalProps {
     open:boolean;
     clickOutSide: boolean;
     setOpenModal: () => void;
-    // infoTransaction: object
 }
 
 interface Props {
     active?: boolean;
-    toggle?: boolean
+    toggle?: boolean;
+    disable?: boolean;
 }
 
-const Modal = styled(ModalCommon)<ModalProps>`
-
-`
 const RequiredBox = styled.div`
     border-bottom: 1px solid #D9D9D9;
     padding-bottom: 17px;
@@ -79,7 +76,6 @@ const WOption = styled.div`
     display: flex;
     justify-content: space-between;
     align-items:center;
-
 `;
 
 const Option = styled(ButtonCommon)<Props>`
@@ -129,20 +125,23 @@ const AdvancedContent = styled.div`
     }
 `;
 
-const ButtonNext = styled(Button)`
+const ButtonNext = styled(Button)<Props>`
     color: #FFFFFF;
-    background: #D9D9D9;
+    background: ${props => props.disable ? '#D9D9D9' : '#594AF1'} ;
     border: none;
 `
 
 const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
     const balance = 200;
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState("");
     const [amount, setAmount] = useState("");
     const [memo, setMemo] = useState("");
     const [gasFee, setGasFee] = useState(GAS_FEE.default);
+    const [nonce, setNonce] = useState("");
+    const [txInfo, setTxInfo] = useState({});
     const [isShowCotent, setIsShowContent] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [disabled, setDisabled] = useState(false);
 
     const handleAmount = (value:any) => {
         if(value > balance) {
@@ -151,16 +150,31 @@ const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
         else {
             setAmount(value);
         }
-
     }
 
     const handleClick = () => {
-        setShowModal(true)
+        setShowModal(disabled!=true);
+        const tx = {
+            address: address,
+            amount: amount,
+            memo: memo,
+            fee: gasFee,
+            nonce: nonce
+        }
+        setTxInfo(tx);
     }
     const handleClickOutSide = () => {
         setShowModal(false)
-
     }
+
+    useEffect (()=> {
+        if(address && amount) {
+            setDisabled(false)
+        }
+        else {
+            setDisabled(true)
+        }
+    },[amount, address])
 
     return(
         <Modal 
@@ -214,6 +228,7 @@ const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
                         variant="outlined"
                         fullWidth
                         size="small"
+                        onChange={event => setMemo(event.target.value)}
                         inputProps={{
                             style: {
                             height: '34px',
@@ -244,9 +259,7 @@ const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
                             placeholder={gasFee.toString()}
                             fullWidth
                             size="small"
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                setGasFee(Number(event.target.value));
-                              }}
+                            onChange={event => setGasFee(Number(event.target.value))}
                             inputProps={{
                                 style: {
                                 height: '34px',
@@ -260,9 +273,11 @@ const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
                         <Tittle>Nonce</Tittle>
                         <Input
                             variant="outlined"
-                            placeholder="Nonce"
+                            placeholder="Nonce 1"
+                            type="number"
                             fullWidth
                             size="small"
+                            onChange={event => setNonce(event.target.value)}
                             inputProps={{
                                 style: {
                                 height: '34px',
@@ -272,11 +287,12 @@ const ModalTransfer = ({open,clickOutSide, setOpenModal}: ModalProps) => {
                         />
                     </AdvancedContent>}
                 </AdvancedBox>
-                <ButtonNext onClick={handleClick} type="submit" >Next</ButtonNext>
-                 <ModalConfirm
+                <ButtonNext disable={disabled} onClick={handleClick} type="submit" >Next</ButtonNext>
+                 <ModalConfirm 
                     open={showModal}
                     clickOutSide={true}
                     setOpenModal={handleClickOutSide}
+                    txInfoProp={txInfo}
                 />
             </FormControl>
         </Modal>

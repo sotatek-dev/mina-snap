@@ -10,7 +10,7 @@ interface IDropDown {
 export const Wrapper = styled.div<IDropDown>`
   display: flex;
   flex-direction: column;
-
+  font-family: 'Inter Regular';
   .is-open .Dropdown-control {
     color: ${(props) => props.theme.palette.grey.black};
     border-color: ${(props) => props.theme.palette.grey.grey2};
@@ -20,6 +20,7 @@ export const Wrapper = styled.div<IDropDown>`
 export const DropDown = styled.select<IDropDown>``;
 
 export const DropdownStyled = styled(Dropdown)<IDropDown>`
+  font-family: 'Inter Regular';
   .Dropdown-control {
     border-radius: ${(props) => props.theme.corner.medium};
     box-sizing: border-box;

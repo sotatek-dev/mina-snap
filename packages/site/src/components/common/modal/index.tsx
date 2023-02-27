@@ -13,6 +13,7 @@ interface IModalCommon extends ModalProps {
 type ModalCommonProps = React.PropsWithChildren<IModalCommon>;
 
 const Container = styled(Box)(() => ({
+  fontFamily: 'Inter Regular',
   position: 'absolute',
   display: 'flex',
   flexDirection: 'column',
@@ -36,7 +37,7 @@ const ContainerContent = styled(Box)(() => ({
 }));
 
 const BoxTitleModal = styled(Box)({
-  fontFamily: 'Inter',
+  fontFamily: 'Inter Regular',
   fontStyle: 'normal',
   fontWeight: '500',
   fontSize: '14px',
