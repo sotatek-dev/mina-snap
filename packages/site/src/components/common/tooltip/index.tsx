@@ -17,6 +17,7 @@ interface Props {
 }
 
 export const Wrapper = styled.div`
+  font-family: 'Inter Regular';
   width: fit-content;
 `;
 

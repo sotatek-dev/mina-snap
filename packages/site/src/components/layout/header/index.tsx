@@ -18,6 +18,7 @@ import CreatNameAccount from 'components/children/CreatNameAccount';
 import { setActiveAccount } from 'slices/walletSlice';
 
 const Wrapper = styled.div`
+  font-family: 'Inter Regular';
   background-color: ${(props) => props.theme.palette.grey.grey3};
   position: fixed;
   width: 1040px;

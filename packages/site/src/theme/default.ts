@@ -66,31 +66,31 @@ export const theme: DefaultTheme = {
   },
   typography: {
     p1: {
-      fontFamily: 'Inter',
+      fontFamily: 'Inter Regular',
       fontWeight: 500,
       fontSize: '14px',
       lineHeight: '17px',
     },
     p2: {
-      fontFamily: 'Roboto Regular',
+      fontFamily: 'Inter Regular',
       fontWeight: 400,
       fontSize: '14px',
       lineHeight: '19.6px',
     },
     c1: {
-      fontFamily: 'Roboto Regular',
+      fontFamily: 'Inter Regular',
       fontWeight: 400,
       fontSize: '12px',
       lineHeight: '16.8px',
     },
     c2: {
-      fontFamily: 'Roboto Regular',
+      fontFamily: 'Inter Regular',
       fontWeight: 400,
       fontSize: '10px',
       lineHeight: '14px',
     },
     c3: {
-      fontFamily: 'Roboto Regular',
+      fontFamily: 'Inter Regular',
       fontWeight: 400,
       fontSize: '8px',
       lineHeight: '11.2px',
@@ -148,7 +148,7 @@ export const theme: DefaultTheme = {
       fontWeight: 700,
     },
     regular: {
-      fontFamily: 'Roboto Regular',
+      fontFamily: 'Inter Regular',
       fontWeight: 400,
     },
   },
