@@ -69,7 +69,7 @@ const DetailsAccount = () => {
         setOpenModal={() => {
           setOpenModal(false);
         }}
-        fixedWidth={true}
+        fixedwitdth={true}
         fixedheight={false}
       >
         <DataExportPrivateKey

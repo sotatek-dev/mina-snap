@@ -136,14 +136,14 @@ const TransactionHistory = () => {
                                     <TxStatus>APPLIED</TxStatus>
                                 </Status>
                             </TransactionDetail>
-                            <ModalTransactionDetail
-                                open={showTxDetail}
-                                clickOutSide={true}
-                                setOpenModal={handleClickOutSideTxDetail}
-                            />
                         </TracsactionItem>
                     )
                 })}
+                <ModalTransactionDetail
+                    open={showTxDetail}
+                    clickOutSide={true}
+                    setOpenModal={handleClickOutSideTxDetail}
+                />
             </TransactionList>
         </Wrapper>
     )
