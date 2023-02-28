@@ -162,7 +162,12 @@ const Header = () => {
       .then(async () => {
         try {
           const accountInfor = await getAccountInfors();
-          dispatch(setActiveAccount(accountInfor.publicKey));
+          dispatch(
+            setActiveAccount({
+              activeAccount: accountInfor.publicKey as string,
+              balance: accountInfor.balance.total as string,
+            }),
+          );
         } catch (error) {
           console.log(error);
         }
@@ -174,7 +179,12 @@ const Header = () => {
 
   const closeModal = (accounts: ResultCreateAccount) => {
     setOpenModal(false);
-    dispatch(setActiveAccount(accounts.address));
+    dispatch(
+      setActiveAccount({
+        activeAccount: accounts.address as string,
+        balance: '0',
+      }),
+    );
   };
 
   const handleClickCreat = () => {

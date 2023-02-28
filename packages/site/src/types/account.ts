@@ -5,6 +5,7 @@ export type Account = {
     nonce: string
     publicKey: string
 }
+
 export type ResultCreateAccount = {
     name: string
     address: string
@@ -39,4 +40,10 @@ export type ResponseExportPrivateKey = {
     privateKey: string
 }
 
+
+
+export type payloadActiveAccount = {
+    activeAccount: string
+    balance: string
+}
 

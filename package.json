@@ -23,14 +23,12 @@
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore",
     "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
-    "test": "echo \"TODO\"",
-    "postinstall": "patch-package"
+    "test": "echo \"TODO\""
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
-    "husky": "^8.0.0",
-    "patch-package": "^6.5.1"
+    "husky": "^8.0.0"
   },
   "packageManager": "yarn@3.2.1",
   "engines": {

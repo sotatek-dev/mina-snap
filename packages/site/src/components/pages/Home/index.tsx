@@ -6,6 +6,7 @@ import { EMinaMethod } from 'test-mina-snap/src/constants/mina-method.constant';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
 import { connectWallet, setIsLoading, setActiveAccount, setWalletConnection } from 'slices/walletSlice';
+import { formatBalance } from 'helpers/formatAccountAddress';
 
 const HomePage = () => {
   useHasMetamaskFlask();
@@ -30,7 +31,12 @@ const HomePage = () => {
             isInstalledSnap,
           }),
         );
-        reduxDispatch(setActiveAccount(accountInfor.publicKey));
+        reduxDispatch(
+          setActiveAccount({
+            activeAccount: accountInfor.publicKey as string,
+            balance: formatBalance(accountInfor.balance.total) as string,
+          }),
+        );
       } else {
         reduxDispatch(setWalletConnection(false));
       }
