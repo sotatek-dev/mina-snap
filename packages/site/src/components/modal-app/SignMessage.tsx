@@ -61,20 +61,24 @@ const CreateNameAccount = ({ onCloseModal }: Props) => {
             Sign
           </ButtonCustom>
         </BoxCustom>
-        <BoxButtom
-          onClick={() => {
-            setShowSignature(!showSignature);
-          }}
-        >
-          <IconBoxBack>
-            Result <img src={showDown} />
-          </IconBoxBack>
-        </BoxButtom>
-        <BoxShowSignature>
-          <TransitionGroup>
-            {showSignature && <Collapse>{renderItem(signature as TypeResponseSignature)}</Collapse>}
-          </TransitionGroup>
-        </BoxShowSignature>
+        {signature && (
+          <>
+            <BoxButtom
+              onClick={() => {
+                setShowSignature(!showSignature);
+              }}
+            >
+              <IconBoxBack>
+                Result <img src={showDown} />
+              </IconBoxBack>
+            </BoxButtom>
+            <BoxShowSignature>
+              <TransitionGroup>
+                {showSignature && <Collapse>{renderItem(signature as TypeResponseSignature)}</Collapse>}
+              </TransitionGroup>
+            </BoxShowSignature>
+          </>
+        )}
       </Container>
     </>
   );
