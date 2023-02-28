@@ -19,7 +19,7 @@ const BoxContent = styled(Box)(() => ({
 }));
 
 const BoxInsideMetamask = styled(Box)(() => ({
-  fontFamily: 'Inter',
+  fontFamily: 'Inter Regular',
   fontStyle: 'italic',
   fontWeight: '400',
   fontSize: '18px',
@@ -55,6 +55,7 @@ const ConnectWallet: React.FC<Props> = () => {
         setActiveAccount({
           activeAccount: accountInfor.publicKey as string,
           balance: formatBalance(accountInfor.balance.total) as string,
+          // setActiveAccount:accountInfor.
         }),
       );
     } catch (e) {

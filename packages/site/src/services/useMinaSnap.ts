@@ -11,7 +11,7 @@ import {
   ResponseExportPrivateKey,
 
 } from 'types/account';
-import { TypeResponseSendTransaction, payloadSendTransaction } from 'types/transaction';
+import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature } from 'types/transaction';
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
@@ -153,8 +153,24 @@ export const useMinaSnap = () => {
       },
     });
   };
+  const Signature = async (payload: string): Promise<TypeResponseSignature> => {
+    console.log(payload);
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_signMessage',
+          params: {
+            message: payload
+          }
+        },
+      },
+    });
+  };
 
   return {
+    Signature,
     ExportPrivateKey,
     EditAccountName,
     ImportAccount,
