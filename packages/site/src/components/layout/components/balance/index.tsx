@@ -2,6 +2,8 @@ import styled from "styled-components"
 import IMinaCircle from "assets/logo/logo-mina-circle.png";
 import ISend from "assets/icons/icon-send.png";
 import ISign from "assets/icons/icon-sign.png";
+import { useState } from "react";
+import ModalTransfer from "components/modal-app/ModalTransfer";
 
 const Wrapper = styled.div`
     display: flex;
@@ -73,6 +75,13 @@ const IconSign = styled.img`
 `;
 
 const Balance = () => {
+    const [showModalSendToken, setShowModalSendToken] = useState(false);
+    const handleClick = () => {
+        setShowModalSendToken(true)
+    }
+    const handleClickOutSide = () => {
+        setShowModalSendToken(false)
+    }
     return(
         <Wrapper>
             <Logo src={IMinaCircle}/>
@@ -81,10 +90,15 @@ const Balance = () => {
                 <TokenName>MINA</TokenName>
             </AmountToken>
             <Action>
-                <Send >
+                <Send onClick={handleClick}>
                     <IconSend src={ISend}/>
                     Send
                 </Send>
+                <ModalTransfer
+                    open={showModalSendToken}
+                    clickOutSide={true}
+                    setOpenModal={handleClickOutSide}
+                />
                 <Sign>
                     <IconSign src={ISign}/>
                     Sign

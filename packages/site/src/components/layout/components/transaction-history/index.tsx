@@ -2,8 +2,10 @@ import { ethers } from "ethers";
 import { formatAccountAddress } from "helpers/formatAccountAddress";
 import styled from "styled-components";
 import ISendTx from "assets/icons/icon-sent-tx.png";
-import IReceivedTx from "assets/icons/icon-received-tx.png"
+// import IReceivedTx from "assets/icons/icon-received-tx.png"
 import { formatDateTime } from "helpers/formatDateTime";
+import ModalTransactionDetail from "components/modal-app/ModalTranstionDetail";
+import { useState } from "react";
 
 
 const Wrapper = styled.div`
@@ -77,7 +79,15 @@ const TxStatus = styled.div`
 `;
 
 const TransactionHistory = () => {
-    const pendding = false;
+    const [showTxDetail, setShowTxDetail] = useState(false);
+
+    const handleClick = () => {
+        setShowTxDetail(true)
+    }
+    
+    const handleClickOutSideTxDetail = () => {
+        setShowTxDetail(false)
+    }
 
     const transactions = [
         {
@@ -113,6 +123,7 @@ const TransactionHistory = () => {
                     return (
                         <TracsactionItem
                             key={index}
+                            onClick={handleClick}
                         >
                             <Icon src={ISendTx} />
                             <TransactionDetail>
@@ -125,6 +136,11 @@ const TransactionHistory = () => {
                                     <TxStatus>APPLIED</TxStatus>
                                 </Status>
                             </TransactionDetail>
+                            <ModalTransactionDetail
+                                open={showTxDetail}
+                                clickOutSide={true}
+                                setOpenModal={handleClickOutSideTxDetail}
+                            />
                         </TracsactionItem>
                     )
                 })}
