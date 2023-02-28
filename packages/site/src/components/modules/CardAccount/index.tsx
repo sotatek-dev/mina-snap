@@ -5,7 +5,7 @@ import pointMenu from 'assets/icons/pointMenu.svg';
 import pointMenuDark from 'assets/icons/pointMenu_dark.svg';
 import { ResultAccountList } from 'types/account';
 import React from 'react';
-import { formatAccountAddress } from 'helpers/formatAccountAddress';
+import { formatAccountAddress, formatBalance } from 'helpers/formatAccountAddress';
 import { useAppDispatch } from 'hooks/redux';
 import { setDetailsAccount } from 'slices/walletSlice';
 
@@ -136,7 +136,7 @@ const CardAccount: React.FC<Props> = ({ active, imported, data, handleShowDetail
       </AccountName>
       <Address active={active}>{data && formatAccountAddress(data.address)}</Address>
       <Balance active={active}>
-        {data.balance.total} MINA
+        {data && formatBalance(data.balance.total)} MINA
         <More active={active} typeButton="round" onClick={showDetails}>
           <PointMenu src={active ? pointMenu : pointMenuDark} />
         </More>
