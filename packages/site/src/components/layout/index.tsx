@@ -3,6 +3,8 @@ import ModalTransfer from 'components/modal-app/ModalTransfer';
 import ModalTransactionDetail from 'components/modal-app/ModalTranstionDetail';
 import { useState } from 'react';
 import styled from 'styled-components';
+import Address from './components/address';
+import Balance from './components/balance';
 import Header from './header';
 
 
@@ -16,6 +18,7 @@ const Wrapper = styled.div`
 `;
 
 const ColMiddle = styled.div`
+  font-family: "Inter Regular";
   max-width: 1040px;
   max-height: 100vh;
   margin: auto;
@@ -63,7 +66,7 @@ const Content = styled.div`
         <Header />
         <ColMiddle>
             <Content>
-              <Button onClick={handleClick}>Click</Button>
+              {/* <Button onClick={handleClick}>Click</Button>
               <ModalTransfer
                 open={showModal}
                 clickOutSide={true}
@@ -74,7 +77,9 @@ const Content = styled.div`
                 open={showTxDetail}
                 clickOutSide={true}
                 setOpenModal={handleClickOutSideTxDetail}
-              />
+              /> */}
+              <Address/>
+              <Balance />
             </Content>
         </ColMiddle>
     </Wrapper>
