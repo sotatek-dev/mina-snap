@@ -12,6 +12,7 @@ const AccountName  = styled.div`
     font-size: 14px;
     line-height: 17px;
     color: #000000;
+    padding: 8px 0 3px;
 `;
 
 const WalletAddress = styled.div`

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Address from './components/address';
 import Balance from './components/balance';
+import TransactionHistory from './components/transaction-history';
 import Header from './header';
 
 
@@ -80,6 +81,7 @@ const Content = styled.div`
               /> */}
               <Address/>
               <Balance />
+              <TransactionHistory/>
             </Content>
         </ColMiddle>
     </Wrapper>

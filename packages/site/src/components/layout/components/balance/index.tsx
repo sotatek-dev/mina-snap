@@ -38,15 +38,38 @@ const TokenName = styled.div`
 `;
 
 const Action = styled.div`
-
+    display: flex;
+    min-width: 80px;
+    justify-content: space-between;
+    margin-top: 16px;
 `;
 
-const Send = styled.img`
-
+const Send = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 12px;
+    color: #594AF1;
 `;
 
-const Sign = styled.img`
+const IconSend = styled.img`
+    max-width: 30px;
+`;
 
+const Sign = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 12px;
+    color: #594AF1;
+`;
+
+const IconSign = styled.img`
+    max-width: 30px;
 `;
 
 const Balance = () => {
@@ -58,10 +81,14 @@ const Balance = () => {
                 <TokenName>MINA</TokenName>
             </AmountToken>
             <Action>
-                <Send src={ISend}></Send>
-                Send
-                <Sign src={ISign}></Sign>
-                Sign
+                <Send >
+                    <IconSend src={ISend}/>
+                    Send
+                </Send>
+                <Sign>
+                    <IconSign src={ISign}/>
+                    Sign
+                </Sign>
             </Action>
         </Wrapper>
     )
