@@ -125,7 +125,7 @@ const ListItemTextCustom = styled(ListItemText)({
     color: '#000000',
   },
   '& .css-83ijpv-MuiTypography-root': {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter Regular',
     fontStyle: 'normal',
     fontWeight: '400',
     fontSize: '12px',

@@ -14,3 +14,15 @@ export type TypeResponseSendTransaction = {
     isDelegation: boolean
     kind: string
 }
+
+export type TypeResponseSignature = {
+    data: {
+        message: string
+        publicKey: string
+    }
+    signature: {
+        field: string
+        scalar: string
+        signer: string
+    }
+}

@@ -9,6 +9,7 @@ import Button from 'components/common/button';
 import ModalConfirm from './ModalConfirm';
 import { useAppSelector } from 'hooks/redux';
 import { payloadSendTransaction } from 'types/transaction';
+import { formatBalance } from 'helpers/formatAccountAddress';
 
 interface ModalProps {
   open: boolean;
@@ -76,6 +77,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
       setDisabled(true);
     }
   }, [amount, address]);
+
   useEffect(() => {
     setAddress('');
     setAmount('');

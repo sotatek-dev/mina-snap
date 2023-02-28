@@ -13,7 +13,7 @@ const Container = styled(Box)(() => ({
   paddingBottom: '0px',
 }));
 const BoxTitle = styled(Box)(() => ({
-  fontFamily: 'Inter',
+  fontFamily: 'Inter Regular',
   fontStyle: 'normal',
   fontWeight: '500',
   fontSize: '10px',

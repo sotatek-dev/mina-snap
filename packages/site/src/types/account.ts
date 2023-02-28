@@ -45,5 +45,6 @@ export type ResponseExportPrivateKey = {
 export type payloadActiveAccount = {
     activeAccount: string
     balance: string
+    // accountName: string
 }
 

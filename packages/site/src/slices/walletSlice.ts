@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 
 
 export interface WalletState {
+  accountName: string,
   balance: string,
   activeAccount: string
   isInstalledWallet: boolean,
@@ -23,6 +24,7 @@ export interface WalletState {
 }
 
 const initialState: WalletState = {
+  accountName: '',
   balance: '',
   activeAccount: '',
   isInstalledWallet: false,
@@ -57,6 +59,7 @@ export const walletSlice = createSlice({
     setActiveAccount: (state, { payload }: PayloadAction<payloadActiveAccount>) => {
       state.activeAccount = payload.activeAccount;
       state.balance = payload.balance
+      // state.accountName = payload.accountName
     },
 
     setSnapInstalled: (state, { payload }: PayloadAction<boolean>) => {
