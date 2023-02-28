@@ -22,7 +22,10 @@ const DetailsAccount = () => {
   const { ExportPrivateKey } = useMinaSnap();
 
   const handelExportPrivateKey = async () => {
-    const res = await ExportPrivateKey();
+    const res = await ExportPrivateKey({
+      accountIndex: Number(detailsAccount?.index),
+      isImported: detailsAccount?.isImported,
+    });
     setPrivateKey(res.privateKey);
     setOpenModal(true);
   };

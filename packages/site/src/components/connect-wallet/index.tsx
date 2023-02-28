@@ -6,6 +6,7 @@ import { Box, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 
 import { connectWallet, setActiveAccount, setIsLoading } from 'slices/walletSlice';
+import { formatBalance } from 'helpers/formatAccountAddress';
 
 const BoxCenter = styled(Box)(() => ({
   display: 'flex',
@@ -50,7 +51,12 @@ const ConnectWallet: React.FC<Props> = () => {
           isInstalledSnap,
         }),
       );
-      reduxDispatch(setActiveAccount(accountInfor.publicKey));
+      reduxDispatch(
+        setActiveAccount({
+          activeAccount: accountInfor.publicKey as string,
+          balance: formatBalance(accountInfor.balance.total) as string,
+        }),
+      );
     } catch (e) {
       console.log(e);
     } finally {

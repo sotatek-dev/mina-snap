@@ -5,7 +5,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Header from './header';
 
-
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.palette.grey.grey3};
   position: absolute;
@@ -24,7 +23,7 @@ const ColMiddle = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-  
+
   @media (max-width: 1024px) {
     width: 896px;
   }
@@ -35,48 +34,37 @@ const Content = styled.div`
   border-radius: ${(props) => props.theme.corner.small};
   height: 9999px;
   padding-top: 124px;
-
 `;
 
-
- const Home = () => {
-
+const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [showTxDetail, setShowTxDetail] = useState(false);
 
   const handleClick = () => {
-    setShowModal(true)
-  }
+    setShowModal(true);
+  };
   const handleClickOutSide = () => {
-    setShowModal(false)
-  }
+    setShowModal(false);
+  };
 
   const showTransactionDetails = () => {
-    setShowTxDetail(true)
-  }
+    setShowTxDetail(true);
+  };
 
   const handleClickOutSideTxDetail = () => {
-    setShowTxDetail(false)
-  }
+    setShowTxDetail(false);
+  };
   return (
     <Wrapper>
-        <Header />
-        <ColMiddle>
-            <Content>
-              <Button onClick={handleClick}>Click</Button>
-              <ModalTransfer
-                open={showModal}
-                clickOutSide={true}
-                setOpenModal={handleClickOutSide}
-              />
-              <Button onClick={showTransactionDetails}>Transaction Detail</Button>
-              <ModalTransactionDetail
-                open={showTxDetail}
-                clickOutSide={true}
-                setOpenModal={handleClickOutSideTxDetail}
-              />
-            </Content>
-        </ColMiddle>
+      <Header />
+      <ColMiddle>
+        <Content>
+          <Button onClick={handleClick}>Click</Button>
+          <ModalTransfer open={showModal} clickOutSide={true} setOpenModal={handleClickOutSide} />
+          <Button onClick={showTransactionDetails}>Transaction Detail</Button>
+          <ModalTransactionDetail open={showTxDetail} clickOutSide={true} setOpenModal={handleClickOutSideTxDetail} />
+        </Content>
+      </ColMiddle>
     </Wrapper>
   );
 };
