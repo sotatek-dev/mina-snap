@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Button,
@@ -64,6 +64,10 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
       return 'disableButton';
     }
   };
+
+  useEffect(() => {
+    setNameAccount('');
+  }, [open]);
 
   return (
     <Modal disableAutoFocus={true} open={open}>

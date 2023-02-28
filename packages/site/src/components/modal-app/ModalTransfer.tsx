@@ -76,6 +76,12 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
       setDisabled(true);
     }
   }, [amount, address]);
+  useEffect(() => {
+    setAddress('');
+    setAmount('');
+    setGasFee(GAS_FEE.default);
+    setNonce('');
+  }, [open]);
 
   return (
     <Modal open={open} title="Send" clickOutSide={clickOutSide} setOpenModal={setOpenModal}>
