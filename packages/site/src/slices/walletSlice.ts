@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Account, ResultAccountList } from 'types/account';
-import { Erc20TokenBalance } from 'types';
+import { Account, ResultAccountList, payloadActiveAccount } from 'types/account';
+import { Erc20TokenBalance, } from 'types';
 import { Transaction } from 'types';
 import { ethers } from 'ethers';
 
 
 
 export interface WalletState {
+  balance: string,
   activeAccount: string
   isInstalledWallet: boolean,
   isInstalledSnap: boolean,
@@ -22,6 +23,7 @@ export interface WalletState {
 }
 
 const initialState: WalletState = {
+  balance: '',
   activeAccount: '',
   isInstalledWallet: false,
   isInstalledSnap: false,
@@ -52,8 +54,9 @@ export const walletSlice = createSlice({
     setDetailsAccount: (state, { payload }: PayloadAction<ResultAccountList>) => {
       state.detailsAccount = payload;
     },
-    setActiveAccount: (state, { payload }: PayloadAction<string>) => {
-      state.activeAccount = payload;
+    setActiveAccount: (state, { payload }: PayloadAction<payloadActiveAccount>) => {
+      state.activeAccount = payload.activeAccount;
+      state.balance = payload.balance
     },
 
     setSnapInstalled: (state, { payload }: PayloadAction<boolean>) => {
