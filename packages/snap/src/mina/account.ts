@@ -11,11 +11,29 @@ import { NetworkConfig } from '../interfaces';
 import { getSnapConfiguration, updateSnapConfig } from './configuration';
 import { popupDialog } from '../util/popup.util';
 
-export const getKeyPair = async () => {
+export const getKeyPair = async (index?: number, isImported?: boolean) => {
   const snapConfig = await getSnapConfiguration();
   const { currentNetwork, networks } = snapConfig;
   const networkConfig = networks[currentNetwork];
   const { importedAccounts, selectedImportedAccount } = networkConfig;
+  if (index && !isImported) {
+    const { name, address } = networkConfig.generatedAccounts[index];
+    const { privateKey } = await generateKeyPair(networkConfig, index);
+    return {
+      name,
+      publicKey: address,
+      privateKey,
+      isImported: false
+    };
+  } else if (index && isImported) {
+    const { name, address, privateKey } = importedAccounts[index];
+    return {
+      name,
+      publicKey: address,
+      privateKey,
+      isImported: true
+    };
+  }
   if (typeof selectedImportedAccount === 'number') {
     return {
       name: importedAccounts[selectedImportedAccount].name,
