@@ -1,9 +1,9 @@
-import Button from 'components/common/button';
-import ModalTransfer from 'components/modal-app/ModalTransfer';
-import ModalTransactionDetail from 'components/modal-app/ModalTranstionDetail';
-import { useState } from 'react';
 import styled from 'styled-components';
+import Address from './components/address';
+import Balance from './components/balance';
+import TransactionHistory from './components/transaction-history';
 import Header from './header';
+
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.palette.grey.grey3};
@@ -15,6 +15,7 @@ const Wrapper = styled.div`
 `;
 
 const ColMiddle = styled.div`
+  font-family: "Inter Regular";
   max-width: 1040px;
   max-height: 100vh;
   margin: auto;
@@ -23,7 +24,7 @@ const ColMiddle = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
-
+  
   @media (max-width: 1024px) {
     width: 896px;
   }
@@ -34,37 +35,21 @@ const Content = styled.div`
   border-radius: ${(props) => props.theme.corner.small};
   height: 9999px;
   padding-top: 124px;
+
 `;
 
-const Home = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [showTxDetail, setShowTxDetail] = useState(false);
 
-  const handleClick = () => {
-    setShowModal(true);
-  };
-  const handleClickOutSide = () => {
-    setShowModal(false);
-  };
-
-  const showTransactionDetails = () => {
-    setShowTxDetail(true);
-  };
-
-  const handleClickOutSideTxDetail = () => {
-    setShowTxDetail(false);
-  };
+ const Home = () => {
   return (
     <Wrapper>
-      <Header />
-      <ColMiddle>
-        <Content>
-          <Button onClick={handleClick}>Click</Button>
-          <ModalTransfer open={showModal} clickOutSide={true} setOpenModal={handleClickOutSide} />
-          <Button onClick={showTransactionDetails}>Transaction Detail</Button>
-          <ModalTransactionDetail open={showTxDetail} clickOutSide={true} setOpenModal={handleClickOutSideTxDetail} />
-        </Content>
-      </ColMiddle>
+        <Header />
+        <ColMiddle>
+            <Content>
+              <Address/>
+              <Balance />
+              <TransactionHistory/>
+            </Content>
+        </ColMiddle>
     </Wrapper>
   );
 };
