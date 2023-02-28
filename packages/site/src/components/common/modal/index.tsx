@@ -4,15 +4,20 @@ import IconBack from 'assets/icons/icon-back.svg';
 
 interface IModalCommon extends ModalProps {
   open: boolean;
+  setOpenModal: () => void;
   ActionsBack?: React.ReactChild;
   title?: string;
-  setOpenModal: () => void;
   fixedheight?: boolean;
   clickOutSide?: boolean;
+  fixedWidth?: boolean;
 }
+
 type ModalCommonProps = React.PropsWithChildren<IModalCommon>;
 
-const Container = styled(Box)(() => ({
+type ContainerProps = React.PropsWithChildren<Omit<IModalCommon, 'open' | 'setOpenModal'>>;
+
+const Container = styled(Box)<ContainerProps>((Prop) => ({
+  fontFamily: 'Inter Regular',
   position: 'absolute',
   display: 'flex',
   flexDirection: 'column',
@@ -22,7 +27,7 @@ const Container = styled(Box)(() => ({
   maxHeight: '550px',
   transform: 'translate(-50%, -50%)',
   boxSizing: 'border-box',
-  width: '322px',
+  width: Prop.fixedWidth ? '310px' : '322px',
   padding: '16px 0px',
   border: '1px solid #ECECF6',
   boxShadow: '0px 0px 3px 1px rgba(0, 0, 0, 0.1)',
@@ -36,10 +41,10 @@ const ContainerContent = styled(Box)(() => ({
 }));
 
 const BoxTitleModal = styled(Box)({
-  fontFamily: 'Inter',
+  fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
-  fontSize: '14px',
+  fontWeight: '600',
+  fontSize: '16px',
   lineHeight: '17px',
   textAlign: 'center',
   color: '#000000',
@@ -47,7 +52,7 @@ const BoxTitleModal = styled(Box)({
 
 const CloseIconWrapper = styled(Box)({
   position: 'absolute',
-  left: 3,
+  left: 15,
   alignSelf: 'flex-end',
   cursor: 'pointer',
 });
@@ -60,7 +65,15 @@ const IconBoxBack = styled(Box)({
   },
 });
 
-const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide, fixedheight }: ModalCommonProps) => {
+const ModalCommon = ({
+  open,
+  title,
+  setOpenModal,
+  children,
+  clickOutSide,
+  fixedheight,
+  fixedWidth,
+}: ModalCommonProps) => {
   return (
     <Modal
       onBackdropClick={() => {
@@ -69,7 +82,7 @@ const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide, fixedh
       disableAutoFocus={true}
       open={open}
     >
-      <Container sx={{ height: fixedheight ? '100%' : 'auto' }}>
+      <Container fixedWidth={fixedWidth} sx={{ height: fixedheight ? '100%' : 'auto' }}>
         <ContainerContent>
           <BoxTitleModal>
             <CloseIconWrapper onClick={setOpenModal}>
@@ -79,6 +92,7 @@ const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide, fixedh
             </CloseIconWrapper>
             {title}
           </BoxTitleModal>
+
           {children}
         </ContainerContent>
       </Container>

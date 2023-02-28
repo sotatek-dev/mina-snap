@@ -14,6 +14,7 @@ export type ResultAccountList = {
     name: string
     address: string
     index: number
+    balance: { total: string }
     isImported: boolean
 }
 
@@ -28,5 +29,14 @@ export type TypeImportAccount = {
     privateKey: string
 }
 
+export type TypePayloadEditAccountName = {
+    index: number
+    name: string
+    isImported: boolean
+}
+
+export type ResponseExportPrivateKey = {
+    privateKey: string
+}
 
 

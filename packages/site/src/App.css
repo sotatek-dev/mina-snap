@@ -1,13 +1,13 @@
 @font-face {
-  font-family: 'Roboto Regular';
-  src: url(./assets/fonts/Roboto/Roboto-Regular.ttf);
+  font-family: 'Inter Regular';
+  src: url(./assets/fonts/Inter/Inter-Regular.ttf);
   font-style: normal;
   font-weight: 400;
   font-display: fallback;
 }
 @font-face {
-  font-family: 'Roboto Bold';
-  src: url(./assets/fonts/Roboto/Roboto-Bold.ttf);
+  font-family: 'Inter Bold';
+  src: url(./assets/fonts/Inter/Inter-Bold.ttf);
   font-style: normal;
   font-weight: 700;
   font-display: fallback;
@@ -32,4 +32,19 @@
 
 ::-webkit-scrollbar-corner {
   background: transparent;
+}
+.MuiButtonBase-root.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.MuiListItem-button.css-bshv44-MuiButtonBase-root-MuiListItem-root {
+
+  padding: 0px 0px 5px 0px;
+}
+
+.disable{
+  opacity: 0.5;
+  pointer-events: none;
+  
+}
+
+.disableButton{
+  opacity: 0.5;
+  pointer-events: none;
 }

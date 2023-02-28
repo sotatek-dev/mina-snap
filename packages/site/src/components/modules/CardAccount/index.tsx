@@ -3,15 +3,17 @@ import iconActive from 'assets/icons/icon-active.svg';
 import ButtonCommon from 'components/common/button';
 import pointMenu from 'assets/icons/pointMenu.svg';
 import pointMenuDark from 'assets/icons/pointMenu_dark.svg';
-import { Account, ResultAccountList } from 'types/account';
-import  React from 'react';
-
+import { ResultAccountList } from 'types/account';
+import React from 'react';
 import { formatAccountAddress } from 'helpers/formatAccountAddress';
+import { useAppDispatch } from 'hooks/redux';
+import { setDetailsAccount } from 'slices/walletSlice';
 
 interface Props {
   active?: boolean;
   imported?: boolean;
   data?: ResultAccountList | null | undefined;
+  handleShowDetail?: () => void;
 }
 
 const Wrapper = styled.div<Props>`
@@ -30,6 +32,7 @@ const Wrapper = styled.div<Props>`
     border: 1px solid #594af1;
   }
 `;
+
 const AccountName = styled.div<Props>`
   line-height: 15px;
   color: ${(props) => (props.active ? '#FFFFFF' : '#000000')};
@@ -60,7 +63,6 @@ const Imported = styled.div<Props>`
   border-radius: 5px;
   margin-left: 3px;
 `;
-
 const IActive = styled.img.attrs(() => ({
   src: iconActive,
 }))``;
@@ -90,6 +92,7 @@ const Balance = styled.div<Props>`
 `;
 
 const More = styled(ButtonCommon)<Props>`
+  z-index: 100;
   width: 30px;
   height: 30px;
   position: relative;
@@ -100,6 +103,7 @@ const More = styled(ButtonCommon)<Props>`
     background: #0000001a;
   }
 `;
+
 const PointMenu = styled.img<Props>`
   position: absolute;
   margin-left: auto;
@@ -109,7 +113,14 @@ const PointMenu = styled.img<Props>`
   text-align: center;
 `;
 
-const CardAccount: React.FC<Props> = ({ active, imported, data }) => {
+const CardAccount: React.FC<Props> = ({ active, imported, data, handleShowDetail }: any) => {
+  const dispatch = useAppDispatch();
+  const showDetails: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    dispatch(setDetailsAccount(data));
+    handleShowDetail();
+    event.stopPropagation();
+  };
+
   return (
     <Wrapper active={active}>
       <AccountName active={active}>
@@ -125,8 +136,8 @@ const CardAccount: React.FC<Props> = ({ active, imported, data }) => {
       </AccountName>
       <Address active={active}>{data && formatAccountAddress(data.address)}</Address>
       <Balance active={active}>
-        0 MINA
-        <More active={active} typeButton="round">
+        {data.balance.total} MINA
+        <More active={active} typeButton="round" onClick={showDetails}>
           <PointMenu src={active ? pointMenu : pointMenuDark} />
         </More>
       </Balance>

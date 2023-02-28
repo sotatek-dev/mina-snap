@@ -29,10 +29,9 @@ const InputCustom = styled(TextField)<TextFieldProps>({
     padding: '0.5rem 1rem',
     color: '#707D96',
   },
-  // '& .MuiInputBase-multiline': {
-  //   fontSize: '10px',
-  //   padding: '10px 10px',
-  // },
+  '& input': {
+    fontSize: '10px',
+  },
 });
 
 const ButtonCustom = styled(Button)<ButtonProps>({

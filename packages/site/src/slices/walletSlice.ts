@@ -18,6 +18,7 @@ export interface WalletState {
   erc20TokenBalanceSelected: Erc20TokenBalance;
   transactions: Transaction[];
   transactionDeploy?: Transaction;
+  detailsAccount?: ResultAccountList
 }
 
 const initialState: WalletState = {
@@ -32,6 +33,7 @@ const initialState: WalletState = {
   erc20TokenBalanceSelected: {} as Erc20TokenBalance,
   transactions: [],
   transactionDeploy: undefined,
+  detailsAccount: undefined
 };
 
 type ConnectWalletParams = {
@@ -47,9 +49,13 @@ export const walletSlice = createSlice({
   name: 'wallet',
   initialState,
   reducers: {
+    setDetailsAccount: (state, { payload }: PayloadAction<ResultAccountList>) => {
+      state.detailsAccount = payload;
+    },
     setActiveAccount: (state, { payload }: PayloadAction<string>) => {
       state.activeAccount = payload;
     },
+
     setSnapInstalled: (state, { payload }: PayloadAction<boolean>) => {
       state.isInstalledSnap = payload;
     },
@@ -133,6 +139,7 @@ export const walletSlice = createSlice({
 });
 
 export const {
+  setDetailsAccount,
   setListAccounts,
   setActiveAccount,
   setIsLoading,

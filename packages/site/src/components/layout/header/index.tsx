@@ -16,8 +16,12 @@ import { useMinaSnap } from 'services';
 import ModalCommon from 'components/common/modal';
 import CreatNameAccount from 'components/children/CreatNameAccount';
 import { setActiveAccount } from 'slices/walletSlice';
+import LinearProgress from '@mui/material/LinearProgress';
+import { ResultCreateAccount } from 'types/account';
+import DetailsAccoust from 'components/children/DetailsAccoust';
 
 const Wrapper = styled.div`
+  font-family: 'Inter Regular';
   background-color: ${(props) => props.theme.palette.grey.grey3};
   position: fixed;
   width: 1040px;
@@ -79,6 +83,9 @@ const WAccount = styled.div`
   max-height: 300px;
   overflow-y: auto;
   padding: 16px;
+  .disable {
+    background-color: palegreen !important;
+  }
 `;
 
 const WButton = styled.div`
@@ -133,29 +140,58 @@ const Wallet = styled.img.attrs(() => ({
     cursor: pointer;
   }
 `;
-
+const LinearProgressCustom = styled(LinearProgress)({
+  height: '1px',
+});
 const Header = () => {
   const { ChangeAccount, getAccountInfors } = useMinaSnap();
   const { accounts, activeAccount } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
-
   const [openModal, setOpenModal] = React.useState(false);
-
   const [typeModal, setTypeModal] = React.useState('create');
+  const [isLoading, setIsloading] = React.useState(false);
+  const [isShowDetail, setIsShowDetail] = React.useState(false);
 
   const handleChangeAccount = async (item: any) => {
+    setIsloading(true);
     const payload = {
       accountIndex: item.index,
       isImported: item.isImported,
     };
-    await ChangeAccount(payload).then(async () => {
-      try {
-        const accountInfor = await getAccountInfors();
-        dispatch(setActiveAccount(accountInfor.publicKey));
-      } catch (error) {
-        console.log(error);
-      }
-    });
+    await ChangeAccount(payload)
+      .then(async () => {
+        try {
+          const accountInfor = await getAccountInfors();
+          dispatch(setActiveAccount(accountInfor.publicKey));
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .finally(() => {
+        setIsloading(false);
+      });
+  };
+
+  const closeModal = (accounts: ResultCreateAccount) => {
+    setOpenModal(false);
+    dispatch(setActiveAccount(accounts.address));
+  };
+
+  const handleClickCreat = () => {
+    setIsShowDetail(false);
+    setOpenModal(true);
+    setTypeModal('create');
+  };
+
+  const handleClickImport = () => {
+    setIsShowDetail(false);
+    setOpenModal(true);
+    setTypeModal('import');
+  };
+
+  const showDetails = () => {
+    setIsShowDetail(true);
+    setOpenModal(true);
   };
 
   return (
@@ -173,7 +209,8 @@ const Header = () => {
             content={
               <AccountDetailsContent>
                 <Label>Account Management</Label>
-                <WAccount>
+                {isLoading && <LinearProgressCustom />}
+                <WAccount className={isLoading ? 'disable' : ''}>
                   {accounts.map((item, index) => {
                     return (
                       <Box
@@ -183,6 +220,7 @@ const Header = () => {
                         }}
                       >
                         <CardAccount
+                          handleShowDetail={showDetails}
                           active={activeAccount === item.address}
                           data={item}
                           imported={item.isImported}
@@ -192,21 +230,11 @@ const Header = () => {
                   })}
                 </WAccount>
                 <WButton>
-                  <ButtonCreate
-                    onClick={() => {
-                      setOpenModal(true);
-                      setTypeModal('create');
-                    }}
-                  >
+                  <ButtonCreate onClick={handleClickCreat}>
                     <ICreate />
                     Create
                   </ButtonCreate>
-                  <ButtonImport
-                    onClick={() => {
-                      setOpenModal(true);
-                      setTypeModal('import');
-                    }}
-                  >
+                  <ButtonImport onClick={handleClickImport}>
                     <IImport />
                     Import
                   </ButtonImport>
@@ -220,18 +248,22 @@ const Header = () => {
       </Wrapper>
       <ModalCommon
         open={openModal}
-        title="Account Name"
+        title={isShowDetail ? 'Account Details' : 'Account Name'}
         setOpenModal={() => {
           setOpenModal(false);
         }}
+        fixedheight={isShowDetail}
       >
-        <CreatNameAccount
-          type={typeModal}
-          onCloseModal={(accounts) => {
-            setOpenModal(false);
-            dispatch(setActiveAccount(accounts.address));
-          }}
-        ></CreatNameAccount>
+        {isShowDetail ? (
+          <DetailsAccoust></DetailsAccoust>
+        ) : (
+          <CreatNameAccount
+            type={typeModal}
+            onCloseModal={(accounts) => {
+              closeModal(accounts);
+            }}
+          ></CreatNameAccount>
+        )}
       </ModalCommon>
     </>
   );
