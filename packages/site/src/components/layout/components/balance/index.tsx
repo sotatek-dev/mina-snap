@@ -95,7 +95,7 @@ const Balance = () => {
     <Wrapper>
       <Logo src={IMinaCircle} />
       <AmountToken>
-        <Amount>{formatBalance(balance)}</Amount>
+        <Amount>{balance}</Amount>
         <TokenName>MINA</TokenName>
       </AmountToken>
       <Action>
