@@ -101,8 +101,8 @@ const TransactionHistory = () => {
 
     useEffect(()=> {
       const getListTxHistory = async () => {
-        const txList:any = await getTxHistory();
-        reduxDispatch(setTransactions(txList.transactions))
+        const txList= await getTxHistory();
+        reduxDispatch(setTransactions(txList))
       }
       getListTxHistory()
     }, [])  
@@ -113,26 +113,24 @@ const TransactionHistory = () => {
             <TransactionList>
                 {transactions.map((item, index) =>{
                     return (
-                        <>
-                          <TracsactionItem
-                              key={index}
-                              onClick={()=>{
-                                handleClick(item)
-                              }}
-                          >
-                              <Icon src={item.from == activeAccount ? ISendTx: IReceivedTx} />
-                              <TransactionDetail>
-                                  <TxInfo>
-                                      <Address>{formatAccountAddress(item.to)}</Address>
-                                      <Amount>{(item.from == activeAccount ?`- `: `+ `) + ethers.utils.formatUnits(item.amount, "gwei")}</Amount>
-                                  </TxInfo>
-                                  <Status>
-                                      <Detail>{formatDateTime(item.dateTime)}</Detail>
-                                      <TxStatus>APPLIED</TxStatus>
-                                  </Status>
-                              </TransactionDetail>
-                        </TracsactionItem>
-                        </>
+                        <TracsactionItem
+                            key={index}
+                            onClick={()=>{
+                              handleClick(item)
+                            }}
+                        >
+                            <Icon src={item.from == activeAccount ? ISendTx: IReceivedTx} />
+                            <TransactionDetail>
+                                <TxInfo>
+                                    <Address>{formatAccountAddress(item.to)}</Address>
+                                    <Amount>{(item.from == activeAccount ?`- `: `+ `) + ethers.utils.formatUnits(item.amount, "gwei")}</Amount>
+                                </TxInfo>
+                                <Status>
+                                    <Detail>{formatDateTime(item.dateTime)}</Detail>
+                                    <TxStatus>APPLIED</TxStatus>
+                                </Status>
+                            </TransactionDetail>
+                      </TracsactionItem>
                     )
                   })}
                   <ModalTransactionDetail

@@ -11,7 +11,7 @@ import {
   ResponseExportPrivateKey,
 
 } from 'types/account';
-import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature, ResultTransactionList } from 'types/transaction';
+import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature, TypeResponseTxHistory } from 'types/transaction';
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
@@ -152,7 +152,7 @@ export const useMinaSnap = () => {
     });
   };
 
-  const getTxHistory = async (): Promise<Array<ResultTransactionList>> => {
+  const getTxHistory = async (): Promise<TypeResponseTxHistory> => {
     return await ethereum.request({
       method: 'wallet_invokeSnap',
       params: {

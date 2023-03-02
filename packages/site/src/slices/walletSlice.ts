@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Account, ResultAccountList, payloadActiveAccount } from 'types/account';
 import { Erc20TokenBalance, } from 'types';
 import { ethers } from 'ethers';
-import { ResultTransactionList } from 'types/transaction';
+import { ResultTransactionList, TypeResponseTxHistory } from 'types/transaction';
 
 export interface WalletState {
   accountName: string,
@@ -133,8 +133,8 @@ export const walletSlice = createSlice({
         forceReconnect: true,
       };
     },
-    setTransactions: (state, { payload }: PayloadAction<Array<ResultTransactionList>>) => {
-      state.transactions = [...payload]
+    setTransactions: (state, { payload }: PayloadAction<TypeResponseTxHistory>) => {
+      state.transactions = [...payload.transactions]
       return state;
     },
   },
