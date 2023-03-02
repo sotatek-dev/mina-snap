@@ -61,9 +61,9 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
       };
       const account = await ImportAccount(payload);
       const accountList = await AccountList();
+      dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
       onCloseModal(account);
-      dispatch(setIsLoading(false));
     } catch (error) {
       dispatch(setIsLoading(false));
     }

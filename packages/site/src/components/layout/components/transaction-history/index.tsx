@@ -2,11 +2,11 @@ import { ethers } from 'ethers';
 import { formatAccountAddress } from 'helpers/formatAccountAddress';
 import styled from 'styled-components';
 import ISendTx from 'assets/icons/icon-sent-tx.png';
-import IReceivedTx from "assets/icons/icon-received-tx.png"
-import { formatDateTime } from "helpers/formatDateTime";
-import ModalTransactionDetail from "components/modal-app/ModalTranstionDetail";
-import { useEffect, useState } from "react";
-import { useMinaSnap } from "services";
+import IReceivedTx from 'assets/icons/icon-received-tx.png';
+import { formatDateTime } from 'helpers/formatDateTime';
+import ModalTransactionDetail from 'components/modal-app/ModalTranstionDetail';
+import { useEffect, useState } from 'react';
+import { useMinaSnap } from 'services';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
@@ -32,7 +32,7 @@ const TracsactionItem = styled.div`
   display: flex;
   padding: 22px 15px;
   :hover {
-    background: #F1F1F1;
+    background: #f1f1f1;
     cursor: pointer;
   }
 `;
@@ -86,66 +86,67 @@ const TxStatus = styled.div`
 `;
 
 const TransactionHistory = () => {
-    const [showTxDetail, setShowTxDetail] = useState(false);
-    const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined)
-    const {activeAccount,transactions} = useAppSelector((state)=> state.wallet);
+  const [showTxDetail, setShowTxDetail] = useState(false);
+  const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
+  const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
 
-    const {getTxHistory} = useMinaSnap();
-    const reduxDispatch = useAppDispatch();
+  const { getTxHistory } = useMinaSnap();
+  const reduxDispatch = useAppDispatch();
 
+  const handleClick = (item: ResultTransactionList) => {
+    setDetailTx(item);
+    setShowTxDetail(true);
+  };
 
-    const handleClick = (item:ResultTransactionList) => {
-      setDetailTx(item);
-      setShowTxDetail(true);
+  const handleClickOutSideTxDetail = () => {
+    setShowTxDetail(false);
+  };
+
+  useEffect(() => {
+    const getListTxHistory = async () => {
+      const txList = await getTxHistory();
+      reduxDispatch(setTransactions(txList));
     };
+    getListTxHistory();
+  }, []);
 
-    const handleClickOutSideTxDetail = () => {
-      setShowTxDetail(false);
-    };
-
-    useEffect(()=> {
-      const getListTxHistory = async () => {
-        const txList= await getTxHistory();
-        reduxDispatch(setTransactions(txList))
-      }
-      getListTxHistory()
-    })  
-
-    return(
-        <Wrapper>
-            <Label>HISTORY</Label>
-            <TransactionList>
-                {transactions.map((item, index) =>{
-                    return (
-                        <TracsactionItem
-                            key={index}
-                            onClick={()=>{
-                              handleClick(item)
-                            }}
-                        >
-                            <Icon src={item.from == activeAccount ? ISendTx: IReceivedTx} />
-                            <TransactionDetail>
-                                <TxInfo>
-                                    <Address>{formatAccountAddress(item.to)}</Address>
-                                    <Amount>{(item.from == activeAccount ?`- `: `+ `) + ethers.utils.formatUnits(item.amount, "gwei")}</Amount>
-                                </TxInfo>
-                                <Status>
-                                    <Detail>{formatDateTime(item.dateTime)}</Detail>
-                                    <TxStatus>APPLIED</TxStatus>
-                                </Status>
-                            </TransactionDetail>
-                      </TracsactionItem>
-                    )
-                  })}
-                  <ModalTransactionDetail
-                    open={showTxDetail}
-                    clickOutSide={true}
-                    setOpenModal={handleClickOutSideTxDetail}
-                    transaction={detailTx}
-                  />
-            </TransactionList>
-        </Wrapper>
-    )
-}
+  return (
+    <Wrapper>
+      <Label>HISTORY</Label>
+      <TransactionList>
+        {transactions.map((item, index) => {
+          return (
+            <TracsactionItem
+              key={index}
+              onClick={() => {
+                handleClick(item);
+              }}
+            >
+              <Icon src={item.from == activeAccount ? ISendTx : IReceivedTx} />
+              <TransactionDetail>
+                <TxInfo>
+                  <Address>{formatAccountAddress(item.to)}</Address>
+                  <Amount>
+                    {(item.from == activeAccount ? `- ` : `+ `) + ethers.utils.formatUnits(item.amount, 'gwei')}
+                  </Amount>
+                </TxInfo>
+                <Status>
+                  <Detail>{formatDateTime(item.dateTime)}</Detail>
+                  <TxStatus>APPLIED</TxStatus>
+                </Status>
+              </TransactionDetail>
+            </TracsactionItem>
+          );
+        })}
+        <ModalTransactionDetail
+          open={showTxDetail}
+          clickOutSide={true}
+          setOpenModal={handleClickOutSideTxDetail}
+          transaction={detailTx}
+        />
+      </TransactionList>
+    </Wrapper>
+  );
+};
 
 export default TransactionHistory;
