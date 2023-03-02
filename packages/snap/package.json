@@ -1,7 +1,7 @@
 {
   "name": "test-mina-snap",
   "version": "0.1.1",
-  "description": "The 'Hello, world!' of MetaMask Snaps, now written in TypeScript.",
+  "description": "This snap helps you interact with Mina protocol using Metamask Flask",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
