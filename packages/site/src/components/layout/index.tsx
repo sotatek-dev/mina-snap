@@ -17,8 +17,9 @@ const Wrapper = styled.div`
 const ColMiddle = styled.div`
   font-family: "Inter Regular";
   max-width: 1040px;
-  max-height: 100vh;
+  max-height: calc(100vh - 124px);
   margin: auto;
+  margin-top: 124px;
   background-color: ${(props) => props.theme.palette.grey.white};
   overflow-y: scroll;
   ::-webkit-scrollbar {
@@ -34,8 +35,6 @@ const Content = styled.div`
   box-shadow: 0px 50px 70px -28px rgba(106, 115, 125, 0.2);
   border-radius: ${(props) => props.theme.corner.small};
   height: 9999px;
-  padding-top: 124px;
-
 `;
 
 
