@@ -2,10 +2,30 @@ import { formatAccountAddress } from 'helpers/formatAccountAddress';
 import styled from 'styled-components';
 import ICoppy from 'assets/icons/icon-coppy.svg';
 import { useAppSelector } from 'hooks/redux';
+import Button from 'components/common/button';
+import IThreeDot from 'assets/icons/icon-kebab-menu.svg';
+import { Box } from '@mui/material';
+import { PopperTooltipView } from 'components/common/tooltip';
+import ILink from "assets/icons/icon-link.svg";
+import IAccount from "assets/icons/icon-account.svg";
+import {MINA_BERKELEY_EXPLORER} from "utils/constants"
+import DetailsAccout from 'components/children/DetailsAccoust';
+import { useState } from 'react';
+import ModalCommon from 'components/common/modal';
 
 const Wrapper = styled.div`
   text-align: center;
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
 `;
+
+const BoxInfo = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 30px;
+`
 
 const AccountName = styled.div`
   font-style: normal;
@@ -31,22 +51,103 @@ const IconCoppy = styled.img`
     cursor: pointer;
   }
 `;
+const KebabMenu = styled(PopperTooltipView)``;
+
+const MenuContent = styled.div`
+  width: 230px;
+  background: #FFFFFF;
+  border-radius: 5px;
+  box-shadow: 0px 50px 70px -28px rgba(106, 115, 125, 0.2);
+  padding: 18px 0;
+  text-align: left;
+`;
+
+const MenuItem = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: -0.03em;
+  color: #000000;
+  padding: 10px 18px;
+  :hover {
+    background: #F1F1F1;
+    cursor: pointer;
+  }
+`;
+
+const IconLink = styled.img`
+  margin-right: 10px;
+`;
+
+const ButtonMenu = styled(Button)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: #FFFFFF;
+  border: none;
+  margin-right: 8px;
+  :hover {
+    background: #D9D9D9;
+  }
+`
+
+const PointMenu = styled.img`
+  text-align: center;
+`;
 
 const Address = () => {
   const { activeAccount, accountName } = useAppSelector((state) => state.wallet);
+  const [openModal, setOpenModal] = useState(false);
+
+  const hanldeViewAccount = () => {
+    const type = 'wallet';
+    window.open(MINA_BERKELEY_EXPLORER + type + '/' + activeAccount, '_blank')?.focus();
+  }
+
+  const handleOpenModal=()=> {
+    setOpenModal(true);
+  }
 
   return (
     <Wrapper>
-      <AccountName>{accountName}</AccountName>
-      <WalletAddress>
-        {formatAccountAddress(activeAccount)}
-        <IconCoppy
-          src={ICoppy}
-          onClick={() => {
-            navigator.clipboard.writeText(activeAccount);
-          }}
-        />
-      </WalletAddress>
+      <BoxInfo>
+        <AccountName>{accountName}</AccountName>
+        <WalletAddress>
+          {formatAccountAddress(activeAccount)}
+          <IconCoppy
+            src={ICoppy}
+            onClick={() => {
+              navigator.clipboard.writeText(activeAccount);
+            }}
+          />
+        </WalletAddress>
+      </BoxInfo>
+      <KebabMenu
+        closeTrigger="click"
+        offSet={[50, 10]}
+        content={<MenuContent>
+          <MenuItem onClick={()=>hanldeViewAccount()}><IconLink src={ILink}/>View Account on Minascan</MenuItem>
+          <MenuItem onClick={() => handleOpenModal()} ><IconLink src={IAccount}/>Account details</MenuItem>
+          
+        </MenuContent>}
+      >
+        <ButtonMenu typeButton='round'>
+        <PointMenu src={IThreeDot}/>
+        </ButtonMenu>
+      </KebabMenu>
+      <ModalCommon
+            open={openModal}
+            title='Account Details'
+            setOpenModal={() => {
+              setOpenModal(false);
+            }}
+            fixedheight={false}
+            fixedwitdth={false}
+          >
+            <DetailsAccout></DetailsAccout>
+          </ModalCommon>
     </Wrapper>
   );
 };

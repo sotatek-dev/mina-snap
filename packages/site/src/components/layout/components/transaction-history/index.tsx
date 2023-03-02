@@ -31,6 +31,10 @@ const TracsactionItem = styled.div`
   border-bottom: 1.6px solid #d9d9d9;
   display: flex;
   padding: 22px 15px;
+  :hover {
+    background: #F1F1F1;
+    cursor: pointer;
+  }
 `;
 
 const Icon = styled.img`
@@ -105,7 +109,7 @@ const TransactionHistory = () => {
         reduxDispatch(setTransactions(txList))
       }
       getListTxHistory()
-    }, [])  
+    })  
 
     return(
         <Wrapper>
@@ -139,8 +143,6 @@ const TransactionHistory = () => {
                     setOpenModal={handleClickOutSideTxDetail}
                     transaction={detailTx}
                   />
-              
-                
             </TransactionList>
         </Wrapper>
     )
