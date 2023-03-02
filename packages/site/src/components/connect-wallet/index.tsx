@@ -4,9 +4,8 @@ import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-
 import { connectWallet, setActiveAccount, setIsLoading } from 'slices/walletSlice';
-import { formatBalance } from 'helpers/formatAccountAddress';
+import { ethers } from 'ethers';
 
 const BoxCenter = styled(Box)(() => ({
   display: 'flex',
@@ -56,7 +55,7 @@ const ConnectWallet: React.FC<Props> = () => {
       reduxDispatch(
         setActiveAccount({
           activeAccount: accountInfor.publicKey as string,
-          balance: formatBalance(accountInfor.balance.total) as string,
+          balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
           accountName: accountInfor.name as string,
         }),
       );
