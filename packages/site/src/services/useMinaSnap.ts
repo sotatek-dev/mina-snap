@@ -11,7 +11,7 @@ import {
   ResponseExportPrivateKey,
 
 } from 'types/account';
-import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature } from 'types/transaction';
+import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature, ResultTransactionList } from 'types/transaction';
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
@@ -78,7 +78,6 @@ export const useMinaSnap = () => {
         snapId: snapId,
         request: {
           method: 'mina_accountList',
-
         },
       },
     });
@@ -134,7 +133,6 @@ export const useMinaSnap = () => {
   };
 
   const SendTransaction = async (payload: payloadSendTransaction): Promise<TypeResponseSendTransaction> => {
-    console.log(payload);
     return await ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
@@ -153,8 +151,25 @@ export const useMinaSnap = () => {
       },
     });
   };
+
+  const getTxHistory = async (): Promise<Array<ResultTransactionList>> => {
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_getTxHistory',
+          params: {
+            limit: 10,
+            sortBy: "DATETIME_DESC",
+            canonical: true
+          }
+        },
+      },
+    });
+  };
+
   const Signature = async (payload: string): Promise<TypeResponseSignature> => {
-    console.log(payload);
     return await ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
@@ -180,6 +195,7 @@ export const useMinaSnap = () => {
     getAccountInfors,
     connectToSnap,
     getSnap,
-    SendTransaction
+    SendTransaction,
+    getTxHistory
   };
 };

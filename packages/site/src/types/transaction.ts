@@ -15,6 +15,32 @@ export type TypeResponseSendTransaction = {
     kind: string
 }
 
+export type ResultTransactionList = {
+    fee: number
+    from: string
+    to: string
+    nonce: number
+    amount: number
+    memo: string
+    hash: string
+    kind: string
+    dateTime: string
+    failureReason: string
+}
+
+// export type TypeResponseTxHistory = {
+//     fee: number
+//     from: string
+//     to: string
+//     nonce: number
+//     amount: number
+//     memo: string
+//     hash: string
+//     kind: string
+//     dateTime: string
+//     failureReason: string
+// }
+
 export type TypeResponseSignature = {
     data: {
         message: string
