@@ -15,10 +15,11 @@ import React from 'react';
 import { useMinaSnap } from 'services';
 import ModalCommon from 'components/common/modal';
 import CreatNameAccount from 'components/children/CreatNameAccount';
-import { setActiveAccount } from 'slices/walletSlice';
+import { setActiveAccount, setIsLoading } from 'slices/walletSlice';
 import LinearProgress from '@mui/material/LinearProgress';
 import { ResultCreateAccount } from 'types/account';
 import DetailsAccoust from 'components/children/DetailsAccoust';
+import { formatBalance } from 'helpers/formatAccountAddress';
 
 const Wrapper = styled.div`
   font-family: 'Inter Regular';
@@ -145,15 +146,14 @@ const LinearProgressCustom = styled(LinearProgress)({
 });
 const Header = () => {
   const { ChangeAccount, getAccountInfors } = useMinaSnap();
-  const { accounts, activeAccount } = useAppSelector((state) => state.wallet);
+  const { accounts, activeAccount, isLoading } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = React.useState(false);
   const [typeModal, setTypeModal] = React.useState('create');
-  const [isLoading, setIsloading] = React.useState(false);
   const [isShowDetail, setIsShowDetail] = React.useState(false);
 
   const handleChangeAccount = async (item: any) => {
-    setIsloading(true);
+    dispatch(setIsLoading(true));
     const payload = {
       accountIndex: item.index,
       isImported: item.isImported,
@@ -165,7 +165,8 @@ const Header = () => {
           dispatch(
             setActiveAccount({
               activeAccount: accountInfor.publicKey as string,
-              balance: accountInfor.balance.total as string,
+              balance: formatBalance(accountInfor.balance.total) as string,
+              accountName: accountInfor.name as string,
             }),
           );
         } catch (error) {
@@ -173,7 +174,7 @@ const Header = () => {
         }
       })
       .finally(() => {
-        setIsloading(false);
+        dispatch(setIsLoading(false));
       });
   };
 
@@ -183,6 +184,7 @@ const Header = () => {
       setActiveAccount({
         activeAccount: accounts.address as string,
         balance: '0',
+        accountName: accounts.name as string,
       }),
     );
   };
@@ -240,11 +242,11 @@ const Header = () => {
                   })}
                 </WAccount>
                 <WButton>
-                  <ButtonCreate onClick={handleClickCreat}>
+                  <ButtonCreate className={isLoading ? 'disable' : ''} onClick={handleClickCreat}>
                     <ICreate />
                     Create
                   </ButtonCreate>
-                  <ButtonImport onClick={handleClickImport}>
+                  <ButtonImport className={isLoading ? 'disable' : ''} onClick={handleClickImport}>
                     <IImport />
                     Import
                   </ButtonImport>

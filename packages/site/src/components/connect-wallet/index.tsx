@@ -45,6 +45,8 @@ const ConnectWallet: React.FC<Props> = () => {
       const isInstalledSnap = await getSnap();
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
+      reduxDispatch(setIsLoading(false));
+
       reduxDispatch(
         connectWallet({
           accountList,
@@ -55,7 +57,7 @@ const ConnectWallet: React.FC<Props> = () => {
         setActiveAccount({
           activeAccount: accountInfor.publicKey as string,
           balance: formatBalance(accountInfor.balance.total) as string,
-          // setActiveAccount:accountInfor.
+          accountName: accountInfor.name as string,
         }),
       );
     } catch (e) {

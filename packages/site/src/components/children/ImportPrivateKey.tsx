@@ -1,9 +1,9 @@
 import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
 
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
 import { useMinaSnap } from 'services';
-import { setListAccounts } from 'slices/walletSlice';
+import { setIsLoading, setListAccounts } from 'slices/walletSlice';
 import { ResultCreateAccount } from 'types/account';
 
 const Container = styled(Box)(() => ({
@@ -49,20 +49,23 @@ type Props = {
 const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
   const [privateKey, setPrivateKey] = useState('');
   const { AccountList, ImportAccount } = useMinaSnap();
-  const reduxDispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.wallet);
 
   const sendRequest = async () => {
     try {
+      dispatch(setIsLoading(true));
       const payload = {
         name: AccountName,
         privateKey: privateKey,
       };
       const account = await ImportAccount(payload);
       const accountList = await AccountList();
-      await reduxDispatch(setListAccounts(accountList));
+      await dispatch(setListAccounts(accountList));
       onCloseModal(account);
+      dispatch(setIsLoading(false));
     } catch (error) {
-      console.log(error);
+      dispatch(setIsLoading(false));
     }
   };
 
@@ -82,7 +85,7 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
           />
         </Box>
         <ButtonCustom
-          disabled={!privateKey}
+          className={!privateKey || isLoading ? 'disable' : ''}
           variant="contained"
           disableElevation
           onClick={() => {

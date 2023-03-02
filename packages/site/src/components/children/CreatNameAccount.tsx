@@ -1,9 +1,9 @@
 import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
 import ModalCommon from 'components/common/modal';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
 import { useMinaSnap } from 'services';
-import { setListAccounts } from 'slices/walletSlice';
+import { setIsLoading, setListAccounts } from 'slices/walletSlice';
 import { ResultCreateAccount } from 'types/account';
 import ImportPrivateKey from './ImportPrivateKey';
 
@@ -50,19 +50,22 @@ type Props = {
 const CreateNameAccount = ({ onCloseModal, type }: Props) => {
   const [nameAccount, setNameAccount] = useState('');
   const { CreateAccount, AccountList } = useMinaSnap();
-  const reduxDispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = useState(false);
+  const { isLoading } = useAppSelector((state) => state.wallet);
 
   const sendRequest = async () => {
     switch (type) {
       case 'create':
         try {
+          dispatch(setIsLoading(true));
           const account = await CreateAccount(nameAccount);
           const accountList = await AccountList();
-          await reduxDispatch(setListAccounts(accountList));
+          await dispatch(setListAccounts(accountList));
           onCloseModal(account);
+          dispatch(setIsLoading(false));
         } catch (error) {
-          console.log(error);
+          dispatch(setIsLoading(false));
         }
         break;
       case 'import':
@@ -71,10 +74,15 @@ const CreateNameAccount = ({ onCloseModal, type }: Props) => {
     }
   };
 
+  const closeInport = (account: ResultCreateAccount) => {
+    onCloseModal(account), setOpenModal(false);
+  };
+
   return (
     <>
       <Container>
         <BoxTitle>Please enter your account name</BoxTitle>
+
         <Box sx={{ paddingBottom: '5rem' }}>
           <InputCustom
             sx={{ paddingTop: '5px' }}
@@ -86,10 +94,11 @@ const CreateNameAccount = ({ onCloseModal, type }: Props) => {
             }}
           />
         </Box>
+
         <ButtonCustom
           variant="contained"
           disableElevation
-          disabled={!nameAccount}
+          className={!nameAccount || isLoading ? 'disable' : ''}
           onClick={() => {
             sendRequest();
           }}
@@ -113,7 +122,7 @@ const CreateNameAccount = ({ onCloseModal, type }: Props) => {
       >
         <ImportPrivateKey
           onCloseModal={(account) => {
-            onCloseModal(account), setOpenModal(false);
+            closeInport(account);
           }}
           AccountName={nameAccount}
         ></ImportPrivateKey>

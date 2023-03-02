@@ -33,11 +33,11 @@ const IconCoppy = styled.img`
 `;
 
 const Address = () => {
-  const { balance, activeAccount } = useAppSelector((state) => state.wallet);
+  const { activeAccount, accountName } = useAppSelector((state) => state.wallet);
 
   return (
     <Wrapper>
-      <AccountName>Account 1</AccountName>
+      <AccountName>{accountName}</AccountName>
       <WalletAddress>
         {formatAccountAddress(activeAccount)}
         <IconCoppy
