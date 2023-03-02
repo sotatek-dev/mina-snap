@@ -2,11 +2,15 @@ import Modal from "components/common/modal";
 import styled from "styled-components";
 import { MINA_BERKELEY_EXPLORER, TRANSACTION_STATUS } from "utils/constants";
 import ILink from "assets/icons/icon-link.svg"
+import { ethers } from "ethers";
+import { ResultTransactionList } from "types/transaction";
+import { formatDateTime } from "helpers/formatDateTime";
 
 interface ModalProps {
     open:boolean;
     clickOutSide: boolean;
     setOpenModal: () => void;
+    transaction?: ResultTransactionList | undefined
 }
 
 const Wrapper = styled.div``;
@@ -67,8 +71,7 @@ const QueryDetails = styled.a`
 const IconLink = styled.img`
     padding-left: 6px;
 `;
-const ModalTransactionDetail = ({open, clickOutSide, setOpenModal}: ModalProps) => {
-    
+const ModalTransactionDetail = ({open, clickOutSide, setOpenModal, transaction}: ModalProps) => {
     return (
         <Modal
             open={open}
@@ -83,33 +86,33 @@ const ModalTransactionDetail = ({open, clickOutSide, setOpenModal}: ModalProps) 
                 </BoxIcon>
                 <BoxInfo>
                 Amount
-                <Content>10.8888 Mina</Content>
+                <Content>{ethers.utils.formatUnits(transaction?.amount || 0 , "gwei")} Mina</Content>
                 </BoxInfo>
                 <BoxInfo>
                     To
-                    <Content>B62qiwy4VoVLzBDdSC7dwN6agu6fe4QKqdzbFvWZ2dEmsiddX32A1tC</Content>
+                    <Content>{transaction?.to}</Content>
                 </BoxInfo>
                 <BoxInfo>
                     From
-                    <Content>B62qiwy4VoVLzBDdSC7dwN6agu6fe4QKqdzbFvWZ2dEmsiddX32A1tC</Content>
+                    <Content>{transaction?.from}</Content>
                 </BoxInfo>
                 <BoxInfo>
                     Fee
-                    <Content>0.0101 MINA</Content>
+                    <Content>{transaction?.fee} MINA</Content>
                 </BoxInfo>
                 <BoxInfo>
                     Time
-                    <Content>02-20-2023, 16:21:01 GMT +0700</Content>
+                    <Content>{formatDateTime(transaction?.dateTime || '')}</Content>
                 </BoxInfo>
                 <BoxInfo>
                     Nonce
-                    <Content>10</Content>
+                    <Content>{transaction?.nonce}</Content>
                 </BoxInfo>
                 <BoxInfo>
                     Transaction Hash 
-                    <Content>CkpYafHzCXSr8nDZT7unf12eBmuLrSFN3u1udsFdzn7mg4scBNDhL</Content>
+                    <Content>{transaction?.hash}</Content>
                 </BoxInfo>
-                <QueryDetails href={MINA_BERKELEY_EXPLORER} target="_blank">
+                <QueryDetails href={MINA_BERKELEY_EXPLORER+'transaction/'+transaction?.hash} target="_blank">
                     Query Details
                     <IconLink src={ILink}/>
                 </QueryDetails>

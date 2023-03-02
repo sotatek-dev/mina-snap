@@ -1,10 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Account, ResultAccountList, payloadActiveAccount } from 'types/account';
 import { Erc20TokenBalance, } from 'types';
-import { Transaction } from 'types';
 import { ethers } from 'ethers';
-
-
+import { ResultTransactionList, TypeResponseTxHistory } from 'types/transaction';
 
 export interface WalletState {
   accountName: string,
@@ -18,9 +16,9 @@ export interface WalletState {
   accounts: Array<ResultAccountList>;
   erc20TokenBalances: Erc20TokenBalance[];
   erc20TokenBalanceSelected: Erc20TokenBalance;
-  transactions: Transaction[];
-  transactionDeploy?: Transaction;
-  detailsAccount?: ResultAccountList
+  detailsAccount?: ResultAccountList;
+  transactions: Array<ResultTransactionList>;
+  detailTransaction?: ResultTransactionList;
 }
 
 const initialState: WalletState = {
@@ -36,8 +34,8 @@ const initialState: WalletState = {
   erc20TokenBalances: [],
   erc20TokenBalanceSelected: {} as Erc20TokenBalance,
   transactions: [],
-  transactionDeploy: undefined,
-  detailsAccount: undefined
+  detailsAccount: undefined,
+  detailTransaction:undefined,
 };
 
 type ConnectWalletParams = {
@@ -126,12 +124,6 @@ export const walletSlice = createSlice({
     setErc20TokenBalanceSelected: (state, { payload }) => {
       state.erc20TokenBalanceSelected = payload;
     },
-    setTransactions: (state, { payload }) => {
-      state.transactions = payload;
-    },
-    setTransactionDeploy: (state, { payload }) => {
-      state.transactionDeploy = payload;
-    },
     clearAccounts: (state) => {
       state.accounts = [];
     },
@@ -140,6 +132,10 @@ export const walletSlice = createSlice({
         ...initialState,
         forceReconnect: true,
       };
+    },
+    setTransactions: (state, { payload }: PayloadAction<TypeResponseTxHistory>) => {
+      state.transactions = [...payload.transactions]
+      return state;
     },
   },
 });
@@ -159,7 +155,6 @@ export const {
   setErc20TokenBalanceSelected,
   upsertErc20TokenBalance,
   setTransactions,
-  setTransactionDeploy,
   resetWallet,
 } = walletSlice.actions;
 
