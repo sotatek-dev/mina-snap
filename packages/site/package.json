@@ -6,7 +6,7 @@
   "scripts": {
     "setup": "yarn install --frozen-lockfile && yarn allow-scripts",
     "start:all": "yarn clean && yarn install && yarn build && yarn start",
-    "start": "react-scripts start",
+    "start": "env-cmd -f .env.production react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage --passWithNoTests",
     "eject": "react-scripts eject",
