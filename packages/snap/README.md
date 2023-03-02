@@ -19,6 +19,10 @@ The snap will be running on `http://localhost:8080`. You can change port number 
 Your DApp now can connect to the snap by calling `wallet_requestSnaps` method with `http://localhost:8080` as the snapId
 
 (Reference: https://docs.metamask.io/guide/snaps-rpc-api.html#wallet-requestsnaps)
+
+## Using published snap
+Connect to the snap by calling `wallet_requestSnaps` method with `npm:test-mina-snap` as the snapId
+
 ## Notes
 
 - Babel is used for transpiling TypeScript to JavaScript, so when building with the CLI,
