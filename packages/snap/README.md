@@ -14,7 +14,7 @@ Run `yarn build:clean` to remove old dist folder and re-build snap
 ## Start local snap
 Run `yarn serve` to start local snap
 
-The snap will running on `http://localhost:8080`. You can change port number in `snap.config.js` as well
+The snap will be running on `http://localhost:8080`. You can change port number in `snap.config.js` as well
 
 ## Notes
 
