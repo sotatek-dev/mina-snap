@@ -1,10 +1,10 @@
 {
   "name": "test-mina-snap",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "This snap helps you interact with Mina protocol using Metamask Flask",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/sotatek-dev/mina-snap-fe"
   },
   "license": "(MIT-0 OR Apache-2.0)",
   "main": "src/index.ts",
