@@ -5,7 +5,7 @@ import ISign from 'assets/icons/icon-sign.png';
 import React, { useState } from 'react';
 import ModalTransfer from 'components/modal-app/ModalTransfer';
 import { useAppSelector } from 'hooks/redux';
-import { formatBalance } from 'helpers/formatAccountAddress';
+
 import ModalSign from 'components/common/modal-sign';
 import SignMessage from 'components/modal-app/SignMessage';
 

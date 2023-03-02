@@ -5,9 +5,10 @@ import pointMenu from 'assets/icons/pointMenu.svg';
 import pointMenuDark from 'assets/icons/pointMenu_dark.svg';
 import { ResultAccountList } from 'types/account';
 import React from 'react';
-import { formatAccountAddress, formatBalance } from 'helpers/formatAccountAddress';
+import { formatAccountAddress } from 'helpers/formatAccountAddress';
 import { useAppDispatch } from 'hooks/redux';
 import { setDetailsAccount } from 'slices/walletSlice';
+import { ethers } from 'ethers';
 
 interface Props {
   active?: boolean;
@@ -136,7 +137,7 @@ const CardAccount: React.FC<Props> = ({ active, imported, data, handleShowDetail
       </AccountName>
       <Address active={active}>{data && formatAccountAddress(data.address)}</Address>
       <Balance active={active}>
-        {data && formatBalance(data.balance.total)} MINA
+        {data && ethers.utils.formatUnits(data.balance.total, 'gwei')} MINA
         <More active={active} typeButton="round" onClick={showDetails}>
           <PointMenu src={active ? pointMenu : pointMenuDark} />
         </More>

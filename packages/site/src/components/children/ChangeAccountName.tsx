@@ -107,7 +107,7 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
 };
 
 const LinearProgressCustom = styled(LinearProgress)({
-  height: '1px',
+  height: '2px !important',
 });
 const ButtonCustomCancel = styled(Button)<ButtonProps>({
   width: '100%',
