@@ -7,7 +7,7 @@
     "setup": "yarn install --frozen-lockfile && yarn allow-scripts",
     "start:all": "yarn clean && yarn install && yarn build && yarn start",
     "start": "env-cmd -f .env.production react-scripts start",
-    "build": "react-scripts build",
+    "build": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test --coverage --passWithNoTests",
     "eject": "react-scripts eject",
     "lint:react": "eslint ./src/**/*.ts ./src/**/*.tsx -f json -o eslint-report.json",
