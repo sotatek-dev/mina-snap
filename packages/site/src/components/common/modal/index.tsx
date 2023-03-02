@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, Modal, styled, ModalProps } from '@mui/material';
+import { Box, Modal, styled, ModalProps, LinearProgress } from '@mui/material';
 import IconBack from 'assets/icons/icon-back.svg';
+import { useAppSelector } from 'hooks/redux';
 
 interface IModalCommon extends ModalProps {
   open: boolean;
@@ -65,6 +66,11 @@ const IconBoxBack = styled(Box)({
   },
 });
 
+const LinearProgressCustom = styled(LinearProgress)({
+  height: '2px',
+  marginTop: '10px',
+});
+
 const ModalCommon = ({
   open,
   title,
@@ -74,6 +80,7 @@ const ModalCommon = ({
   fixedheight,
   fixedwitdth,
 }: ModalCommonProps) => {
+  const { isLoading } = useAppSelector((state) => state.wallet);
   return (
     <Modal
       onBackdropClick={() => {
@@ -91,8 +98,8 @@ const ModalCommon = ({
               </IconBoxBack>
             </CloseIconWrapper>
             {title}
+            {isLoading && <LinearProgressCustom />}
           </BoxTitleModal>
-
           {children}
         </ContainerContent>
       </Container>

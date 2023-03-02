@@ -4,6 +4,7 @@ export type Account = {
     inferredNonce: string
     nonce: string
     publicKey: string
+    name: string
 }
 
 export type ResultCreateAccount = {
@@ -45,6 +46,6 @@ export type ResponseExportPrivateKey = {
 export type payloadActiveAccount = {
     activeAccount: string
     balance: string
-    // accountName: string
+    accountName: string
 }
 

@@ -35,6 +35,7 @@ const HomePage = () => {
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
             balance: formatBalance(accountInfor.balance.total) as string,
+            accountName: accountInfor.name as string,
           }),
         );
       } else {

@@ -1,9 +1,9 @@
 import { Box, Button, ButtonProps, Collapse, List, styled, TextField, TextFieldProps } from '@mui/material';
 import ModalCommon from 'components/common/modal';
-import { useAppDispatch } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
 import { useMinaSnap } from 'services';
-import { setListAccounts } from 'slices/walletSlice';
+import { setIsLoading, setListAccounts } from 'slices/walletSlice';
 import { ResultCreateAccount } from 'types/account';
 import { TransitionGroup } from 'react-transition-group';
 import showDown from 'assets/icons/show-down.svg';
@@ -27,11 +27,20 @@ function renderItem({ signature }: TypeResponseSignature) {
 const CreateNameAccount = ({ onCloseModal }: Props) => {
   const [nameAccount, setNameAccount] = useState('');
   const { Signature } = useMinaSnap();
+  const dispatch = useAppDispatch();
   const [showSignature, setShowSignature] = useState(false);
   const [signature, setSignature] = useState<TypeResponseSignature>();
+  const { isLoading } = useAppSelector((state) => state.wallet);
+
   const sendRequest = async () => {
-    const res = await Signature(nameAccount);
-    setSignature(res);
+    try {
+      dispatch(setIsLoading(true));
+      const res = await Signature(nameAccount);
+      setSignature(res);
+      dispatch(setIsLoading(false));
+    } catch (e) {
+      dispatch(setIsLoading(false));
+    }
   };
 
   return (
@@ -53,7 +62,7 @@ const CreateNameAccount = ({ onCloseModal }: Props) => {
           <ButtonCustom
             variant="contained"
             disableElevation
-            disabled={!nameAccount}
+            className={!nameAccount || isLoading ? 'disable' : ''}
             onClick={() => {
               sendRequest();
             }}

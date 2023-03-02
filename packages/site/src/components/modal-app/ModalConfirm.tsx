@@ -4,7 +4,7 @@ import { formatBalance } from 'helpers/formatAccountAddress';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React from 'react';
 import { useMinaSnap } from 'services';
-import { connectWallet, setActiveAccount, setListAccounts } from 'slices/walletSlice';
+import { connectWallet, setActiveAccount, setIsLoading, setListAccounts } from 'slices/walletSlice';
 import styled from 'styled-components';
 import { payloadSendTransaction } from 'types/transaction';
 
@@ -21,7 +21,9 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   const { SendTransaction, AccountList, getAccountInfors } = useMinaSnap();
   const { activeAccount } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
+
   const handleSend = async () => {
+    dispatch(setIsLoading(true));
     await SendTransaction(txInfoProp)
       .then(async () => {
         const accountList = await AccountList();
@@ -31,14 +33,18 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
             balance: formatBalance(accountInfor.balance.total) as string,
+            accountName: accountInfor.name as string,
           }),
         );
         closeSucces();
       })
       .catch((e) => {
         console.log(e);
+        dispatch(setIsLoading(false));
+      })
+      .finally(() => {
+        dispatch(setIsLoading(false));
       });
-    // console.log(res);1
   };
   return (
     <Modal
