@@ -19,6 +19,7 @@ interface Props {
 export const Wrapper = styled.div`
   font-family: 'Inter Regular';
   width: fit-content;
+  bac
 `;
 
 export const PopperContainer = styled.div`
@@ -26,13 +27,13 @@ export const PopperContainer = styled.div`
   background-color: ${(props) => props.theme.palette.grey.white};
   text-align: center;
   box-shadow: 0px 0px 60px 0px rgba(106, 115, 125, 0.2);
+  z-index: 10000;
 `;
 
 export const ToolTipContent = styled.div`
   font-size: ${(props) => props.theme.typography.c1.fontSize};
   color: ${(props) => props.theme.palette.grey.grey1};
 `;
-  
 
 export const PopperTooltipView = ({
   children,
@@ -88,7 +89,7 @@ export const PopperTooltipView = ({
       </Wrapper>
 
       {visible && (
-        <PopperContainer ref={setTooltipRef} {...getTooltipProps({})} >
+        <PopperContainer ref={setTooltipRef} {...getTooltipProps({})}>
           <ToolTipContent style={contentStyle}>{content}</ToolTipContent>
         </PopperContainer>
       )}

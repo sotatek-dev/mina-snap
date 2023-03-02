@@ -19,9 +19,11 @@ export interface WalletState {
   detailsAccount?: ResultAccountList;
   transactions: Array<ResultTransactionList>;
   detailTransaction?: ResultTransactionList;
+  loadingSwitchNework: boolean;
 }
 
 const initialState: WalletState = {
+  loadingSwitchNework: false,
   accountName: '',
   balance: '',
   activeAccount: '',
@@ -68,6 +70,9 @@ export const walletSlice = createSlice({
     },
     setWalletConnection: (state, { payload }: PayloadAction<boolean>) => {
       state.connected = payload;
+    },
+    setIsLoadingSwitchNetWork: (state, { payload }: PayloadAction<boolean>) => {
+      state.loadingSwitchNework = payload;
     },
     setIsLoading: (state, { payload }: PayloadAction<boolean>) => {
       state.isLoading = payload;
@@ -156,6 +161,7 @@ export const {
   upsertErc20TokenBalance,
   setTransactions,
   resetWallet,
+  setIsLoadingSwitchNetWork
 } = walletSlice.actions;
 
 export default walletSlice.reducer;
