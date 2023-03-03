@@ -35,26 +35,20 @@ const Header = () => {
       accountIndex: item.index,
       isImported: item.isImported,
     };
-    await ChangeAccount(payload)
-      .then(async () => {
-        try {
-          const accountInfor = await getAccountInfors();
-          const txList = await getTxHistory();
-          dispatch(setTransactions(txList));
-          dispatch(
-            setActiveAccount({
-              activeAccount: accountInfor.publicKey as string,
-              balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
-              accountName: accountInfor.name as string,
-            }),
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      })
-      .finally(() => {
-        dispatch(setIsLoading(false));
-      });
+
+    await ChangeAccount(payload);
+    const accountInfor = await getAccountInfors();
+    const txList = await getTxHistory();
+    dispatch(setTransactions(txList));
+    dispatch(
+      setActiveAccount({
+        activeAccount: accountInfor.publicKey as string,
+        balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+        accountName: accountInfor.name as string,
+      }),
+    );
+
+    dispatch(setIsLoading(false));
   };
 
   const closeModal = (accounts: ResultCreateAccount) => {

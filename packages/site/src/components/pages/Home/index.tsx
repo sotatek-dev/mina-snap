@@ -19,11 +19,11 @@ const HomePage = () => {
     const a = async () => {
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
-      const isInstalledSnap = await getSnap();
 
       setIsUnlocked(isUnlocked);
       if (isUnlocked) {
-        if (!isInstalledSnap['npm:test-mina-snap']) {
+        const isInstalledSnap = await getSnap();
+        if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
           await RequestSnap();
         }
         const accountList = await AccountList();

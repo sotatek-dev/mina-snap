@@ -57,6 +57,7 @@ export const useMinaSnap = () => {
 
 
   const ChangeAccount = async (payload: PayloadChangeAccount): Promise<Array<ResultCreateAccount>> => {
+
     return await ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
@@ -193,7 +194,7 @@ export const useMinaSnap = () => {
         request: {
           method: 'mina_changeNetwork',
           params: {
-            message: payload
+            networkName: payload
           }
         },
       },
