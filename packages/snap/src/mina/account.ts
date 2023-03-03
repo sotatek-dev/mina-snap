@@ -15,7 +15,7 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
   const snapConfig = await getSnapConfiguration();
   const { currentNetwork, networks } = snapConfig;
   const networkConfig = networks[currentNetwork];
-  const { importedAccounts, selectedImportedAccount } = networkConfig satisfies NetworkConfig;
+  const { importedAccounts, selectedImportedAccount } = networkConfig as NetworkConfig;
   if (typeof index === 'number' && !isImported) {
     const { name, address } = networkConfig.generatedAccounts[index];
     const { privateKey } = await generateKeyPair(networkConfig, index);
