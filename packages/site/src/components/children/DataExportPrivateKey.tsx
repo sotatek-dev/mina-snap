@@ -1,5 +1,6 @@
 import { Box, Button, ButtonProps, styled } from '@mui/material';
 import coppy from 'assets/icons/coppy.svg';
+import { handelCoppy } from 'helpers/handleCoppy';
 import React from 'react';
 
 type Props = {
@@ -9,19 +10,6 @@ type Props = {
 };
 
 const DataExportPrivateKey = ({ address, privateKey, onDone }: Props) => {
-  const handelCoppy = () => {
-    // navigator.clipboard.writeText(privateKey as string);
-
-    const storage = document.createElement('textarea');
-    storage.value = privateKey as string;
-    const element = document.querySelector('#privateKey');
-    (element as any).appendChild(storage);
-    storage.select();
-    storage.setSelectionRange(0, 99999);
-    document.execCommand('copy');
-    (element as any).removeChild(storage);
-  };
-
   return (
     <>
       <Container>
@@ -29,7 +17,7 @@ const DataExportPrivateKey = ({ address, privateKey, onDone }: Props) => {
         <BoxContentAddress>{address}</BoxContentAddress>
         <ContainerContent>
           <BoxCustomText id="privateKey">{privateKey}</BoxCustomText>
-          <ButtonCustom onClick={handelCoppy} variant="text" disableElevation>
+          <ButtonCustom onClick={()=>handelCoppy(privateKey as string, "#privateKey")} variant="text" disableElevation>
             <CustomImg>
               <img src={coppy}></img>
             </CustomImg>

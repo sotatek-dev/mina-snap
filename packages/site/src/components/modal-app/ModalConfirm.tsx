@@ -49,10 +49,11 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   return (
     <Modal
       open={open}
-      title="Confirm Transaction  "
+      title="Confirm Transaction"
       clickOutSide={clickOutSide}
       setOpenModal={setOpenModal}
       txInfoProp={txInfoProp}
+      fixedwitdth={true}
     >
       <WTransactionConfirm>
         <BoxAmount>
