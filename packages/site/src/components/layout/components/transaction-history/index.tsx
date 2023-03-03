@@ -15,7 +15,6 @@ const TransactionHistory = () => {
   const [showTxDetail, setShowTxDetail] = useState(false);
   const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
   const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
-
   const { getTxHistory } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
 
@@ -148,6 +147,5 @@ const TxStatus = styled.div`
   color: #0db27c;
   background: #d5e7e4;
 `;
-
 
 export default TransactionHistory;

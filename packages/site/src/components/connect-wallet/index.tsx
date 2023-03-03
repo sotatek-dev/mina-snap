@@ -1,11 +1,12 @@
 import Button from 'components/common/button';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
-import { Box, styled } from '@mui/material';
+import { Box, ButtonProps, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { connectWallet, setActiveAccount, setIsLoading } from 'slices/walletSlice';
 import { ethers } from 'ethers';
+import wainning from 'assets/icons/wainning.svg';
 
 type Props = {};
 
@@ -56,7 +57,14 @@ const ConnectWallet: React.FC<Props> = () => {
         </BoxCenter>
 
         <BoxCenter sx={{ paddingBottom: '25px' }}>
-          {!isInstalledWallet && <Button>Metamask Flask is required to run snap!</Button>}
+          {!isInstalledWallet && (
+            <ButtonCustomRequiredMetamask>
+              <BoxImg>
+                <img src={wainning} />
+              </BoxImg>
+              Metamask Flask is required to run snap!
+            </ButtonCustomRequiredMetamask>
+          )}
         </BoxCenter>
         <BoxCenter>
           <Button onClick={handleConnectClick}>{isLoading ? <>CONNECTING</> : 'CONNECT TO METAMASK'}</Button>
@@ -65,6 +73,17 @@ const ConnectWallet: React.FC<Props> = () => {
     </>
   );
 };
+
+const BoxImg = styled(Box)(() => ({
+  marginRight: '7px',
+}));
+
+const ButtonCustomRequiredMetamask = styled(Button)<ButtonProps>(() => ({
+  background: '#FC6643',
+  border: '1px solid #000000',
+  display: 'flex',
+  justifyContent: 'center',
+}));
 
 const BoxCenter = styled(Box)(() => ({
   display: 'flex',

@@ -200,7 +200,18 @@ export const useMinaSnap = () => {
     });
   };
 
+  const RequestSnap = async (): Promise<any> => {
+    return await ethereum.request({
+      method: 'wallet_requestSnaps',
+      params: {
+        'npm:test-mina-snap': {},
+      },
+    });
+  };
+
+
   return {
+    RequestSnap,
     SwitchNetwork,
     Signature,
     ExportPrivateKey,

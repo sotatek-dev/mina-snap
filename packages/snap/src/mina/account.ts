@@ -23,7 +23,7 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
       name,
       publicKey: address,
       privateKey,
-      isImported: false
+      isImported: false,
     };
   } else if (index && isImported) {
     const { name, address, privateKey } = importedAccounts[index];
@@ -31,7 +31,7 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
       name,
       publicKey: address,
       privateKey,
-      isImported: true
+      isImported: true,
     };
   }
   if (typeof selectedImportedAccount === 'number') {
@@ -40,7 +40,7 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
       privateKey: importedAccounts[selectedImportedAccount].privateKey,
       publicKey: importedAccounts[selectedImportedAccount].address,
       isImported: true,
-    }
+    };
   }
   const keyPair = await generateKeyPair(networkConfig);
   return { name: networkConfig.generatedAccounts[networkConfig.currentAccIndex].name, ...keyPair, isImported: false };
@@ -71,7 +71,7 @@ export const generateKeyPair = async (networkConfig: NetworkConfig, index?: numb
     privateKey,
     publicKey,
   };
-}
+};
 // export const getMinaAddress = async () => {
 //   const keyPair = await getKeyPair();
 //   return keyPair.publicKey;
@@ -136,17 +136,25 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
         address: account.address,
       };
     } else {
-      return popupDialog(ESnapDialogType.ALERT, 'Invalid account index', 'The account index is invalid')
+      return {
+        error: {
+          message: 'The account index is invalid',
+        },
+      };
     }
   }
-  const account = generatedAccounts[index]
+  const account = generatedAccounts[index];
   if (account) {
     snapConfig.networks[snapConfig.currentNetwork].currentAccIndex = index;
     snapConfig.networks[currentNetwork].selectedImportedAccount = null;
     await updateSnapConfig(snapConfig);
     return account;
   } else {
-    return popupDialog(ESnapDialogType.ALERT, 'Invalid account index', 'The account index is invalid')
+    return {
+      error: {
+        message: 'The account index is invalid',
+      },
+    };
   }
 };
 
@@ -159,7 +167,7 @@ export const createAccount = async (name: string, index?: number) => {
   } else {
     const { generatedAccounts } = networks[currentNetwork];
     if (Object.keys(generatedAccounts).length) {
-      const currentMaxIndex = Math.max(...Object.keys(generatedAccounts).map(key => Number(key)));
+      const currentMaxIndex = Math.max(...Object.keys(generatedAccounts).map((key) => Number(key)));
       newAccountIndex = currentMaxIndex + 1;
     } else {
       newAccountIndex = 0;
@@ -171,81 +179,106 @@ export const createAccount = async (name: string, index?: number) => {
   snapConfig.networks[currentNetwork].generatedAccounts[newAccountIndex] = { name, address: publicKey };
   await updateSnapConfig(snapConfig);
   return { name, address: publicKey };
-}
+};
 
 export const importAccount = async (name: string, privateKey: string) => {
+  const snapConfig = await getSnapConfiguration();
+  const { networks, currentNetwork } = snapConfig;
+  const { importedAccounts, generatedAccounts } = networks[currentNetwork];
+  const client = getMinaClient(snapConfig.networks[snapConfig.currentNetwork]);
+  const existingAddresses = [
+    ...Object.values(generatedAccounts).map((account) => account.address),
+    ...Object.values(importedAccounts).map((account) => account.address),
+  ];
+
+  // Validate for incorrect private key
+  let publicKey: string;
   try {
-    const snapConfig = await getSnapConfiguration();
-    const { networks, currentNetwork } = snapConfig;
-    const { importedAccounts, generatedAccounts } = networks[currentNetwork];
-    const client = getMinaClient(snapConfig.networks[snapConfig.currentNetwork]);
-    const existingAddresses = [...Object.values(generatedAccounts).map(account => account.address), ...Object.values(importedAccounts).map(account => account.address)];
-    const publicKey = client.derivePublicKey(privateKey);
-    const duplicateAddress = existingAddresses.find(address => address === publicKey);
-    if (duplicateAddress) {
-      return popupDialog(ESnapDialogType.ALERT, 'Cannot import account', 'The account you are trying to import is a duplicate')
-    }
-    let newAccountIndex;
-    if (Object.keys(importedAccounts).length) {
-      const currentMaxIndex = Math.max(...Object.keys(importedAccounts).map(key => Number(key)));
-      newAccountIndex = currentMaxIndex + 1;
-    } else {
-      newAccountIndex = 0;
-    }
-    snapConfig.networks[currentNetwork].selectedImportedAccount = newAccountIndex;
-    snapConfig.networks[currentNetwork].importedAccounts[newAccountIndex] = {
-      name,
-      address: publicKey,
-      privateKey
+    publicKey = client.derivePublicKey(privateKey);
+  } catch (err) {
+    return {
+      error: {
+        message: 'The account index is invalid',
+      },
     };
-    await updateSnapConfig(snapConfig);
-    return { name, address: publicKey };
-  } catch (error) {
-    console.error(`Failed to import account:`, error);
-    return popupDialog(ESnapDialogType.ALERT, 'Cannot import account', 'Error happened')
   }
-}
+
+  // Check for duplicate account
+  const duplicateAddress = existingAddresses.find((address) => address === publicKey);
+  if (duplicateAddress) {
+    return {
+      error: {
+        message: 'Incorrect Private Key',
+      },
+    };
+  }
+
+  let newAccountIndex;
+  if (Object.keys(importedAccounts).length) {
+    const currentMaxIndex = Math.max(...Object.keys(importedAccounts).map((key) => Number(key)));
+    newAccountIndex = currentMaxIndex + 1;
+  } else {
+    newAccountIndex = 0;
+  }
+  snapConfig.networks[currentNetwork].selectedImportedAccount = newAccountIndex;
+  snapConfig.networks[currentNetwork].importedAccounts[newAccountIndex] = {
+    name,
+    address: publicKey,
+    privateKey,
+  };
+  await updateSnapConfig(snapConfig);
+  return { name, address: publicKey };
+};
 
 export const getAccounts = async () => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
   const { generatedAccounts, importedAccounts } = networks[currentNetwork];
-  const generatedAccountsArr = Object.keys(generatedAccounts).length > 0 ? Object.entries(generatedAccounts).map(([index, account]) => {
-    return {
-      ...account,
-      index,
-      isImported: false,
-    } as any
-  }) : [];
-  const importedAccountsArr = Object.keys(importedAccounts).length > 0 ? Object.entries(importedAccounts).map(([index, account]) => {
-    const  { name, address } = account;
-    return {
-      name,
-      address,
-      index,
-      isImported: true,
-    } as any
-  }) : [];
+  const generatedAccountsArr =
+    Object.keys(generatedAccounts).length > 0
+      ? Object.entries(generatedAccounts).map(([index, account]) => {
+          return {
+            ...account,
+            index,
+            isImported: false,
+          } as any;
+        })
+      : [];
+  const importedAccountsArr =
+    Object.keys(importedAccounts).length > 0
+      ? Object.entries(importedAccounts).map(([index, account]) => {
+          const { name, address } = account;
+          return {
+            name,
+            address,
+            index,
+            isImported: true,
+          } as any;
+        })
+      : [];
   const allAccounts = [...generatedAccountsArr, ...importedAccountsArr];
-  await Promise.all(allAccounts.map(account => {
-    return getAccountInfo(account.address, networks[currentNetwork]).then(data => {
-      account.balance = data.account.balance;
-    });
-  }));
+  await Promise.all(
+    allAccounts.map((account) => {
+      return getAccountInfo(account.address, networks[currentNetwork]).then((data) => {
+        account.balance = data.account.balance;
+      });
+    }),
+  );
   return allAccounts;
-}
+};
 
 export const editAccountName = async (index: number, name: string, isImported?: boolean) => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
-  let account;
-  if (isImported) {
-    account = networks[currentNetwork].importedAccounts[index]
-  } else {
-    account = networks[currentNetwork].generatedAccounts[index];
-  }
+  const account = isImported
+    ? networks[currentNetwork].importedAccounts[index]
+    : networks[currentNetwork].generatedAccounts[index];
   if (!account) {
-    return popupDialog(ESnapDialogType.ALERT, 'Invalid account', 'The account does not exist')
+    return {
+      error: {
+        message: 'The account does not exist',
+      },
+    };
   }
   account.name = name;
   await updateSnapConfig(snapConfig);
@@ -253,4 +286,4 @@ export const editAccountName = async (index: number, name: string, isImported?: 
     name: account.name,
     address: account.address,
   };
-}
+};
