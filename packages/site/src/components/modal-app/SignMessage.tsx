@@ -35,17 +35,9 @@ const CreateNameAccount = ({ onCloseModal }: Props) => {
   const sendRequest = async () => {
     try {
       dispatch(setIsLoading(true));
-      await Signature(nameAccount)
-        .then((res) => {
-          setSignature(res);
-          dispatch(setIsLoading(false));
-        })
-        .catch(() => {
-          dispatch(setIsLoading(false));
-        })
-        .finally(() => {
-          dispatch(setIsLoading(false));
-        });
+      const res = await Signature(nameAccount);
+      setSignature(res);
+      dispatch(setIsLoading(false));
     } catch (e) {
       dispatch(setIsLoading(false));
     }

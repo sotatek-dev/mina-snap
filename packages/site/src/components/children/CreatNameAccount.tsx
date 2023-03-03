@@ -59,20 +59,10 @@ const CreateNameAccount = ({ onCloseModal, type }: Props) => {
       case 'create':
         try {
           dispatch(setIsLoading(true));
-          await CreateAccount(nameAccount)
-            .then((account) => {
-              dispatch(setIsLoading(false));
-              onCloseModal(account);
-            })
-            .catch(() => {
-              dispatch(setIsLoading(false));
-            })
-            .finally(() => {
-              dispatch(setIsLoading(false));
-            });
+          const account = await CreateAccount(nameAccount);
           const accountList = await AccountList();
           await dispatch(setListAccounts(accountList));
-
+          onCloseModal(account);
           dispatch(setIsLoading(false));
         } catch (error) {
           dispatch(setIsLoading(false));

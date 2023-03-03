@@ -38,7 +38,6 @@ const Header = () => {
     };
     await ChangeAccount(payload)
       .then(async () => {
-        dispatch(setIsLoading(false));
         try {
           const accountInfor = await getAccountInfors();
           const txList = await getTxHistory();
@@ -51,7 +50,6 @@ const Header = () => {
             }),
           );
         } catch (error) {
-          dispatch(setIsLoading(false));
           console.log(error);
         }
       })
