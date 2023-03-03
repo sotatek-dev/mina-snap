@@ -12,6 +12,7 @@ import {MINA_BERKELEY_EXPLORER} from "utils/constants"
 import DetailsAccout from 'components/children/DetailsAccoust';
 import { useState } from 'react';
 import ModalCommon from 'components/common/modal';
+import { handelCoppy } from 'helpers/handleCoppy';
 
 const Wrapper = styled.div`
   text-align: center;
@@ -114,13 +115,11 @@ const Address = () => {
     <Wrapper>
       <BoxInfo>
         <AccountName>{accountName}</AccountName>
-        <WalletAddress>
+        <WalletAddress id='walletAddress'>
           {formatAccountAddress(activeAccount)}
           <IconCoppy
             src={ICoppy}
-            onClick={() => {
-              navigator.clipboard.writeText(activeAccount);
-            }}
+            onClick={()=>handelCoppy(activeAccount as string, "#walletAddress")}
           />
         </WalletAddress>
       </BoxInfo>
