@@ -11,6 +11,70 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
 
+const TransactionHistory = () => {
+  const [showTxDetail, setShowTxDetail] = useState(false);
+  const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
+  const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
+
+  const { getTxHistory } = useMinaSnap();
+  const reduxDispatch = useAppDispatch();
+
+  const handleClick = (item: ResultTransactionList) => {
+    setDetailTx(item);
+    setShowTxDetail(true);
+  };
+
+  const handleClickOutSideTxDetail = () => {
+    setShowTxDetail(false);
+  };
+
+  useEffect(() => {
+    const getListTxHistory = async () => {
+      const txList = await getTxHistory();
+      reduxDispatch(setTransactions(txList));
+    };
+    getListTxHistory();
+  }, []);
+
+  return (
+    <Wrapper>
+      <Label>HISTORY</Label>
+      <TransactionList>
+        {transactions.map((item, index) => {
+          return (
+            <TracsactionItem
+              key={index}
+              onClick={() => {
+                handleClick(item);
+              }}
+            >
+              <Icon src={item.from == activeAccount ? ISendTx : IReceivedTx} />
+              <TransactionDetail>
+                <TxInfo>
+                  <Address>{formatAccountAddress(item.to)}</Address>
+                  <Amount>
+                    {(item.from == activeAccount ? `- ` : `+ `) + ethers.utils.formatUnits(item.amount, 'gwei')}
+                  </Amount>
+                </TxInfo>
+                <Status>
+                  <Detail>{formatDateTime(item.dateTime)}</Detail>
+                  <TxStatus>APPLIED</TxStatus>
+                </Status>
+              </TransactionDetail>
+            </TracsactionItem>
+          );
+        })}
+        <ModalTransactionDetail
+          open={showTxDetail}
+          clickOutSide={true}
+          setOpenModal={handleClickOutSideTxDetail}
+          transaction={detailTx}
+        />
+      </TransactionList>
+    </Wrapper>
+  );
+};
+
 const Wrapper = styled.div`
   margin-top: 32px;
 `;
@@ -85,67 +149,5 @@ const TxStatus = styled.div`
   background: #d5e7e4;
 `;
 
-const TransactionHistory = () => {
-    const [showTxDetail, setShowTxDetail] = useState(false);
-    const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined)
-    const {activeAccount,transactions} = useAppSelector((state)=> state.wallet);
-
-    const {getTxHistory} = useMinaSnap();
-    const reduxDispatch = useAppDispatch();
-
-
-    const handleClick = (item:ResultTransactionList) => {
-      setDetailTx(item);
-      setShowTxDetail(true);
-    };
-
-    const handleClickOutSideTxDetail = () => {
-      setShowTxDetail(false);
-    };
-
-    useEffect(()=> {
-      const getListTxHistory = async () => {
-        const txList= await getTxHistory();
-        reduxDispatch(setTransactions(txList))
-      }
-      getListTxHistory()
-    })  
-
-    return(
-        <Wrapper>
-            <Label>HISTORY</Label>
-            <TransactionList>
-                {transactions.map((item, index) =>{
-                    return (
-                        <TracsactionItem
-                            key={index}
-                            onClick={()=>{
-                              handleClick(item)
-                            }}
-                        >
-                            <Icon src={item.from == activeAccount ? ISendTx: IReceivedTx} />
-                            <TransactionDetail>
-                                <TxInfo>
-                                    <Address>{formatAccountAddress(item.to)}</Address>
-                                    <Amount>{(item.from == activeAccount ?`- `: `+ `) + ethers.utils.formatUnits(item.amount, "gwei")}</Amount>
-                                </TxInfo>
-                                <Status>
-                                    <Detail>{formatDateTime(item.dateTime)}</Detail>
-                                    <TxStatus>APPLIED</TxStatus>
-                                </Status>
-                            </TransactionDetail>
-                      </TracsactionItem>
-                    )
-                  })}
-                  <ModalTransactionDetail
-                    open={showTxDetail}
-                    clickOutSide={true}
-                    setOpenModal={handleClickOutSideTxDetail}
-                    transaction={detailTx}
-                  />
-            </TransactionList>
-        </Wrapper>
-    )
-}
 
 export default TransactionHistory;

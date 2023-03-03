@@ -19,7 +19,6 @@ import { setActiveAccount, setIsLoading, setTransactions } from 'slices/walletSl
 import LinearProgress from '@mui/material/LinearProgress';
 import { ResultCreateAccount } from 'types/account';
 import DetailsAccoust from 'components/children/DetailsAccoust';
-
 import { ethers } from 'ethers';
 
 const Header = () => {
@@ -161,6 +160,7 @@ const Header = () => {
     </>
   );
 };
+
 const Wrapper = styled.div`
   font-family: 'Inter Regular';
   background-color: ${(props) => props.theme.palette.grey.grey3};

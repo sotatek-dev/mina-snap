@@ -65,6 +65,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     };
     setTxInfo(tx);
   };
+  
   const handleClickOutSide = () => {
     setShowModal(false);
   };

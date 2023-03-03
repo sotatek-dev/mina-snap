@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React from 'react';
 import { useMinaSnap } from 'services';
-import { connectWallet, setActiveAccount, setIsLoading, setListAccounts } from 'slices/walletSlice';
+import { setActiveAccount, setIsLoading, setListAccounts } from 'slices/walletSlice';
 import styled from 'styled-components';
 import { payloadSendTransaction } from 'types/transaction';
 
@@ -15,6 +15,7 @@ interface ModalProps {
   txInfoProp: payloadSendTransaction;
   closeSucces: () => void;
 }
+
 type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 
 const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucces }: ModalProps) => {

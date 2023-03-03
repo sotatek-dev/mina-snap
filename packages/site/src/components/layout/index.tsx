@@ -4,6 +4,20 @@ import Balance from './components/balance';
 import TransactionHistory from './components/transaction-history';
 import Header from './header';
 
+ const Home = () => {
+  return (
+    <Wrapper>
+        <Header />
+        <ColMiddle>
+            <Content>
+              <Address/>
+              <Balance />
+              <TransactionHistory/>
+            </Content>
+        </ColMiddle>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.palette.grey.grey3};
@@ -36,21 +50,5 @@ const Content = styled.div`
   border-radius: ${(props) => props.theme.corner.small};
   height: 9999px;
 `;
-
-
- const Home = () => {
-  return (
-    <Wrapper>
-        <Header />
-        <ColMiddle>
-            <Content>
-              <Address/>
-              <Balance />
-              <TransactionHistory/>
-            </Content>
-        </ColMiddle>
-    </Wrapper>
-  );
-};
 
 export default Home;

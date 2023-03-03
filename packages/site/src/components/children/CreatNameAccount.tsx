@@ -1,46 +1,11 @@
 import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
 import ModalCommon from 'components/common/modal';
-import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import React, { useState } from 'react';
+import { useAppDispatch } from 'hooks/redux';
+import { useState } from 'react';
 import { useMinaSnap } from 'services';
 import { setIsLoading, setListAccounts } from 'slices/walletSlice';
 import { ResultCreateAccount } from 'types/account';
 import ImportPrivateKey from './ImportPrivateKey';
-
-const Container = styled(Box)(() => ({
-  paddingTop: '16px',
-  paddingLeft: '5px',
-  paddingRight: '5px',
-  paddingBottom: '0px',
-}));
-const BoxTitle = styled(Box)(() => ({
-  fontFamily: 'Inter Regular',
-  fontStyle: 'normal',
-  fontWeight: '500',
-  fontSize: '10px',
-  lineHeight: '12px',
-  color: '#000000',
-}));
-
-const InputCustom = styled(TextField)<TextFieldProps>({
-  backgroundColor: '#FFFFFF',
-  width: '100%',
-  borderRadius: '8px',
-  input: {
-    padding: '0.5rem 1rem',
-    color: '#707D96',
-  },
-  '& input': {
-    fontSize: '10px',
-  },
-});
-
-const ButtonCustom = styled(Button)<ButtonProps>({
-  width: '100%',
-  textTransform: 'none',
-  background: '#594AF1',
-  borderRadius: '5px',
-});
 
 type Props = {
   onCloseModal: (data: ResultCreateAccount) => void;
@@ -53,7 +18,6 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
   const { CreateAccount, AccountList } = useMinaSnap();
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = useState(false);
-  const { isLoading } = useAppSelector((state) => state.wallet);
   const nameDefault = "Account " + index;
 
   const sendRequest = async () => {
@@ -131,5 +95,40 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
     </>
   );
 };
+
+const Container = styled(Box)(() => ({
+  paddingTop: '16px',
+  paddingLeft: '5px',
+  paddingRight: '5px',
+  paddingBottom: '0px',
+}));
+const BoxTitle = styled(Box)(() => ({
+  fontFamily: 'Inter Regular',
+  fontStyle: 'normal',
+  fontWeight: '500',
+  fontSize: '10px',
+  lineHeight: '12px',
+  color: '#000000',
+}));
+
+const InputCustom = styled(TextField)<TextFieldProps>({
+  backgroundColor: '#FFFFFF',
+  width: '100%',
+  borderRadius: '8px',
+  input: {
+    padding: '0.5rem 1rem',
+    color: '#707D96',
+  },
+  '& input': {
+    fontSize: '10px',
+  },
+});
+
+const ButtonCustom = styled(Button)<ButtonProps>({
+  width: '100%',
+  textTransform: 'none',
+  background: '#594AF1',
+  borderRadius: '5px',
+});
 
 export default CreateNameAccount;

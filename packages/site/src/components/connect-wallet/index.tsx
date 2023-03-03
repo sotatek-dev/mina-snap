@@ -1,32 +1,11 @@
 import Button from 'components/common/button';
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { connectWallet, setActiveAccount, setIsLoading } from 'slices/walletSlice';
 import { ethers } from 'ethers';
-
-const BoxCenter = styled(Box)(() => ({
-  display: 'flex',
-  justifyContent: 'center',
-}));
-
-const BoxContent = styled(Box)(() => ({
-  maxWidth: '430px',
-  margin: 'auto',
-}));
-
-const BoxInsideMetamask = styled(Box)(() => ({
-  fontFamily: 'Inter Regular',
-  fontStyle: 'italic',
-  fontWeight: '400',
-  fontSize: '18px',
-  lineHeight: '22px',
-  paddingTop: '25px',
-  paddingBottom: '25px',
-  color: '#000000',
-}));
 
 type Props = {};
 
@@ -86,5 +65,26 @@ const ConnectWallet: React.FC<Props> = () => {
     </>
   );
 };
+
+const BoxCenter = styled(Box)(() => ({
+  display: 'flex',
+  justifyContent: 'center',
+}));
+
+const BoxContent = styled(Box)(() => ({
+  maxWidth: '430px',
+  margin: 'auto',
+}));
+
+const BoxInsideMetamask = styled(Box)(() => ({
+  fontFamily: 'Inter Regular',
+  fontStyle: 'italic',
+  fontWeight: '400',
+  fontSize: '18px',
+  lineHeight: '22px',
+  paddingTop: '25px',
+  paddingBottom: '25px',
+  color: '#000000',
+}));
 
 export default ConnectWallet;
