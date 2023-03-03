@@ -10,17 +10,22 @@ import { ethers } from 'ethers';
 const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
-  const { getSnap, AccountList, getAccountInfors } = useMinaSnap();
+  const { getSnap, AccountList, getAccountInfors, RequestSnap } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState(false);
   const { connected } = useAppSelector((state) => state.wallet);
 
   useEffect(() => {
+    reduxDispatch(setIsLoading(false));
     const a = async () => {
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
+      const isInstalledSnap = await getSnap();
+
       setIsUnlocked(isUnlocked);
       if (isUnlocked) {
-        const isInstalledSnap = await getSnap();
+        if (!isInstalledSnap['npm:test-mina-snap']) {
+          await RequestSnap();
+        }
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
 

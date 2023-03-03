@@ -26,6 +26,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
     dispatch(setIsLoading(true));
     await SendTransaction(txInfoProp)
       .then(async () => {
+        dispatch(setIsLoading(false));
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
         await dispatch(setListAccounts(accountList));
@@ -39,7 +40,6 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
         closeSucces();
       })
       .catch((e) => {
-        console.log(e);
         dispatch(setIsLoading(false));
       })
       .finally(() => {
