@@ -65,7 +65,7 @@ const IconBoxBack = styled(Box)({
 });
 
 const LinearProgressCustom = styled(LinearProgress)({
-  height: '2px',
+  height: '2px !important',
   marginTop: '10px',
 });
 

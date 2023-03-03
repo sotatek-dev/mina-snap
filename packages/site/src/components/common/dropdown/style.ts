@@ -19,7 +19,7 @@ export const Wrapper = styled.div<IDropDown>`
 
 export const DropDown = styled.select<IDropDown>``;
 
-export const DropdownStyled = styled(Dropdown)<IDropDown>`
+export const DropdownStyled = styled(Dropdown) <IDropDown>`
   font-family: 'Inter Regular';
   .Dropdown-control {
     border-radius: ${(props) => props.theme.corner.medium};
@@ -74,11 +74,15 @@ export const DropdownStyled = styled(Dropdown)<IDropDown>`
     line-height: ${(props) => props.theme.typography.p1.lineHeight};
     padding: 4px 0;
     text-align: center;
-
+    
     :hover {
       background-color: ${(props) => props.theme.palette.grey.grey4};
       color: ${(props) => props.theme.palette.default.main};
     }
+  }
+  .Dropdown-option.is-selected {
+    background-color: white;
+    color: #594AF1;
   }
 `;
 

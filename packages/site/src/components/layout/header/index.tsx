@@ -15,12 +15,151 @@ import React from 'react';
 import { useMinaSnap } from 'services';
 import ModalCommon from 'components/common/modal';
 import CreatNameAccount from 'components/children/CreatNameAccount';
-import { setActiveAccount, setIsLoading } from 'slices/walletSlice';
+import { setActiveAccount, setIsLoading, setTransactions } from 'slices/walletSlice';
 import LinearProgress from '@mui/material/LinearProgress';
 import { ResultCreateAccount } from 'types/account';
 import DetailsAccoust from 'components/children/DetailsAccoust';
-import { formatBalance } from 'helpers/formatAccountAddress';
 
+import { ethers } from 'ethers';
+
+const Header = () => {
+  const { ChangeAccount, getAccountInfors, getTxHistory } = useMinaSnap();
+  const { accounts, activeAccount, isLoading } = useAppSelector((state) => state.wallet);
+  const dispatch = useAppDispatch();
+  const [openModal, setOpenModal] = React.useState(false);
+  const [typeModal, setTypeModal] = React.useState('create');
+  const [isShowDetail, setIsShowDetail] = React.useState(false);
+
+  const handleChangeAccount = async (item: any) => {
+    dispatch(setIsLoading(true));
+    const payload = {
+      accountIndex: item.index,
+      isImported: item.isImported,
+    };
+    await ChangeAccount(payload)
+      .then(async () => {
+        try {
+          const accountInfor = await getAccountInfors();
+          const txList = await getTxHistory();
+          dispatch(setTransactions(txList));
+          dispatch(
+            setActiveAccount({
+              activeAccount: accountInfor.publicKey as string,
+              balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+              accountName: accountInfor.name as string,
+            }),
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .finally(() => {
+        dispatch(setIsLoading(false));
+      });
+  };
+
+  const closeModal = (accounts: ResultCreateAccount) => {
+    setOpenModal(false);
+    dispatch(
+      setActiveAccount({
+        activeAccount: accounts.address as string,
+        balance: '0',
+        accountName: accounts.name as string,
+      }),
+    );
+  };
+
+  const handleClickCreat = () => {
+    setIsShowDetail(false);
+    setOpenModal(true);
+    setTypeModal('create');
+  };
+
+  const handleClickImport = () => {
+    setIsShowDetail(false);
+    setOpenModal(true);
+    setTypeModal('import');
+  };
+
+  const showDetails = () => {
+    setIsShowDetail(true);
+    setOpenModal(true);
+  };
+
+  return (
+    <>
+      <Wrapper>
+        <BoxLogo>
+          <Logo />
+          <Title />
+        </BoxLogo>
+        <WDropDown>
+          <DropDownNetwork options={OPTIONS_NETWORK} />
+          <AccountDetails
+            closeTrigger="click"
+            offSet={[-140, 10]}
+            content={
+              <AccountDetailsContent>
+                <Label>Account Management</Label>
+                {isLoading && <LinearProgressCustom />}
+                <WAccount className={isLoading ? 'disable' : ''}>
+                  {accounts.map((item, index) => {
+                    return (
+                      <Box
+                        key={index}
+                        onClick={() => {
+                          handleChangeAccount(item);
+                        }}
+                      >
+                        <CardAccount
+                          handleShowDetail={showDetails}
+                          active={activeAccount === item.address}
+                          data={item}
+                          imported={item.isImported}
+                        ></CardAccount>
+                      </Box>
+                    );
+                  })}
+                </WAccount>
+                <WButton>
+                  <ButtonCreate className={isLoading ? 'disable' : ''} onClick={handleClickCreat}>
+                    <ICreate />
+                    Create
+                  </ButtonCreate>
+                  <ButtonImport className={isLoading ? 'disable' : ''} onClick={handleClickImport}>
+                    <IImport />
+                    Import
+                  </ButtonImport>
+                </WButton>
+              </AccountDetailsContent>
+            }
+          >
+            <Wallet />
+          </AccountDetails>
+        </WDropDown>
+      </Wrapper>
+      <ModalCommon
+        open={openModal}
+        title={isShowDetail ? 'Account Details' : 'Account Name'}
+        setOpenModal={() => {
+          setOpenModal(false);
+        }}
+        fixedheight={isShowDetail}
+      >
+        {isShowDetail ? (
+          <DetailsAccoust></DetailsAccoust>
+        ) : (
+          <CreatNameAccount
+            type={typeModal}
+            onCloseModal={(accounts) => {
+              closeModal(accounts);
+            }}
+          ></CreatNameAccount>
+        )}
+      </ModalCommon>
+    </>
+  );
+};
 const Wrapper = styled.div`
   font-family: 'Inter Regular';
   background-color: ${(props) => props.theme.palette.grey.grey3};
@@ -143,143 +282,6 @@ const Wallet = styled.img.attrs(() => ({
   }
 `;
 const LinearProgressCustom = styled(LinearProgress)({
-  height: '1px',
+  height: '2px !important',
 });
-const Header = () => {
-  const { ChangeAccount, getAccountInfors } = useMinaSnap();
-  const { accounts, activeAccount, isLoading } = useAppSelector((state) => state.wallet);
-  const dispatch = useAppDispatch();
-  const [openModal, setOpenModal] = React.useState(false);
-  const [typeModal, setTypeModal] = React.useState('create');
-  const [isShowDetail, setIsShowDetail] = React.useState(false);
-
-  const handleChangeAccount = async (item: any) => {
-    dispatch(setIsLoading(true));
-    const payload = {
-      accountIndex: item.index,
-      isImported: item.isImported,
-    };
-    await ChangeAccount(payload)
-      .then(async () => {
-        try {
-          const accountInfor = await getAccountInfors();
-          dispatch(
-            setActiveAccount({
-              activeAccount: accountInfor.publicKey as string,
-              balance: formatBalance(accountInfor.balance.total) as string,
-              accountName: accountInfor.name as string,
-            }),
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      })
-      .finally(() => {
-        dispatch(setIsLoading(false));
-      });
-  };
-
-  const closeModal = (accounts: ResultCreateAccount) => {
-    setOpenModal(false);
-    dispatch(
-      setActiveAccount({
-        activeAccount: accounts.address as string,
-        balance: '0',
-        accountName: accounts.name as string,
-      }),
-    );
-  };
-
-  const handleClickCreat = () => {
-    setIsShowDetail(false);
-    setOpenModal(true);
-    setTypeModal('create');
-  };
-
-  const handleClickImport = () => {
-    setIsShowDetail(false);
-    setOpenModal(true);
-    setTypeModal('import');
-  };
-
-  const showDetails = () => {
-    setIsShowDetail(true);
-    setOpenModal(true);
-  };
-
-  return (
-    <>
-      <Wrapper>
-        <BoxLogo>
-          <Logo />
-          <Title />
-        </BoxLogo>
-        <WDropDown>
-          <DropDownNetwork options={OPTIONS_NETWORK} />
-          <AccountDetails
-            closeTrigger="click"
-            offSet={[-140, 10]}
-            content={
-              <AccountDetailsContent>
-                <Label>Account Management</Label>
-                {isLoading && <LinearProgressCustom />}
-                <WAccount className={isLoading ? 'disable' : ''}>
-                  {accounts.map((item, index) => {
-                    return (
-                      <Box
-                        key={index}
-                        onClick={() => {
-                          handleChangeAccount(item);
-                        }}
-                      >
-                        <CardAccount
-                          handleShowDetail={showDetails}
-                          active={activeAccount === item.address}
-                          data={item}
-                          imported={item.isImported}
-                        ></CardAccount>
-                      </Box>
-                    );
-                  })}
-                </WAccount>
-                <WButton>
-                  <ButtonCreate className={isLoading ? 'disable' : ''} onClick={handleClickCreat}>
-                    <ICreate />
-                    Create
-                  </ButtonCreate>
-                  <ButtonImport className={isLoading ? 'disable' : ''} onClick={handleClickImport}>
-                    <IImport />
-                    Import
-                  </ButtonImport>
-                </WButton>
-              </AccountDetailsContent>
-            }
-          >
-            <Wallet />
-          </AccountDetails>
-        </WDropDown>
-      </Wrapper>
-      <ModalCommon
-        open={openModal}
-        title={isShowDetail ? 'Account Details' : 'Account Name'}
-        setOpenModal={() => {
-          setOpenModal(false);
-        }}
-        fixedheight={isShowDetail}
-      >
-        {isShowDetail ? (
-          <DetailsAccoust></DetailsAccoust>
-        ) : (
-          <CreatNameAccount
-            type={typeModal}
-            onCloseModal={(accounts) => {
-              closeModal(accounts);
-            }}
-          ></CreatNameAccount>
-        )}
-      </ModalCommon>
-    </>
-  );
-};
-
 export default Header;

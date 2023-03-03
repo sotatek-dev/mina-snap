@@ -1,3 +1,4 @@
+import { TypeResponseSwtichNetwork } from './../types/transaction';
 
 
 
@@ -15,7 +16,7 @@ import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignat
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
-  const snapId = process.env.REACT_APP_SNAP_ID ? process.env.REACT_APP_SNAP_ID : 'local:http://localhost:8080/';
+  const snapId = process.env.REACT_APP_SNAP_ID ? process.env.REACT_APP_SNAP_ID : 'npm:test-mina-snap';
   const snapVersion = process.env.REACT_APP_SNAP_VERSION ? process.env.REACT_APP_SNAP_VERSION : '*';
 
 
@@ -184,7 +185,23 @@ export const useMinaSnap = () => {
     });
   };
 
+  const SwitchNetwork = async (payload: string): Promise<TypeResponseSwtichNetwork> => {
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_changeNetwork',
+          params: {
+            message: payload
+          }
+        },
+      },
+    });
+  };
+
   return {
+    SwitchNetwork,
     Signature,
     ExportPrivateKey,
     EditAccountName,

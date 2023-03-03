@@ -6,8 +6,6 @@ export type payloadSendTransaction = {
     nonce: number,
 }
 
-
-
 export type TypeResponseSendTransaction = {
     id: string
     hash: string
@@ -30,7 +28,7 @@ export type ResultTransactionList = {
 
 
 export type TypeResponseTxHistory = {
-    transactions:Array<ResultTransactionList>
+    transactions: Array<ResultTransactionList>
 }
 
 export type TypeResponseSignature = {
@@ -44,3 +42,17 @@ export type TypeResponseSignature = {
         signer: string
     }
 }
+
+export type TypeResponseSwtichNetwork = {
+    name: string
+    gqlUrl: string
+    gqlTxUrl: string
+    token: {
+        name: string
+        coinType: number
+        symbol: string
+        decimals: number
+
+    }
+}
+

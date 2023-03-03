@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import ConnectWallet from 'components/connect-wallet/index';
 import { useHasMetamaskFlask } from 'hooks/useHasMetamaskFlask';
 import Home from 'components/layout/index';
-import { EMinaMethod } from 'test-mina-snap/src/constants/mina-method.constant';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
 import { connectWallet, setIsLoading, setActiveAccount, setWalletConnection } from 'slices/walletSlice';
-import { formatBalance } from 'helpers/formatAccountAddress';
+import { ethers } from 'ethers';
 
 const HomePage = () => {
   useHasMetamaskFlask();
@@ -34,7 +33,7 @@ const HomePage = () => {
         reduxDispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
-            balance: formatBalance(accountInfor.balance.total) as string,
+            balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
             accountName: accountInfor.name as string,
           }),
         );

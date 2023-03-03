@@ -1,6 +1,6 @@
 import Button from 'components/common/button';
 import ModalCommon from 'components/common/modal';
-import { formatBalance } from 'helpers/formatAccountAddress';
+import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React from 'react';
 import { useMinaSnap } from 'services';
@@ -32,7 +32,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
         dispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
-            balance: formatBalance(accountInfor.balance.total) as string,
+            balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
             accountName: accountInfor.name as string,
           }),
         );
