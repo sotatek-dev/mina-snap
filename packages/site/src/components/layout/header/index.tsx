@@ -154,6 +154,7 @@ const Header = () => {
             onCloseModal={(accounts) => {
               closeModal(accounts);
             }}
+            index={accounts.length + 1}
           ></CreatNameAccount>
         )}
       </ModalCommon>

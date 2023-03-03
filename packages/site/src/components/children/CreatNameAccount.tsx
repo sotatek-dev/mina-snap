@@ -45,21 +45,23 @@ const ButtonCustom = styled(Button)<ButtonProps>({
 type Props = {
   onCloseModal: (data: ResultCreateAccount) => void;
   type: string;
+  index: number;
 };
 
-const CreateNameAccount = ({ onCloseModal, type }: Props) => {
+const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
   const [nameAccount, setNameAccount] = useState('');
   const { CreateAccount, AccountList } = useMinaSnap();
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = useState(false);
   const { isLoading } = useAppSelector((state) => state.wallet);
+  const nameDefault = "Account " + index;
 
   const sendRequest = async () => {
     switch (type) {
       case 'create':
         try {
           dispatch(setIsLoading(true));
-          const account = await CreateAccount(nameAccount);
+          const account = await CreateAccount(nameAccount || nameDefault);
           const accountList = await AccountList();
           await dispatch(setListAccounts(accountList));
           onCloseModal(account);
@@ -87,7 +89,7 @@ const CreateNameAccount = ({ onCloseModal, type }: Props) => {
           <InputCustom
             sx={{ paddingTop: '5px' }}
             variant={'outlined'}
-            placeholder="Search"
+            placeholder={nameDefault}
             value={nameAccount}
             onChange={(e) => {
               setNameAccount(e.target.value);
@@ -98,7 +100,6 @@ const CreateNameAccount = ({ onCloseModal, type }: Props) => {
         <ButtonCustom
           variant="contained"
           disableElevation
-          className={!nameAccount || isLoading ? 'disable' : ''}
           onClick={() => {
             sendRequest();
           }}
@@ -124,7 +125,7 @@ const CreateNameAccount = ({ onCloseModal, type }: Props) => {
           onCloseModal={(account) => {
             closeInport(account);
           }}
-          AccountName={nameAccount}
+          AccountName={nameAccount || nameDefault}
         ></ImportPrivateKey>
       </ModalCommon>
     </>
