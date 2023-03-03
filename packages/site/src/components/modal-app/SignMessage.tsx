@@ -1,10 +1,8 @@
-import { Box, Button, ButtonProps, Collapse, List, styled, TextField, TextFieldProps } from '@mui/material';
-import ModalCommon from 'components/common/modal';
+import { Box, Button, ButtonProps, Collapse, styled, TextField, TextFieldProps } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
 import { useMinaSnap } from 'services';
-import { setIsLoading, setListAccounts } from 'slices/walletSlice';
-import { ResultCreateAccount } from 'types/account';
+import { setIsLoading } from 'slices/walletSlice';
 import { TransitionGroup } from 'react-transition-group';
 import showDown from 'assets/icons/show-down.svg';
 import { TypeResponseSignature } from 'types/transaction';

@@ -14,6 +14,26 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
+const Button: React.FC<Props> = ({
+  size = 'default',
+  typeButton = 'default',
+  children,
+  loading,
+  disabled,
+  ...props
+}) => {
+  return (
+    <ButtonWrapper
+      size={size}
+      typeButton={typeButton}
+      {...props}
+      disabled={disabled || loading}
+    >
+      {children}
+    </ButtonWrapper>
+  );
+};
+
 const buttonStyle = (type:any, theme:any) => {
   switch (type) {
     case 'primary':
@@ -70,6 +90,7 @@ const buttonStyle = (type:any, theme:any) => {
 };
 
 const fillBackgroundButtonTypes = ['primary'];
+
 const borderButtonTypes = ['receive', 'cancel', 'default'];
 
 const ButtonWrapper = styled.button<Props>`
@@ -105,25 +126,5 @@ const ButtonWrapper = styled.button<Props>`
     background: ${p => p.theme.palette.grey.grey4};
   }
 `;
-
-const Button: React.FC<Props> = ({
-  size = 'default',
-  typeButton = 'default',
-  children,
-  loading,
-  disabled,
-  ...props
-}) => {
-  return (
-    <ButtonWrapper
-      size={size}
-      typeButton={typeButton}
-      {...props}
-      disabled={disabled || loading}
-    >
-      {children}
-    </ButtonWrapper>
-  );
-};
 
 export default Button;

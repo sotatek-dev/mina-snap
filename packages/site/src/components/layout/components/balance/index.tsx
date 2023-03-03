@@ -9,6 +9,56 @@ import { useAppSelector } from 'hooks/redux';
 import ModalSign from 'components/common/modal-sign';
 import SignMessage from 'components/modal-app/SignMessage';
 
+const Balance = () => {
+  const [showModalSendToken, setShowModalSendToken] = useState(false);
+  const { balance } = useAppSelector((state) => state.wallet);
+  const [openModal, setOpenModalSign] = React.useState(false);
+
+  const handleClick = () => {
+    setShowModalSendToken(true);
+  };
+  const handleClickOutSide = () => {
+    setShowModalSendToken(false);
+  };
+  return (
+    <Wrapper>
+      <Logo src={IMinaCircle} />
+      <AmountToken>
+        <Amount>{balance}</Amount>
+        <TokenName>MINA</TokenName>
+      </AmountToken>
+      <Action>
+        <Send onClick={handleClick}>
+          <IconSend src={ISend} />
+          Send
+        </Send>
+        <ModalTransfer open={showModalSendToken} clickOutSide={true} setOpenModal={handleClickOutSide} />
+        <Sign
+          onClick={() => {
+            setOpenModalSign(true);
+          }}
+        >
+          <IconSign src={ISign} />
+          Sign
+        </Sign>
+      </Action>
+      <ModalSign
+        open={openModal}
+        title={'Sign Custom Message'}
+        setOpenModal={() => {
+          setOpenModalSign(false);
+        }}
+      >
+        <SignMessage
+          onCloseModal={() => {
+            setOpenModalSign(false);
+          }}
+        ></SignMessage>
+      </ModalSign>
+    </Wrapper>
+  );
+};
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -78,55 +128,5 @@ const Sign = styled.div`
 const IconSign = styled.img`
   max-width: 30px;
 `;
-
-const Balance = () => {
-  const [showModalSendToken, setShowModalSendToken] = useState(false);
-  const { balance } = useAppSelector((state) => state.wallet);
-  const [openModal, setOpenModalSign] = React.useState(false);
-
-  const handleClick = () => {
-    setShowModalSendToken(true);
-  };
-  const handleClickOutSide = () => {
-    setShowModalSendToken(false);
-  };
-  return (
-    <Wrapper>
-      <Logo src={IMinaCircle} />
-      <AmountToken>
-        <Amount>{balance}</Amount>
-        <TokenName>MINA</TokenName>
-      </AmountToken>
-      <Action>
-        <Send onClick={handleClick}>
-          <IconSend src={ISend} />
-          Send
-        </Send>
-        <ModalTransfer open={showModalSendToken} clickOutSide={true} setOpenModal={handleClickOutSide} />
-        <Sign
-          onClick={() => {
-            setOpenModalSign(true);
-          }}
-        >
-          <IconSign src={ISign} />
-          Sign
-        </Sign>
-      </Action>
-      <ModalSign
-        open={openModal}
-        title={'Sign Custom Message'}
-        setOpenModal={() => {
-          setOpenModalSign(false);
-        }}
-      >
-        <SignMessage
-          onCloseModal={() => {
-            setOpenModalSign(false);
-          }}
-        ></SignMessage>
-      </ModalSign>
-    </Wrapper>
-  );
-};
 
 export default Balance;

@@ -105,4 +105,5 @@ const BoxInsideMetamask = styled(Box)(() => ({
   paddingBottom: '25px',
   color: '#000000',
 }));
+
 export default ConnectWallet;

@@ -14,6 +14,59 @@ import { useState } from 'react';
 import ModalCommon from 'components/common/modal';
 import { handelCoppy } from 'helpers/handleCoppy';
 
+const Address = () => {
+  const { activeAccount, accountName } = useAppSelector((state) => state.wallet);
+  const [openModal, setOpenModal] = useState(false);
+
+  const hanldeViewAccount = () => {
+    const type = 'wallet';
+    window.open(MINA_BERKELEY_EXPLORER + type + '/' + activeAccount, '_blank')?.focus();
+  }
+
+  const handleOpenModal=()=> {
+    setOpenModal(true);
+  }
+
+  return (
+    <Wrapper>
+      <BoxInfo>
+        <AccountName>{accountName}</AccountName>
+        <WalletAddress id='walletAddress'>
+          {formatAccountAddress(activeAccount)}
+          <IconCoppy
+            src={ICoppy}
+            onClick={()=>handelCoppy(activeAccount as string, "#walletAddress")}
+          />
+        </WalletAddress>
+      </BoxInfo>
+      <KebabMenu
+        closeTrigger="click"
+        offSet={[50, 10]}
+        content={<MenuContent>
+          <MenuItem onClick={()=>hanldeViewAccount()}><IconLink src={ILink}/>View Account on Minascan</MenuItem>
+          <MenuItem onClick={() => handleOpenModal()} ><IconLink src={IAccount}/>Account details</MenuItem>
+          
+        </MenuContent>}
+      >
+        <ButtonMenu typeButton='round'>
+        <PointMenu src={IThreeDot}/>
+        </ButtonMenu>
+      </KebabMenu>
+      <ModalCommon
+            open={openModal}
+            title='Account Details'
+            setOpenModal={() => {
+              setOpenModal(false);
+            }}
+            fixedheight={false}
+            fixedwitdth={false}
+          >
+            <DetailsAccout></DetailsAccout>
+          </ModalCommon>
+    </Wrapper>
+  );
+};
+
 const Wrapper = styled.div`
   text-align: center;
   display: flex;
@@ -93,62 +146,8 @@ const ButtonMenu = styled(Button)`
     background: #D9D9D9;
   }
 `
-
 const PointMenu = styled.img`
   text-align: center;
 `;
-
-const Address = () => {
-  const { activeAccount, accountName } = useAppSelector((state) => state.wallet);
-  const [openModal, setOpenModal] = useState(false);
-
-  const hanldeViewAccount = () => {
-    const type = 'wallet';
-    window.open(MINA_BERKELEY_EXPLORER + type + '/' + activeAccount, '_blank')?.focus();
-  }
-
-  const handleOpenModal=()=> {
-    setOpenModal(true);
-  }
-
-  return (
-    <Wrapper>
-      <BoxInfo>
-        <AccountName>{accountName}</AccountName>
-        <WalletAddress id='walletAddress'>
-          {formatAccountAddress(activeAccount)}
-          <IconCoppy
-            src={ICoppy}
-            onClick={()=>handelCoppy(activeAccount as string, "#walletAddress")}
-          />
-        </WalletAddress>
-      </BoxInfo>
-      <KebabMenu
-        closeTrigger="click"
-        offSet={[50, 10]}
-        content={<MenuContent>
-          <MenuItem onClick={()=>hanldeViewAccount()}><IconLink src={ILink}/>View Account on Minascan</MenuItem>
-          <MenuItem onClick={() => handleOpenModal()} ><IconLink src={IAccount}/>Account details</MenuItem>
-          
-        </MenuContent>}
-      >
-        <ButtonMenu typeButton='round'>
-        <PointMenu src={IThreeDot}/>
-        </ButtonMenu>
-      </KebabMenu>
-      <ModalCommon
-            open={openModal}
-            title='Account Details'
-            setOpenModal={() => {
-              setOpenModal(false);
-            }}
-            fixedheight={false}
-            fixedwitdth={false}
-          >
-            <DetailsAccout></DetailsAccout>
-          </ModalCommon>
-    </Wrapper>
-  );
-};
 
 export default Address;

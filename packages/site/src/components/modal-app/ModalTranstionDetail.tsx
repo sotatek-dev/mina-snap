@@ -13,6 +13,56 @@ interface ModalProps {
     transaction?: ResultTransactionList | undefined
 }
 
+const ModalTransactionDetail = ({open, clickOutSide, setOpenModal, transaction}: ModalProps) => {
+    return (
+        <Modal
+            open={open}
+            title="Transaction Details"
+            clickOutSide={clickOutSide}
+            setOpenModal={setOpenModal}
+        >
+            <Wrapper>
+                <BoxIcon>
+                    <Icon src={TRANSACTION_STATUS.Success}></Icon>
+                    <Status>{Object.keys(TRANSACTION_STATUS)[0]}</Status>
+                </BoxIcon>
+                <BoxInfo>
+                Amount
+                <Content>{ethers.utils.formatUnits(transaction?.amount || 0 , "gwei")} Mina</Content>
+                </BoxInfo>
+                <BoxInfo>
+                    To
+                    <Content>{transaction?.to}</Content>
+                </BoxInfo>
+                <BoxInfo>
+                    From
+                    <Content>{transaction?.from}</Content>
+                </BoxInfo>
+                <BoxInfo>
+                    Fee
+                    <Content>{transaction?.fee} MINA</Content>
+                </BoxInfo>
+                <BoxInfo>
+                    Time
+                    <Content>{formatDateTime(transaction?.dateTime || '')}</Content>
+                </BoxInfo>
+                <BoxInfo>
+                    Nonce
+                    <Content>{transaction?.nonce}</Content>
+                </BoxInfo>
+                <BoxInfo>
+                    Transaction Hash 
+                    <Content>{transaction?.hash}</Content>
+                </BoxInfo>
+                <QueryDetails href={MINA_BERKELEY_EXPLORER+'transaction/'+transaction?.hash} target="_blank">
+                    Query Details
+                    <IconLink src={ILink}/>
+                </QueryDetails>
+            </Wrapper>
+        </Modal>
+    )
+}
+
 const Wrapper = styled.div``;
 
 const BoxIcon = styled.div`
@@ -71,54 +121,5 @@ const QueryDetails = styled.a`
 const IconLink = styled.img`
     padding-left: 6px;
 `;
-const ModalTransactionDetail = ({open, clickOutSide, setOpenModal, transaction}: ModalProps) => {
-    return (
-        <Modal
-            open={open}
-            title="Transaction Details"
-            clickOutSide={clickOutSide}
-            setOpenModal={setOpenModal}
-        >
-            <Wrapper>
-                <BoxIcon>
-                    <Icon src={TRANSACTION_STATUS.Success}></Icon>
-                    <Status>{Object.keys(TRANSACTION_STATUS)[0]}</Status>
-                </BoxIcon>
-                <BoxInfo>
-                Amount
-                <Content>{ethers.utils.formatUnits(transaction?.amount || 0 , "gwei")} Mina</Content>
-                </BoxInfo>
-                <BoxInfo>
-                    To
-                    <Content>{transaction?.to}</Content>
-                </BoxInfo>
-                <BoxInfo>
-                    From
-                    <Content>{transaction?.from}</Content>
-                </BoxInfo>
-                <BoxInfo>
-                    Fee
-                    <Content>{transaction?.fee} MINA</Content>
-                </BoxInfo>
-                <BoxInfo>
-                    Time
-                    <Content>{formatDateTime(transaction?.dateTime || '')}</Content>
-                </BoxInfo>
-                <BoxInfo>
-                    Nonce
-                    <Content>{transaction?.nonce}</Content>
-                </BoxInfo>
-                <BoxInfo>
-                    Transaction Hash 
-                    <Content>{transaction?.hash}</Content>
-                </BoxInfo>
-                <QueryDetails href={MINA_BERKELEY_EXPLORER+'transaction/'+transaction?.hash} target="_blank">
-                    Query Details
-                    <IconLink src={ILink}/>
-                </QueryDetails>
-            </Wrapper>
-        </Modal>
-    )
-}
 
 export default ModalTransactionDetail

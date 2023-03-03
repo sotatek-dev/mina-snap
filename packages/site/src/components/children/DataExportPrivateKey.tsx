@@ -1,7 +1,6 @@
 import { Box, Button, ButtonProps, styled } from '@mui/material';
 import coppy from 'assets/icons/coppy.svg';
 import { handelCoppy } from 'helpers/handleCoppy';
-import React from 'react';
 
 type Props = {
   address?: string;
@@ -33,6 +32,7 @@ const DataExportPrivateKey = ({ address, privateKey, onDone }: Props) => {
     </>
   );
 };
+
 const BoxAccton = styled(Box)({
   paddingTop: '35px',
 });

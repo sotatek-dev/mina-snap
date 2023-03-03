@@ -15,7 +15,37 @@ type ModalCommonProps = React.PropsWithChildren<IModalCommon>;
 
 type ContainerProps = React.PropsWithChildren<Omit<IModalCommon, 'open' | 'setOpenModal'>>;
 
-const Container = styled(Box)<ContainerProps>((Prop) => ({
+const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide }: ModalCommonProps) => {
+  const { isLoading } = useAppSelector((state) => state.wallet);
+
+  return (
+    <Modal
+      onBackdropClick={() => {
+        clickOutSide ? setOpenModal : '';
+      }}
+      disableAutoFocus={true}
+      open={open}
+    >
+      <Container>
+        <ContainerContent>
+          <BoxTitleModal>
+            <CloseIconWrapper onClick={setOpenModal}>
+              <IconBoxBack>
+                <img src={IconBack} />
+              </IconBoxBack>
+            </CloseIconWrapper>
+            {title}
+            {isLoading && <LinearProgressCustom />}
+          </BoxTitleModal>
+
+          {children}
+        </ContainerContent>
+      </Container>
+    </Modal>
+  );
+};
+
+const Container = styled(Box)<ContainerProps>(() => ({
   fontFamily: 'Inter Regular',
   position: 'absolute',
   display: 'flex',
@@ -69,33 +99,4 @@ const LinearProgressCustom = styled(LinearProgress)({
   marginTop: '10px',
 });
 
-const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide }: ModalCommonProps) => {
-  const { isLoading } = useAppSelector((state) => state.wallet);
-
-  return (
-    <Modal
-      onBackdropClick={() => {
-        clickOutSide ? setOpenModal : '';
-      }}
-      disableAutoFocus={true}
-      open={open}
-    >
-      <Container>
-        <ContainerContent>
-          <BoxTitleModal>
-            <CloseIconWrapper onClick={setOpenModal}>
-              <IconBoxBack>
-                <img src={IconBack} />
-              </IconBoxBack>
-            </CloseIconWrapper>
-            {title}
-            {isLoading && <LinearProgressCustom />}
-          </BoxTitleModal>
-
-          {children}
-        </ContainerContent>
-      </Container>
-    </Modal>
-  );
-};
 export default ModalCommon;

@@ -17,6 +17,38 @@ interface Props {
   handleShowDetail?: () => void;
 }
 
+const CardAccount: React.FC<Props> = ({ active, imported, data, handleShowDetail }: any) => {
+  const dispatch = useAppDispatch();
+  const showDetails: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    dispatch(setDetailsAccount(data));
+    handleShowDetail();
+    event.stopPropagation();
+  };
+
+  return (
+    <Wrapper active={active}>
+      <AccountName active={active}>
+        <Label>
+          {data?.name}
+          {data?.isImported && (
+            <Imported active={active} imported={imported}>
+              Imported
+            </Imported>
+          )}
+        </Label>
+        <IconActive active={active} />
+      </AccountName>
+      <Address active={active}>{data && formatAccountAddress(data.address)}</Address>
+      <Balance active={active}>
+        {data && ethers.utils.formatUnits(data.balance.total, 'gwei')} MINA
+        <More active={active} typeButton="round" onClick={showDetails}>
+          <PointMenu src={active ? pointMenu : pointMenuDark} />
+        </More>
+      </Balance>
+    </Wrapper>
+  );
+};
+
 const Wrapper = styled.div<Props>`
   width: 245px;
   max-height: 88px;
@@ -113,37 +145,5 @@ const PointMenu = styled.img<Props>`
   right: 0;
   text-align: center;
 `;
-
-const CardAccount: React.FC<Props> = ({ active, imported, data, handleShowDetail }: any) => {
-  const dispatch = useAppDispatch();
-  const showDetails: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-    dispatch(setDetailsAccount(data));
-    handleShowDetail();
-    event.stopPropagation();
-  };
-
-  return (
-    <Wrapper active={active}>
-      <AccountName active={active}>
-        <Label>
-          {data?.name}
-          {data?.isImported && (
-            <Imported active={active} imported={imported}>
-              Imported
-            </Imported>
-          )}
-        </Label>
-        <IconActive active={active} />
-      </AccountName>
-      <Address active={active}>{data && formatAccountAddress(data.address)}</Address>
-      <Balance active={active}>
-        {data && ethers.utils.formatUnits(data.balance.total, 'gwei')} MINA
-        <More active={active} typeButton="round" onClick={showDetails}>
-          <PointMenu src={active ? pointMenu : pointMenuDark} />
-        </More>
-      </Balance>
-    </Wrapper>
-  );
-};
 
 export default CardAccount;
