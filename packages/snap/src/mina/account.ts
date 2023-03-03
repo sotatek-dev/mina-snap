@@ -34,7 +34,7 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
       isImported: true,
     };
   }
-  if (typeof selectedImportedAccount === 'number') {
+  if (selectedImportedAccount) {
     return {
       name: importedAccounts[selectedImportedAccount].name,
       privateKey: importedAccounts[selectedImportedAccount].privateKey,
