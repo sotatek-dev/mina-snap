@@ -82,7 +82,7 @@ export async function getTxHistory(networkConfig: NetworkConfig, options: Histor
   pooledUserCommands.forEach((tx: any) => (tx.status = 'PENDING'));
 
   const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery, { ...options, address });
-  transactions.forEach((tx: any) => (tx.status = tx.failureReason ? 'FAILED' : 'INCLUDED'));
+  transactions.forEach((tx: any) => (tx.status = tx.failureReason ? 'FAILED' : 'APPLIED'));
 
   return [...pooledUserCommands, ...transactions];
 }
