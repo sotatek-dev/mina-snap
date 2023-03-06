@@ -57,11 +57,32 @@ query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolea
 		memo
 		hash
 		kind
+		isDelegation
+		feeToken
 		dateTime
 		failureReason
 		id
 	}
 }
+`;
+
+export const TxPendingQuery = `
+query pendingTx($address: PublicKey!) {
+    pooledUserCommands(publicKey: $address) {
+		fee
+		from
+		to
+		nonce
+		amount
+		memo
+		hash
+		kind
+		isDelegation
+		feeToken
+		failureReason
+		id
+    }
+  }
 `;
 
 export const getTxDetailQuery = `

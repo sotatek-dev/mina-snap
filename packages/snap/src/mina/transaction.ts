@@ -1,7 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { Payment, Signed } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import { gql } from '../graphql';
-import { getTxHistoryQuery, getTxDetailQuery, sendPaymentQuery, getTxStatusQuery } from '../graphql/gqlparams';
+import {
+  getTxHistoryQuery,
+  getTxDetailQuery,
+  sendPaymentQuery,
+  getTxStatusQuery,
+  TxPendingQuery,
+} from '../graphql/gqlparams';
 import { HistoryOptions, NetworkConfig, TxInput } from '../interfaces';
 import { getMinaClient } from '../util/mina-client.util';
 import { popupNotify } from '../util/popup.util';
@@ -72,12 +78,13 @@ export async function sendPayment(signedPayment: Signed<Payment>, networkConfig:
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
-  const query = getTxHistoryQuery;
-  const variables = { ...options, address };
+  const { pooledUserCommands } = await gql(networkConfig.gqlUrl, TxPendingQuery, { address });
+  pooledUserCommands.forEach((tx: any) => (tx.status = 'PENDING'));
 
-  const data = await gql(networkConfig.gqlTxUrl, query, variables);
+  const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery, { ...options, address });
+  transactions.forEach((tx: any) => (tx.status = tx.failureReason ? 'FAILED' : 'INCLUDED'));
 
-  return data;
+  return [...pooledUserCommands, ...transactions];
 }
 
 export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
