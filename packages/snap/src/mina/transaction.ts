@@ -78,13 +78,13 @@ export async function sendPayment(signedPayment: Signed<Payment>, networkConfig:
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
-  const { pooledUserCommands } = await gql(networkConfig.gqlUrl, TxPendingQuery, { address });
-  pooledUserCommands.forEach((tx: any) => (tx.status = 'PENDING'));
+  const { pooledUserCommands: pendingTxs } = await gql(networkConfig.gqlUrl, TxPendingQuery, { address });
+  pendingTxs.forEach((tx: any) => (tx.status = 'PENDING'));
 
   const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery, { ...options, address });
   transactions.forEach((tx: any) => (tx.status = tx.failureReason ? 'FAILED' : 'APPLIED'));
 
-  return [...pooledUserCommands, ...transactions];
+  return [...pendingTxs, ...transactions];
 }
 
 export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
