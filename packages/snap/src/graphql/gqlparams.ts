@@ -59,6 +59,7 @@ query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolea
 		kind
 		dateTime
 		failureReason
+		id
 	}
 }
 `;
