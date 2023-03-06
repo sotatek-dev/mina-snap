@@ -1,5 +1,5 @@
 {
-  "version": "0.1.6",
+  "version": "0.1.9",
   "description": "An example Snap written in TypeScript.",
   "proposedName": "Mina Example Snap",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/sotatek-dev/mina-snap-fe"
   },
   "source": {
-    "shasum": "ba3SAi34IOLtKMLRjgciTI9PXU5Ep4TOZdZAjUiu+kw=",
+    "shasum": "K5dtqI0Ppp75nmzh8zDGoazoc2jnanP1CM9i79EavAk=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

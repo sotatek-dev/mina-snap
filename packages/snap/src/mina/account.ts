@@ -34,7 +34,7 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
       isImported: true,
     };
   }
-  if (selectedImportedAccount) {
+  if (selectedImportedAccount || selectedImportedAccount == 0) {
     return {
       name: importedAccounts[selectedImportedAccount].name,
       privateKey: importedAccounts[selectedImportedAccount].privateKey,
@@ -77,14 +77,13 @@ export const generateKeyPair = async (networkConfig: NetworkConfig, index?: numb
 //   return keyPair.publicKey;
 // };
 
-export const signMessage = (message: string, keypair: Keypair, networkConfig: NetworkConfig) => {
-  const client = getMinaClient(networkConfig);
-  const signed = client.signMessage(message, keypair);
-  if (client.verifyMessage(signed)) {
-    console.log('Message was verified successfully');
+export const signMessage = async (message: string, keypair: Keypair, networkConfig: NetworkConfig) => {
+  const confirmSignMsg = await popupDialog(ESnapDialogType.CONFIRMATION, 'Sign this message?', message);
+  if (confirmSignMsg) {
+    const client = getMinaClient(networkConfig);
+    const signed = client.signMessage(message, keypair);
     return signed;
   }
-  console.log('Failed to verify message');
   return null;
 };
 
@@ -198,7 +197,7 @@ export const importAccount = async (name: string, privateKey: string) => {
   } catch (err) {
     return {
       error: {
-        message: 'The account index is invalid',
+        message: 'Incorrect Private Key',
       },
     };
   }
@@ -208,7 +207,7 @@ export const importAccount = async (name: string, privateKey: string) => {
   if (duplicateAddress) {
     return {
       error: {
-        message: 'Incorrect Private Key',
+        message: 'Do not import repeatedly',
       },
     };
   }
