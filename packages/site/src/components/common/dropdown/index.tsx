@@ -16,7 +16,7 @@ interface Props extends ReactDropdownProps {
 const DropDown = ({ disabled, error, options, label, ...otherProps }: Props) => {
   const dispatch = useDispatch();
   const { SwitchNetwork, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
-  const [value, setValue] = useState('Devnet');
+  const [value, setValue] = useState('Berkeley');
 
   const changeNetwork = async (e: Option) => {
     setValue(e.value);

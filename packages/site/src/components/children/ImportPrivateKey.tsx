@@ -1,4 +1,5 @@
 import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
+import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useState } from 'react';
 import { useMinaSnap } from 'services';
@@ -12,7 +13,7 @@ type Props = {
 
 const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
   const [privateKey, setPrivateKey] = useState('');
-  const { AccountList, ImportAccount } = useMinaSnap();
+  const { AccountList, ImportAccount, getAccountInfors } = useMinaSnap();
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.wallet);
 
@@ -25,9 +26,12 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
       };
       const account = await ImportAccount(payload);
       const accountList = await AccountList();
+      const accountInfor = await getAccountInfors();
+      console.log(accountInfor, 'accountInfor');
       dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
-      onCloseModal(account);
+      // console.log({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
+      onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
     } catch (error) {
       dispatch(setIsLoading(false));
     }
@@ -97,6 +101,5 @@ const ButtonCustom = styled(Button)<ButtonProps>({
   background: '#594AF1',
   borderRadius: '5px',
 });
-
 
 export default ImportPrivateKey;

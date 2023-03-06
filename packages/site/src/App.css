@@ -48,3 +48,15 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+.isUnInstalledWallet{
+  opacity: 0.5;
+  border: 1px solid #000000;
+  border-radius: 5px 0px;
+  background: #FC6643 !important;
+  pointer-events: none;
+  width: 73% !important;
+}
+.connectMetamask{
+  width: 73% !important;
+}

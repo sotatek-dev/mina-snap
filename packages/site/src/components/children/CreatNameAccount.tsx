@@ -1,5 +1,6 @@
 import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
 import ModalCommon from 'components/common/modal';
+import { ethers } from 'ethers';
 import { useAppDispatch } from 'hooks/redux';
 import { useState } from 'react';
 import { useMinaSnap } from 'services';
@@ -15,10 +16,10 @@ type Props = {
 
 const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
   const [nameAccount, setNameAccount] = useState('');
-  const { CreateAccount, AccountList } = useMinaSnap();
+  const { CreateAccount, AccountList, getAccountInfors } = useMinaSnap();
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = useState(false);
-  const nameDefault = "Account " + index;
+  const nameDefault = 'Account ' + index;
 
   const sendRequest = async () => {
     switch (type) {
@@ -27,8 +28,9 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
           dispatch(setIsLoading(true));
           const account = await CreateAccount(nameAccount || nameDefault);
           const accountList = await AccountList();
+          const accountInfor = await getAccountInfors();
           await dispatch(setListAccounts(accountList));
-          onCloseModal(account);
+          onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
           dispatch(setIsLoading(false));
         } catch (error) {
           dispatch(setIsLoading(false));

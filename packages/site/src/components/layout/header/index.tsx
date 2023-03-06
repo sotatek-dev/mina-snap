@@ -53,10 +53,11 @@ const Header = () => {
 
   const closeModal = (accounts: ResultCreateAccount) => {
     setOpenModal(false);
+    console.log(accounts.balance, 'accounts.balance');
     dispatch(
       setActiveAccount({
         activeAccount: accounts.address as string,
-        balance: '0',
+        balance: accounts.balance as string,
         accountName: accounts.name as string,
       }),
     );

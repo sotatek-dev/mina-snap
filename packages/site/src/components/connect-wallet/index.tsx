@@ -67,7 +67,12 @@ const ConnectWallet: React.FC<Props> = () => {
           )}
         </BoxCenter>
         <BoxCenter>
-          <Button onClick={handleConnectClick}>{isLoading ? <>CONNECTING</> : 'CONNECT TO METAMASK'}</Button>
+          <Button
+            className={!isInstalledWallet ? 'isUnInstalledWallet' : 'connectMetamask'}
+            onClick={handleConnectClick}
+          >
+            {isLoading ? <>CONNECTING</> : 'CONNECT TO METAMASK'}
+          </Button>
         </BoxCenter>
       </BoxContent>
     </>
