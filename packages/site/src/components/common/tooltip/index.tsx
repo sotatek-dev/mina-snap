@@ -81,7 +81,6 @@ export const PopperTooltipView = ({
 export const Wrapper = styled.div`
   font-family: 'Inter Regular';
   width: fit-content;
-  bac
 `;
 
 export const PopperContainer = styled.div`
