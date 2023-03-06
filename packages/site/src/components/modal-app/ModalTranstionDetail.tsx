@@ -13,6 +13,10 @@ interface ModalProps {
     transaction?: ResultTransactionList | undefined
 }
 
+interface Props {
+    status?: string;
+}
+
 const ModalTransactionDetail = ({open, clickOutSide, setOpenModal, transaction}: ModalProps) => {
     return (
         <Modal
@@ -23,12 +27,14 @@ const ModalTransactionDetail = ({open, clickOutSide, setOpenModal, transaction}:
         >
             <Wrapper>
                 <BoxIcon>
-                    <Icon src={TRANSACTION_STATUS.Success}></Icon>
-                    <Status>{Object.keys(TRANSACTION_STATUS)[0]}</Status>
+                    <Icon src={transaction?.status == "PENDING" ? TRANSACTION_STATUS.Pending : transaction?.status == "APPLIED" ? TRANSACTION_STATUS.Success : TRANSACTION_STATUS.Fail}></Icon>
+                    <Status status={transaction?.status}>
+                        {transaction?.status == "PENDING" ? "Wait" : transaction?.status == "APPLIED" ? "Success" : "Failed"}
+                    </Status>
                 </BoxIcon>
                 <BoxInfo>
                 Amount
-                <Content>{ethers.utils.formatUnits(transaction?.amount || 0 , "gwei")} Mina</Content>
+                <Content>{ethers.utils.formatUnits(transaction?.amount || 0 , "gwei")} MINA</Content>
                 </BoxInfo>
                 <BoxInfo>
                     To
@@ -40,12 +46,14 @@ const ModalTransactionDetail = ({open, clickOutSide, setOpenModal, transaction}:
                 </BoxInfo>
                 <BoxInfo>
                     Fee
-                    <Content>{transaction?.fee} MINA</Content>
+                    <Content>{ethers.utils.formatUnits(transaction?.fee || 0 , "gwei")} MINA</Content>
                 </BoxInfo>
+                {transaction?.status != "PENDING" && 
                 <BoxInfo>
                     Time
                     <Content>{formatDateTime(transaction?.dateTime || '')}</Content>
                 </BoxInfo>
+                }
                 <BoxInfo>
                     Nonce
                     <Content>{transaction?.nonce}</Content>
@@ -76,13 +84,13 @@ const Icon = styled.img`
     max-width: 70px;
 `;
 
-const Status = styled.div`
+const Status = styled.div<Props>`
     padding-top: 12px;
-    color: #0DB27C;
+    color: ${(props)=> (props.status == 'PENDING'? '#ECC307': props.status == 'APPLIED' ? '#0DB27C' : '#D95A5A')};
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
-    line-height: 16px;
+    line-height: 17px;
     letter-spacing: -0.03em;
 `;
 

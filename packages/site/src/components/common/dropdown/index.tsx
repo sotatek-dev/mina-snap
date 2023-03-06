@@ -21,9 +21,7 @@ const DropDown = ({ disabled, error, options, label, ...otherProps }: Props) => 
   const changeNetwork = async (e: Option) => {
     setValue(e.value);
     dispatch(
-      setTransactions({
-        transactions: [],
-      }),
+      setTransactions([]),
     );
     dispatch(setIsLoadingSwitchNetWork(true));
     await SwitchNetwork(e.value)
