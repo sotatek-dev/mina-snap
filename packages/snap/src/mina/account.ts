@@ -98,12 +98,8 @@ export async function getAccountInfo(publicKey: string, networkConfig: NetworkCo
   const query = getAccountInfoQuery;
   const variables = { publicKey };
 
-  const { data, error } = await gql(networkConfig.gqlUrl, query, variables);
+  const data = await gql(networkConfig.gqlUrl, query, variables);
 
-  if (error) {
-    console.error(error);
-    return null;
-  }
   /**return default data if the account does not have any tx */
   if (!data.account) {
     data.account = {
@@ -135,11 +131,8 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
         address: account.address,
       };
     } else {
-      return {
-        error: {
-          message: 'The account index is invalid',
-        },
-      };
+      console.error('packages/snap/src/mina/account.ts:138', 'The account index is invalid');
+      throw new Error('The account index is invalid');
     }
   }
   const account = generatedAccounts[index];
@@ -149,11 +142,8 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
     await updateSnapConfig(snapConfig);
     return account;
   } else {
-    return {
-      error: {
-        message: 'The account index is invalid',
-      },
-    };
+    console.error('packages/snap/src/mina/account.ts:149', 'The account index is invalid');
+    throw new Error('The account index is invalid');
   }
 };
 
@@ -195,21 +185,15 @@ export const importAccount = async (name: string, privateKey: string) => {
   try {
     publicKey = client.derivePublicKey(privateKey);
   } catch (err) {
-    return {
-      error: {
-        message: 'Incorrect Private Key',
-      },
-    };
+    console.error('packages/snap/src/mina/account.ts:198', err.message);
+    throw new Error('Incorrect Private Key');
   }
 
   // Check for duplicate account
   const duplicateAddress = existingAddresses.find((address) => address === publicKey);
   if (duplicateAddress) {
-    return {
-      error: {
-        message: 'Do not import repeatedly',
-      },
-    };
+    console.error('packages/snap/src/mina/account.ts:205', 'Duplicate address');
+    throw new Error('Do not import repeatedly');
   }
 
   let newAccountIndex;
@@ -273,11 +257,8 @@ export const editAccountName = async (index: number, name: string, isImported?: 
     ? networks[currentNetwork].importedAccounts[index]
     : networks[currentNetwork].generatedAccounts[index];
   if (!account) {
-    return {
-      error: {
-        message: 'The account does not exist',
-      },
-    };
+    console.error('packages/snap/src/mina/account.ts:264', 'The account does not exist');
+    throw new Error('The account does not exist');
   }
   account.name = name;
   await updateSnapConfig(snapConfig);
