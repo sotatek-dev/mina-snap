@@ -24,12 +24,11 @@ export type ResultTransactionList = {
     kind: string
     dateTime: string
     failureReason: string
+    status: string
 }
 
 
-export type TypeResponseTxHistory = {
-    transactions: Array<ResultTransactionList>
-}
+export type TypeResponseTxHistory = Array<ResultTransactionList>
 
 export type TypeResponseSignature = {
     data: {

@@ -11,6 +11,10 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
 
+interface Props {
+  status:string
+}
+
 const TransactionHistory = () => {
   const [showTxDetail, setShowTxDetail] = useState(false);
   const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
@@ -56,8 +60,8 @@ const TransactionHistory = () => {
                   </Amount>
                 </TxInfo>
                 <Status>
-                  <Detail>{formatDateTime(item.dateTime)}</Detail>
-                  <TxStatus>APPLIED</TxStatus>
+                  {item.status == "PENDING" ? <Detail>Nonce {item.nonce}</Detail> : <Detail>{formatDateTime(item.dateTime)}</Detail>}
+                  <TxStatus status={item.status}>{item.status}</TxStatus>
                 </Status>
               </TransactionDetail>
             </TracsactionItem>
@@ -138,14 +142,14 @@ const Detail = styled.div`
   letter-spacing: -0.03em;
 `;
 
-const TxStatus = styled.div`
+const TxStatus = styled.div<Props>`
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
   line-height: 15px;
   letter-spacing: -0.03em;
-  color: #0db27c;
-  background: #d5e7e4;
+  color: ${(props)=> (props.status == 'PENDING'? '#ECC307': props.status == 'APPLIED' ? '#0DB27C' : '#D95A5A')};
+  background: ${(props)=> (props.status == 'PENDING'? '#ECE8D7': props.status == 'APPLIED' ? '#D5E7E4' : '#FBEEEE')};
 `;
 
 export default TransactionHistory;

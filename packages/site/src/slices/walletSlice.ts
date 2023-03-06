@@ -139,7 +139,7 @@ export const walletSlice = createSlice({
       };
     },
     setTransactions: (state, { payload }: PayloadAction<TypeResponseTxHistory>) => {
-      state.transactions = [...payload.transactions]
+      state.transactions = payload
       return state;
     },
   },
