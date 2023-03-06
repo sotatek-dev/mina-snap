@@ -73,7 +73,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
           Fee
           <Content>{txInfoProp?.fee} MINA</Content>
         </BoxInfo>
-        {txInfoProp?.nonce && (
+        {txInfoProp?.nonce != 0 && (
           <BoxInfo>
             Nonce
             <Content>{txInfoProp.nonce}</Content>

@@ -20,6 +20,7 @@ interface Props {
   active?: boolean;
   toggle?: boolean;
   disable?: boolean;
+  isValidValue?: boolean;
 }
 
 const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
@@ -70,13 +71,17 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setShowModal(false);
   };
 
+  const isPositiveInteger = (num:number) => {
+    return Number.isInteger(num) && num >= 0;
+  }
+
   useEffect(() => {
-    if (address && amount) {
+    if (address && amount && isPositiveInteger(Number(nonce))) {
       setDisabled(false);
     } else {
       setDisabled(true);
     }
-  }, [amount, address]);
+  }, [amount, address, nonce]);
 
   useEffect(() => {
     setAddress('');
@@ -103,7 +108,9 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             inputProps={{
               style: {
                 height: '34px',
-                padding: '0 14px',
+                margin: '0 7px',
+                padding: '0px 0px',
+                fontSize:'10px',
               },
             }}
           />
@@ -125,7 +132,9 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             inputProps={{
               style: {
                 height: '34px',
-                padding: '0 14px',
+                margin: '0 7px',
+                padding: '0px 0px',
+                fontSize:'10px',
               },
             }}
           />
@@ -138,7 +147,9 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             inputProps={{
               style: {
                 height: '34px',
-                padding: '0 14px',
+                margin: '0 7px',
+                padding: '0px 0px',
+                fontSize:'10px',
               },
             }}
           />
@@ -193,13 +204,16 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                 inputProps={{
                   style: {
                     height: '34px',
-                    padding: '0 14px',
+                    margin: '0 7px',
+                    padding: '0px 0px',
+                    fontSize:'10px',
                   },
                 }}
               />
               {gasFee > 10 && <FormHelperText>Fees are much higher than average</FormHelperText>}
               <Tittle>Nonce</Tittle>
               <Input
+                error={!isPositiveInteger(Number(nonce))}
                 variant="outlined"
                 placeholder="Nonce 1"
                 fullWidth
@@ -211,10 +225,14 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                 inputProps={{
                   style: {
                     height: '34px',
-                    padding: '0px 62px 0px 14px',
+                    margin: '0 7px',
+                    padding: '0px 0px',
+                    fontSize:'10px',
                   },
                 }}
+                isValidValue={!isPositiveInteger(Number(nonce))}
               />
+              {!isPositiveInteger(Number(nonce)) && <FormHelperText>Please enter a valid nonce</FormHelperText>}
             </AdvancedContent>
           )}
         </AdvancedBox>
@@ -246,23 +264,26 @@ const WTitle = styled.div`
 const Tittle = styled.div`
   font-style: normal;
   font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 10px;
+  line-height: 12px;
   color: #000000;
-  margin-top: 12px;
-  margin-bottom: 4px;
+  margin-top: 16px;
+  margin-bottom: 5px;
 `;
 
 const Balance = styled.div`
   font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
   color: #00000066;
   margin-top: 20px;
 `;
 
 const MaxAmount = styled.div`
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 12px;
   position: absolute;
   left: calc(100% - 50px);
   top: calc(30% - 36px);
@@ -273,17 +294,18 @@ const MaxAmount = styled.div`
   }
 `;
 
-const Input = styled(TextField)`
+const Input = styled(TextField)<Props>`
     position: relative;
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
     -webkit-appearance: none; 
     margin: 0; 
     }
-    
-    '&.Mui-focused': {
-        borderColor: #594AF1,
-      },
+    & .MuiOutlinedInput-root {
+      &.Mui-focused fieldset {
+        border: 1px solid ${(props) => (props.isValidValue ? '#d32f2f' : '#594AF1')};
+      }
+    }
 `;
 
 const WOption = styled.div`
@@ -300,7 +322,7 @@ const Option = styled(ButtonCommon)<Props>`
   max-height: 30px;
   font-style: normal;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 10px;
   line-height: 12px;
   color: ${(props) => (props.active ? '#594AF1' : '#000000')};
   background: #f9fafc;
@@ -309,7 +331,7 @@ const Option = styled(ButtonCommon)<Props>`
 `;
 
 const AdvancedBox = styled.div`
-  min-height: 153px;
+  min-height: 176px;
 `;
 
 const Toggle = styled.div`
@@ -318,7 +340,7 @@ const Toggle = styled.div`
   padding-top: 4px;
   font-style: normal;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 10px;
   line-height: 12px;
   color: #594af1;
   :hover {
@@ -332,7 +354,7 @@ const AdvancedIcon = styled.img<Props>`
 `;
 
 const AdvancedContent = styled.div`
-  max-height: 110px;
+  max-height: 155px;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;
@@ -343,6 +365,10 @@ const ButtonNext = styled(Button)<Props>`
   color: #ffffff;
   background: ${(props) => (props.disable ? '#D9D9D9' : '#594AF1')};
   border: none;
+  width: 270px;
+  height: 34px;
+  padding: 0;
+  margin: auto;
 `;
 
 export default ModalTransfer;

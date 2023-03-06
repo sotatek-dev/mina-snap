@@ -65,7 +65,7 @@ const Container = styled(Box)<ContainerProps>((Prop) => ({
   transform: 'translate(-50%, -50%)',
   boxSizing: 'border-box',
   width: Prop.fixedwitdth ? '310px' : '322px',
-  padding: '16px 0px',
+  padding: '23px 0px 16px',
   border: '1px solid #ECECF6',
   boxShadow: '0px 0px 3px 1px rgba(0, 0, 0, 0.1)',
   borderRadius: '5px',
