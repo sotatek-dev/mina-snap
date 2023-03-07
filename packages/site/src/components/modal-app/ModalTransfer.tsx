@@ -93,163 +93,170 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   return (
     <Modal open={open} title="Send" clickOutSide={clickOutSide} setOpenModal={setOpenModal}>
       <FormControl fullWidth required>
-        <RequiredBox>
-          <Tittle>To</Tittle>
+        <ContentBox>
+          <RequiredBox>
+            <Tittle>To</Tittle>
 
-          <Input
-            value={address}
-            onChange={(event) => {
-              setAddress(event.target.value);
-            }}
-            variant="outlined"
-            placeholder="Address"
-            fullWidth
-            size="small"
-            inputProps={{
-              style: {
-                height: '34px',
-                margin: '0 7px',
-                padding: '0px 0px',
-                fontSize:'10px',
-              },
-            }}
-          />
-          <WTitle>
-            <Tittle>Amount</Tittle>
-            <Balance>Balance: {balance}</Balance>
-            <MaxAmount onClick={() => setAmount(balance.toString())}>Max</MaxAmount>
-          </WTitle>
-          <Input
-            value={amount}
-            type="number"
-            variant="outlined"
-            placeholder="0"
-            onChange={(event) => {
-              handleAmount(event.target.value);
-            }}
-            fullWidth
-            size="small"
-            inputProps={{
-              style: {
-                height: '34px',
-                margin: '0 7px',
-                padding: '0px 0px',
-                fontSize:'10px',
-              },
-            }}
-          />
-          <Tittle>Memo(Optional)</Tittle>
-          <Input
-            variant="outlined"
-            fullWidth
-            size="small"
-            onChange={(event) => setMemo(event.target.value)}
-            inputProps={{
-              style: {
-                height: '34px',
-                margin: '0 7px',
-                padding: '0px 0px',
-                fontSize:'10px',
-              },
-            }}
-          />
-          <WTitle>
-            <Tittle>Fee</Tittle>
-            <Balance>{gasFee}</Balance>
-          </WTitle>
-          <WOption>
-            <Option
-              active={gasFee == GAS_FEE.slow}
-              onClick={() => {
-                setGasFee(GAS_FEE.slow);
+            <Input
+              value={address}
+              onChange={(event) => {
+                setAddress(event.target.value);
               }}
-            >
-              Slow
-            </Option>
-            <Option
-              active={gasFee == GAS_FEE.default}
-              onClick={() => {
-                setGasFee(GAS_FEE.default);
+              variant="outlined"
+              placeholder="Address"
+              fullWidth
+              size="small"
+              inputProps={{
+                style: {
+                  height: '34px',
+                  margin: '0 7px',
+                  padding: '0px 0px',
+                  fontSize:'10px',
+                },
               }}
-            >
-              Default
-            </Option>
-            <Option
-              active={gasFee == GAS_FEE.fast}
-              onClick={() => {
-                setGasFee(GAS_FEE.fast);
+            />
+            <WTitle>
+              <Tittle>Amount</Tittle>
+              <Balance>Balance: {balance}</Balance>
+              <MaxAmount onClick={() => setAmount(balance.toString())}>Max</MaxAmount>
+            </WTitle>
+            <Input
+              value={amount}
+              type="number"
+              variant="outlined"
+              placeholder="0"
+              onChange={(event) => {
+                handleAmount(event.target.value);
               }}
-            >
-              Fast
-            </Option>
-          </WOption>
-        </RequiredBox>
-        <AdvancedBox>
-          <Toggle onClick={() => setIsShowContent(!isShowCotent)}>
-            Advanced
-            <AdvancedIcon toggle={isShowCotent} src={IAdvanced}></AdvancedIcon>
-          </Toggle>
-          {isShowCotent && (
-            <AdvancedContent>
-              <Tittle>Transaction Fee</Tittle>
-              <Input
-                type="number"
-                variant="outlined"
-                placeholder={gasFee.toString()}
-                fullWidth
-                size="small"
-                onChange={(event) => {
-                  setGasFee(Number(event.target.value));
+              fullWidth
+              size="small"
+              inputProps={{
+                style: {
+                  height: '34px',
+                  margin: '0 7px',
+                  padding: '0px 0px',
+                  fontSize:'10px',
+                },
+              }}
+            />
+            <Tittle>Memo(Optional)</Tittle>
+            <Input
+              variant="outlined"
+              fullWidth
+              size="small"
+              onChange={(event) => setMemo(event.target.value)}
+              inputProps={{
+                style: {
+                  height: '34px',
+                  margin: '0 7px',
+                  padding: '0px 0px',
+                  fontSize:'10px',
+                },
+              }}
+            />
+            <WTitle>
+              <Tittle>Fee</Tittle>
+              <Balance>{gasFee}</Balance>
+            </WTitle>
+            <WOption>
+              <Option
+                active={gasFee == GAS_FEE.slow}
+                onClick={() => {
+                  setGasFee(GAS_FEE.slow);
                 }}
-                inputProps={{
-                  style: {
-                    height: '34px',
-                    margin: '0 7px',
-                    padding: '0px 0px',
-                    fontSize:'10px',
-                  },
+              >
+                Slow
+              </Option>
+              <Option
+                active={gasFee == GAS_FEE.default}
+                onClick={() => {
+                  setGasFee(GAS_FEE.default);
                 }}
-              />
-              {gasFee > 10 && <FormHelperText>Fees are much higher than average</FormHelperText>}
-              <Tittle>Nonce</Tittle>
-              <Input
-                error={!isPositiveInteger(Number(nonce))}
-                variant="outlined"
-                placeholder="Nonce 1"
-                fullWidth
-                size="small"
-                type="number"
-                onChange={(event) => {
-                  setNonce(event.target.value);
+              >
+                Default
+              </Option>
+              <Option
+                active={gasFee == GAS_FEE.fast}
+                onClick={() => {
+                  setGasFee(GAS_FEE.fast);
                 }}
-                inputProps={{
-                  style: {
-                    height: '34px',
-                    margin: '0 7px',
-                    padding: '0px 0px',
-                    fontSize:'10px',
-                  },
-                }}
-                isValidValue={!isPositiveInteger(Number(nonce))}
-              />
-              {!isPositiveInteger(Number(nonce)) && <FormHelperText>Please enter a valid nonce</FormHelperText>}
-            </AdvancedContent>
-          )}
-        </AdvancedBox>
-        <ButtonNext disable={disabled} onClick={handleClick} type="submit">
-          Next
-        </ButtonNext>
-        <ModalConfirm
-          open={showModal}
-          clickOutSide={true}
-          closeSucces={success}
-          setOpenModal={handleClickOutSide}
-          txInfoProp={txInfo}
-        />
+              >
+                Fast
+              </Option>
+            </WOption>
+          </RequiredBox>
+          <AdvancedBox>
+            <Toggle onClick={() => setIsShowContent(!isShowCotent)}>
+              Advanced
+              <AdvancedIcon toggle={isShowCotent} src={IAdvanced}></AdvancedIcon>
+            </Toggle>
+            {isShowCotent && (
+              <AdvancedContent>
+                <Tittle>Transaction Fee</Tittle>
+                <Input
+                  type="number"
+                  variant="outlined"
+                  placeholder={gasFee.toString()}
+                  fullWidth
+                  size="small"
+                  onChange={(event) => {
+                    setGasFee(Number(event.target.value));
+                  }}
+                  inputProps={{
+                    style: {
+                      height: '34px',
+                      margin: '0 7px',
+                      padding: '0px 0px',
+                      fontSize:'10px',
+                    },
+                  }}
+                />
+                {gasFee > 10 && <FormHelperText>Fees are much higher than average</FormHelperText>}
+                <Tittle>Nonce</Tittle>
+                <Input
+                  error={!isPositiveInteger(Number(nonce))}
+                  variant="outlined"
+                  placeholder="Nonce 1"
+                  fullWidth
+                  size="small"
+                  type="number"
+                  onChange={(event) => {
+                    setNonce(event.target.value);
+                  }}
+                  inputProps={{
+                    style: {
+                      height: '34px',
+                      margin: '0 7px',
+                      padding: '0px 0px',
+                      fontSize:'10px',
+                    },
+                  }}
+                  isValidValue={!isPositiveInteger(Number(nonce))}
+                />
+                {!isPositiveInteger(Number(nonce)) && <FormHelperText>Please enter a valid nonce</FormHelperText>}
+              </AdvancedContent>
+            )}
+          </AdvancedBox>
+          <ButtonNext disable={disabled} onClick={handleClick} type="submit">
+            Next
+          </ButtonNext>
+          <ModalConfirm
+            open={showModal}
+            clickOutSide={true}
+            closeSucces={success}
+            setOpenModal={handleClickOutSide}
+            txInfoProp={txInfo}
+          />
+        </ContentBox>
       </FormControl>
     </Modal>
   );
 };
+
+const ContentBox = styled.div`
+  min-width: 300px;
+  padding: 0 10px;
+`
 
 const RequiredBox = styled.div`
   border-bottom: 1px solid #d9d9d9;
@@ -278,6 +285,7 @@ const Balance = styled.div`
   line-height: 12px;
   color: #00000066;
   margin-top: 20px;
+  margin-bottom: 5px;
 `;
 
 const MaxAmount = styled.div`
@@ -285,8 +293,8 @@ const MaxAmount = styled.div`
   font-size: 10px;
   line-height: 12px;
   position: absolute;
-  left: calc(100% - 50px);
-  top: calc(30% - 36px);
+  left: calc(100% - 40px);
+  top: calc(30% - 37px);
   color: #5972f5;
   z-index: 999;
   :hover {
@@ -331,7 +339,7 @@ const Option = styled(ButtonCommon)<Props>`
 `;
 
 const AdvancedBox = styled.div`
-  min-height: 176px;
+  min-height: 169px;
 `;
 
 const Toggle = styled.div`
@@ -365,7 +373,6 @@ const ButtonNext = styled(Button)<Props>`
   color: #ffffff;
   background: ${(props) => (props.disable ? '#D9D9D9' : '#594AF1')};
   border: none;
-  width: 270px;
   height: 34px;
   padding: 0;
   margin: auto;

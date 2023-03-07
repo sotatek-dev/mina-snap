@@ -36,7 +36,7 @@ const ModalCommon = ({
       open={open}
     >
       <Container fixedwitdth={fixedwitdth} sx={{ height: fixedheight ? '100%' : 'auto' }}>
-        <ContainerContent>
+        <>
           <BoxTitleModal>
             <CloseIconWrapper onClick={setOpenModal}>
               <IconBoxBack>
@@ -47,7 +47,7 @@ const ModalCommon = ({
             {isLoading && <LinearProgressCustom />}
           </BoxTitleModal>
           {children}
-        </ContainerContent>
+        </>
       </Container>
     </Modal>
   );
@@ -61,10 +61,9 @@ const Container = styled(Box)<ContainerProps>((Prop) => ({
   top: '50%',
   background: '#FFFFFF',
   left: '50%',
-  maxHeight: '550px',
   transform: 'translate(-50%, -50%)',
   boxSizing: 'border-box',
-  width: Prop.fixedwitdth ? '310px' : '322px',
+  width: Prop.fixedwitdth ? '310px' : 'auto',
   padding: '23px 0px 16px',
   border: '1px solid #ECECF6',
   boxShadow: '0px 0px 3px 1px rgba(0, 0, 0, 0.1)',
@@ -72,10 +71,6 @@ const Container = styled(Box)<ContainerProps>((Prop) => ({
   '&:focus-visible': {
     outline: 'none',
   },
-}));
-
-const ContainerContent = styled(Box)(() => ({
-  padding: '0px 13px',
 }));
 
 const BoxTitleModal = styled(Box)({

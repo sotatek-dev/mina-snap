@@ -59,7 +59,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       <WTransactionConfirm>
         <BoxAmount>
           <TitleAmount>Amount</TitleAmount>
-          <Amount>{txInfoProp?.amount}</Amount>
+          <Amount>{txInfoProp?.amount} MINA</Amount>
         </BoxAmount>
         <BoxInfo>
           To
@@ -85,7 +85,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
             <Content>{txInfoProp.memo}</Content>
           </BoxInfo>
         )}
-        <Button onClick={handleSend}>Confirm</Button>
+        <ButtonConfirm onClick={handleSend}>Confirm</ButtonConfirm>
       </WTransactionConfirm>
     </Modal>
   );
@@ -98,21 +98,23 @@ const Modal = styled(ModalCommon)<ContainerProps>`
 const WTransactionConfirm = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 15px;
 `;
 
 const BoxAmount = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 0px;
+  padding: 20px 0px 10px;
 `;
 
 const TitleAmount = styled.div`
   font-family: 'Inter Regular';
   font-style: normal;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 15px;
+  color: #767677;
 `;
 
 const Amount = styled.div`
@@ -140,5 +142,9 @@ const Content = styled.div`
   font-size: 14px;
   line-height: 17px;
   color: #000000;
+`;
+
+const ButtonConfirm = styled(Button)`
+  margin-top: 12px;
 `;
 export default ModalConfirm;
