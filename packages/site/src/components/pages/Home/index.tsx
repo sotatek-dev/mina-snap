@@ -19,16 +19,20 @@ const HomePage = () => {
     const a = async () => {
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
-
       setIsUnlocked(isUnlocked);
+      const isInstalledSnap = await getSnap();
+
+      if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
+        setIsUnlocked(false);
+        return;
+      }
+
       if (isUnlocked) {
-        const isInstalledSnap = await getSnap();
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
           await RequestSnap();
         }
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
-
         reduxDispatch(
           connectWallet({
             accountList,

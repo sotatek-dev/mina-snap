@@ -27,10 +27,8 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
       const account = await ImportAccount(payload);
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
-      console.log(accountInfor, 'accountInfor');
       dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
-      // console.log({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
       onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
     } catch (error) {
       dispatch(setIsLoading(false));
