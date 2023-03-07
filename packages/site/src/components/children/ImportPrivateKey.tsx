@@ -25,8 +25,8 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
         privateKey: privateKey,
       };
       const account = await ImportAccount(payload);
-      const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
+      const accountList = await AccountList();
       const txList = await getTxHistory();
       dispatch(setTransactions(txList));
       dispatch(setIsLoading(false));
