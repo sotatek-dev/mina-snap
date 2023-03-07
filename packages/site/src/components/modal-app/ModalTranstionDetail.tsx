@@ -71,27 +71,30 @@ const ModalTransactionDetail = ({open, clickOutSide, setOpenModal, transaction}:
     )
 }
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+    max-width: 336px;
+    padding: 0 22px;
+`;
 
 const BoxIcon = styled.div`
     text-align: center;
-    padding: 24px 0 12px;
+    margin-top: 32px;
     border-bottom: 1.6px solid #D9D9D9;
-    margin-bottom: 10px;
 `;
 
 const Icon = styled.img`
     max-width: 70px;
+    margin-bottom: 14px;
 `;
 
 const Status = styled.div<Props>`
-    padding-top: 12px;
     color: ${(props)=> (props.status == 'PENDING'? '#ECC307': props.status == 'APPLIED' ? '#0DB27C' : '#D95A5A')};
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
     line-height: 17px;
     letter-spacing: -0.03em;
+    margin-bottom: 23px;
 `;
 
 const BoxInfo = styled.div`
@@ -100,14 +103,14 @@ const BoxInfo = styled.div`
     font-size: 12px;
     line-height: 15px;
     color: #767677;
-    padding: 4px 0;
+    padding-top: 13px;
 `;
 
 const Content = styled.div`
     max-width: 100%;
     word-wrap: break-word;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
     line-height: 17px;
     color: #000000;
@@ -123,7 +126,7 @@ const QueryDetails = styled.a`
     line-height: 17px;
     letter-spacing: -0.03em;
     color: #594AF1;
-    margin: 8px 0;
+    margin: 18px 0 4px;
 `;
 
 const IconLink = styled.img`

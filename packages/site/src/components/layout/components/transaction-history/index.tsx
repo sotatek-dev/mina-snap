@@ -119,7 +119,7 @@ const TransactionDetail = styled.div`
 const TxInfo = styled.div`
   display: flex;
   justify-content: space-between;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 17px;
   letter-spacing: -0.03em;
@@ -132,7 +132,9 @@ const Status = styled.div`
 
 const Address = styled.div``;
 
-const Amount = styled.div``;
+const Amount = styled.div`
+  font-weight: 500;
+`;
 
 const Detail = styled.div`
   font-style: normal;
