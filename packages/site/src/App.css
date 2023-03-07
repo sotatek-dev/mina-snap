@@ -57,6 +57,7 @@
   pointer-events: none;
   width: 73% !important;
 }
-.connectMetamask{
+.connectMetamask{ 
+  border: 1px solid #000000 !important;
   width: 73% !important;
 }

@@ -64,7 +64,7 @@ export const OPTIONS_NETWORK = ['Mainnet', 'Devnet', 'Berkeley'];
 export const GAS_FEE = {
   slow: 0.0011,
   default: 0.0101,
-  fast: 0.2001
+  fast: 0.201
 }
 
 export const TRANSACTION_STATUS = {

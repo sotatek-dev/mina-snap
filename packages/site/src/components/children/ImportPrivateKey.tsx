@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useState } from 'react';
 import { useMinaSnap } from 'services';
-import { setIsLoading, setListAccounts } from 'slices/walletSlice';
+import { setIsLoading, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ResultCreateAccount } from 'types/account';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 
 const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
   const [privateKey, setPrivateKey] = useState('');
-  const { AccountList, ImportAccount, getAccountInfors } = useMinaSnap();
+  const { AccountList, ImportAccount, getAccountInfors, getTxHistory } = useMinaSnap();
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.wallet);
 
@@ -27,6 +27,8 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
       const account = await ImportAccount(payload);
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
+      const txList = await getTxHistory();
+      dispatch(setTransactions(txList));
       dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
       onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });

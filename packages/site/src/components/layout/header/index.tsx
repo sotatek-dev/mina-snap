@@ -74,7 +74,7 @@ const Header = () => {
     padding: '2px 8px 4px 9px',
     borderRadius: '50%',
   };
-  
+
   const handleClickCreat = () => {
     setIsShowDetail(false);
     setOpenModal(true);
@@ -186,6 +186,7 @@ const Wrapper = styled.div`
 `;
 
 const BoxLogo = styled.div`
+  padding-top: 40px;
   display: flex;
   align-items: center;
   height: 100%;
@@ -236,7 +237,7 @@ const Label = styled.div`
 `;
 
 const WAccount = styled.div`
-  max-height: 300px;
+  max-height: 330px;
   overflow-y: auto;
   padding: 16px;
   .disable {

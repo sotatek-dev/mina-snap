@@ -39,6 +39,7 @@ const HomePage = () => {
             isInstalledSnap,
           }),
         );
+        console.log(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string);
         reduxDispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
