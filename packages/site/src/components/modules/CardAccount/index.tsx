@@ -40,7 +40,7 @@ const CardAccount: React.FC<Props> = ({ active, imported, data, handleShowDetail
       </AccountName>
       <Address active={active}>{data && formatAccountAddress(data.address)}</Address>
       <Balance active={active}>
-        {data && ethers.utils.formatUnits(data.balance.total, 'gwei')} MINA
+        {data &&(data.balance.total > 0 ? ethers.utils.formatUnits(data.balance.total, 'gwei') : 0) } MINA
         <More active={active} typeButton="round" onClick={showDetails}>
           <PointMenu src={active ? pointMenu : pointMenuDark} />
         </More>
@@ -50,7 +50,7 @@ const CardAccount: React.FC<Props> = ({ active, imported, data, handleShowDetail
 };
 
 const Wrapper = styled.div<Props>`
-  width: 245px;
+  width: 270px;;
   max-height: 88px;
   background: ${(props) => (props.active ? '#594AF1' : '#F9FAFC')};
   border: 1px solid ${(props) => (props.active ? '#594AF1' : '#D9D9D9')};
@@ -69,7 +69,7 @@ const Wrapper = styled.div<Props>`
 const AccountName = styled.div<Props>`
   line-height: 15px;
   color: ${(props) => (props.active ? '#FFFFFF' : '#000000')};
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   padding: 3px 0;
   display: flex;

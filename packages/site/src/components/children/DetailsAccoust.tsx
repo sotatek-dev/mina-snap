@@ -53,6 +53,9 @@ const DetailsAccount = () => {
           </ListItem>
           <ListItem button onClick={handelExportPrivateKey}>
             <ListItemTextCustom primary={'Export Private Key'}></ListItemTextCustom>
+            <ListItemAvatar sx={{ minWidth: '0px' }}>
+              <img src={IconMore} />
+            </ListItemAvatar>
           </ListItem>
         </ListCustom>
       </Container>
@@ -72,8 +75,6 @@ const DetailsAccount = () => {
         setOpenModal={() => {
           setOpenModal(false);
         }}
-        fixedwitdth={true}
-        fixedheight={false}
       >
         <DataExportPrivateKey
           onDone={() => {
@@ -99,8 +100,8 @@ const ListCustom = styled(List)({
 const BoxContentTitle = styled(Box)({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
-  fontSize: '10px',
+  fontWeight: '600',
+  fontSize: '12px',
   lineHeight: '12px',
   paddingTop: '17px',
   color: '#000000',
@@ -119,8 +120,8 @@ const BoxContentAddress = styled(Box)({
 const ListItemTextCustom = styled(ListItemText)({
   '& .css-10hburv-MuiTypography-root': {
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: '10px',
+    fontWeight: '600',
+    fontSize: '12px',
     lineHeight: '12px',
     color: '#000000',
   },
@@ -137,10 +138,9 @@ const ListItemTextCustom = styled(ListItemText)({
 });
 const Container = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
-  paddingTop: '16px',
-  paddingLeft: '5px',
-  paddingRight: '5px',
-  paddingBottom: '0px',
+  width: '295px',
+  height: '494px',
+  padding: '0 13px',
 }));
 
 export default DetailsAccount;

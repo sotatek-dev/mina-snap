@@ -35,12 +35,15 @@ const DataExportPrivateKey = ({ address, privateKey, onDone }: Props) => {
 
 const BoxAccton = styled(Box)({
   paddingTop: '35px',
+  textAlign: 'center',
 });
 const ButtonCustomDone = styled(Button)<ButtonProps>({
-  width: '100%',
+  width: '270px',
   textTransform: 'none',
   background: '#594AF1',
   borderRadius: '5px',
+  margin : '0 12px',
+
 });
 const CustomImg = styled(Box)({
   height: '14px',
@@ -50,7 +53,7 @@ const CustomImg = styled(Box)({
 const ButtonCustom = styled(Button)<ButtonProps>({
   textTransform: 'none',
   color: '#594AF1',
-  fontWeight: '500',
+  fontWeight: '600',
   padding: '0',
   minWidth: '20px',
   fontSize: '10px',
@@ -58,7 +61,7 @@ const ButtonCustom = styled(Button)<ButtonProps>({
 const BoxCustomText = styled(Box)({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
+  fontWeight: '600',
   fontSize: '12px',
   lineHeight: '15px',
   wordWrap: 'break-word',
@@ -68,11 +71,12 @@ const BoxCustomText = styled(Box)({
 const BoxContentTitle = styled(Box)({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
-  fontSize: '10px',
+  fontWeight: '600',
+  fontSize: '12px',
   lineHeight: '12px',
   paddingTop: '17px',
   color: '#000000',
+  margin : '0 12px',
 });
 const BoxContentAddress = styled(Box)({
   fontFamily: 'Inter Regular',
@@ -85,22 +89,22 @@ const BoxContentAddress = styled(Box)({
   color: '#000000',
   opacity: '0.4',
   wordWrap: 'break-word',
+  margin : '0 12px',
 });
 
 const ContainerContent = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   background: '#F9FAFC',
   border: '1px solid #D9D9D9',
-  padding: '15px 10px',
+  padding: '21px 14px',
   borderRadius: '8px',
+  margin: '0 8px',
+  height: '56px',
 }));
 
 const Container = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
-  paddingTop: '16px',
-  paddingLeft: '5px',
-  paddingRight: '5px',
-  paddingBottom: '0px',
+  width: '300px',
 }));
 
 export default DataExportPrivateKey;

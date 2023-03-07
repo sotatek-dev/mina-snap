@@ -143,7 +143,6 @@ const Header = () => {
         setOpenModal={() => {
           setOpenModal(false);
         }}
-        fixedheight={isShowDetail}
       >
         {isShowDetail ? (
           <DetailsAccoust></DetailsAccoust>
@@ -217,7 +216,7 @@ const Label = styled.div`
   line-height: 17px;
   font-size: 17px;
   color: #000;
-  font-weight: 500;
+  font-weight: 600;
   padding: 16px 0;
 `;
 
