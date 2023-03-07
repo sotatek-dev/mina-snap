@@ -121,6 +121,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
               <MaxAmount onClick={() => setAmount(balance.toString())}>Max</MaxAmount>
             </WTitle>
             <Input
+              error={!(Number(amount) >= 0)}
               value={amount}
               type="number"
               variant="outlined"
@@ -138,7 +139,9 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   fontSize:'10px',
                 },
               }}
+              isValidValue={!(Number(amount) >= 0)}
             />
+            {!(Number(amount) >= 0) && <FormHelperText error>Please enter a valid amount</FormHelperText>}
             <Tittle>Memo(Optional)</Tittle>
             <Input
               variant="outlined"
@@ -211,12 +214,12 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                     },
                   }}
                 />
-                {gasFee > 10 && <FormHelperText>Fees are much higher than average</FormHelperText>}
+                {gasFee > 10 && <FormHelperText error>Fees are much higher than average</FormHelperText>}
                 <Tittle>Nonce</Tittle>
                 <Input
                   error={!isPositiveInteger(Number(nonce))}
                   variant="outlined"
-                  placeholder="Nonce 1"
+                  placeholder="Nonce"
                   fullWidth
                   size="small"
                   type="number"
@@ -233,7 +236,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   }}
                   isValidValue={!isPositiveInteger(Number(nonce))}
                 />
-                {!isPositiveInteger(Number(nonce)) && <FormHelperText>Please enter a valid nonce</FormHelperText>}
+                {!isPositiveInteger(Number(nonce)) && <FormHelperText error>Please enter a valid nonce</FormHelperText>}
               </AdvancedContent>
             )}
           </AdvancedBox>
@@ -270,7 +273,7 @@ const WTitle = styled.div`
 
 const Tittle = styled.div`
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 10px;
   line-height: 12px;
   color: #000000;
@@ -329,7 +332,7 @@ const Option = styled(ButtonCommon)<Props>`
   width: 85px;
   max-height: 30px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 10px;
   line-height: 12px;
   color: ${(props) => (props.active ? '#594AF1' : '#000000')};
