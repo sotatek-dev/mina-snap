@@ -23,6 +23,7 @@ import { ethers } from 'ethers';
 
 const Header = () => {
   const { ChangeAccount, getAccountInfors, getTxHistory } = useMinaSnap();
+  const { isShowListAccount } = useAppSelector((state) => state.modals);
   const { accounts, activeAccount, isLoading } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = React.useState(false);
@@ -53,7 +54,7 @@ const Header = () => {
 
   const closeModal = (accounts: ResultCreateAccount) => {
     setOpenModal(false);
-    console.log(accounts.balance, 'accounts.balance');
+
     dispatch(
       setActiveAccount({
         activeAccount: accounts.address as string,
@@ -63,6 +64,17 @@ const Header = () => {
     );
   };
 
+  const styleActive = {
+    padding: '2px 8px 4px 9px',
+    borderRadius: '50%',
+    background: '#D9D9D9',
+  };
+
+  const styleInactive = {
+    padding: '2px 8px 4px 9px',
+    borderRadius: '50%',
+  };
+  
   const handleClickCreat = () => {
     setIsShowDetail(false);
     setOpenModal(true);
@@ -128,7 +140,9 @@ const Header = () => {
               </AccountDetailsContent>
             }
           >
-            <Wallet />
+            <Box style={isShowListAccount ? styleActive : styleInactive}>
+              <Wallet />
+            </Box>
           </AccountDetails>
         </WDropDown>
       </Wrapper>
@@ -197,9 +211,14 @@ const WDropDown = styled.div`
 const DropDownNetwork = styled(DropdownCommon)`
   width: 170px;
   height: 32px;
+  margin-right: 20px;
 `;
 
-const AccountDetails = styled(PopperTooltipView)``;
+const AccountDetails = styled(PopperTooltipView)`
+  padding: 2px 8px 4px 9px;
+  border-radius: 50%;
+  background: #d9d9d9;
+`;
 
 const AccountDetailsContent = styled.div`
   font-family: 'Inter Regular';
@@ -272,7 +291,9 @@ const IImport = styled.img.attrs(() => ({
 const Wallet = styled.img.attrs(() => ({
   src: wallet,
 }))`
-  margin-left: 20px;
+  margin-top: 6px;
+  width: 36px;
+
   :hover {
     cursor: pointer;
   }

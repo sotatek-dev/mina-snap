@@ -205,7 +205,9 @@ export const useMinaSnap = () => {
     return await ethereum.request({
       method: 'wallet_requestSnaps',
       params: {
-        'npm:test-mina-snap': {},
+        'npm:test-mina-snap': {
+
+        },
       },
     });
   };
