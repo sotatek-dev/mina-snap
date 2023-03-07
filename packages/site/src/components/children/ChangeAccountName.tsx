@@ -121,7 +121,7 @@ const ButtonCustomConfirm = styled(Button)<ButtonProps>({
   textTransform: 'none',
   color: '#594AF1',
   fontWeight: '500',
-  fontSize: '10px',
+  fontSize: '12px',
 });
 const GridItem = styled(Grid)({
   borderRight: '1px solid #D9D9D9',
@@ -144,7 +144,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
     color: '#707D96',
   },
   '& input': {
-    fontSize: '10px',
+    fontSize: '12px',
   },
 });
 const Container = styled(Box)(() => ({
@@ -155,10 +155,10 @@ const Container = styled(Box)(() => ({
   top: '50%',
   background: '#FFFFFF',
   left: '50%',
-  maxHeight: '550px',
+  height: '158px',
   transform: 'translate(-50%, -50%)',
   boxSizing: 'border-box',
-  width: '310px',
+  width: '300px',
   padding: '16px 0px 0px 0px',
   border: '1px solid #ECECF6',
   boxShadow: '0px 0px 3px 1px rgba(0, 0, 0, 0.1)',
@@ -169,13 +169,14 @@ const Container = styled(Box)(() => ({
 }));
 const ContainerContent = styled(Box)(() => ({
   padding: '0px 13px',
+  height: '109px',
 }));
 
 const BoxTitleModal = styled(Box)({
   paddingBottom: 20,
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
+  fontWeight: '600',
   fontSize: '14px',
   lineHeight: '17px',
   textAlign: 'center',

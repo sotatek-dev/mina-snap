@@ -53,7 +53,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
       <Container>
         <BoxTitle>Please enter your account name</BoxTitle>
 
-        <Box sx={{ paddingBottom: '5rem' }}>
+        <BoxContent>
           <InputCustom
             sx={{ paddingTop: '5px' }}
             variant={'outlined'}
@@ -63,7 +63,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
               setNameAccount(e.target.value);
             }}
           />
-        </Box>
+        </BoxContent>
 
         <ButtonCustom
           variant="contained"
@@ -101,18 +101,21 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
 };
 
 const Container = styled(Box)(() => ({
-  paddingTop: '16px',
-  paddingLeft: '5px',
-  paddingRight: '5px',
-  paddingBottom: '0px',
+  width: '276px',
+  height: '246px',
+  padding: '12px 12px 0',
 }));
 const BoxTitle = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
-  fontSize: '10px',
+  fontWeight: '600',
+  fontSize: '12px',
   lineHeight: '12px',
   color: '#000000',
+}));
+
+const BoxContent = styled(Box)(() =>({
+  minHeight: '200px',
 }));
 
 const InputCustom = styled(TextField)<TextFieldProps>({
@@ -124,7 +127,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
     color: '#707D96',
   },
   '& input': {
-    fontSize: '10px',
+    fontSize: '12px',
   },
 });
 
