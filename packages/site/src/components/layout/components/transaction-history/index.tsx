@@ -54,7 +54,7 @@ const TransactionHistory = () => {
               <Icon src={item.from == activeAccount ? ISendTx : IReceivedTx} />
               <TransactionDetail>
                 <TxInfo>
-                  <Address>{formatAccountAddress(item.to)}</Address>
+                  <Address>{item.from == activeAccount ? formatAccountAddress(item.to): formatAccountAddress(item.from)}</Address>
                   <Amount>
                     {(item.from == activeAccount ? `- ` : `+ `) + ethers.utils.formatUnits(item.amount, 'gwei')}
                   </Amount>
