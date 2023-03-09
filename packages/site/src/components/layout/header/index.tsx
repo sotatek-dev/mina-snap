@@ -46,6 +46,7 @@ const Header = () => {
         activeAccount: accountInfor.publicKey as string,
         balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
         accountName: accountInfor.name as string,
+        inferredNonce: accountInfor.inferredNonce as string,
       }),
     );
 
@@ -60,7 +61,7 @@ const Header = () => {
         activeAccount: accounts.address as string,
         balance: accounts.balance as string,
         accountName: accounts.name as string,
-        inferredNonce: accountInfor.inferredNonce as string,
+        inferredNonce: accounts.inferredNonce as string,
       }),
     );
   };
