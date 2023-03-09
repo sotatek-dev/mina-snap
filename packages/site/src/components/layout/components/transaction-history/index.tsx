@@ -3,6 +3,7 @@ import { formatAccountAddress } from 'helpers/formatAccountAddress';
 import styled from 'styled-components';
 import ISendTx from 'assets/icons/icon-sent-tx.png';
 import IReceivedTx from "assets/icons/icon-received-tx.png"
+import ILink from "assets/icons/icon-link.svg"
 import { formatDateTime } from "helpers/formatDateTime";
 import ModalTransactionDetail from "components/modal-app/ModalTranstionDetail";
 import { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import { useMinaSnap } from "services";
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
+import { MINA_BERKELEY_EXPLORER } from 'utils/constants';
 
 interface Props {
   status:string
@@ -27,6 +29,11 @@ const TransactionHistory = () => {
     setShowTxDetail(true);
   };
 
+    const hanldeViewAccount = () => {
+    const type = 'wallet';
+    window.open(MINA_BERKELEY_EXPLORER + type + '/' + activeAccount, '_blank')?.focus();
+  }
+
   const handleClickOutSideTxDetail = () => {
     setShowTxDetail(false);
   };
@@ -42,8 +49,11 @@ const TransactionHistory = () => {
   return (
     <Wrapper>
       <Label>HISTORY</Label>
+      {transactions.length == 0 ? <NoTx>
+        You have no transactions
+      </NoTx> :
       <TransactionList>
-        {transactions.map((item, index) => {
+        {transactions.slice(0,10).map((item, index) => {
           return (
             <TracsactionItem
               key={index}
@@ -73,7 +83,11 @@ const TransactionHistory = () => {
           setOpenModal={handleClickOutSideTxDetail}
           transaction={detailTx}
         />
-      </TransactionList>
+        {transactions.length > 10 && <CheckmoreTx onClick={()=>hanldeViewAccount()}>
+          Check more transaction history
+          <IconLink src={ILink} />
+        </CheckmoreTx>}
+      </TransactionList>}
     </Wrapper>
   );
 };
@@ -91,6 +105,17 @@ const Label = styled.div`
   padding-bottom: 12px;
   border-bottom: 1.5px solid #000000;
 `;
+
+const NoTx = styled.div`
+  padding-top: 35px;
+  font-style: normal;
+  text-align: center;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #000000;
+  opacity: 0.5;
+`
 
 const TransactionList = styled.div``;
 
@@ -153,5 +178,18 @@ const TxStatus = styled.div<Props>`
   color: ${(props)=> (props.status == 'PENDING'? '#ECC307': props.status == 'APPLIED' ? '#0DB27C' : '#D95A5A')};
   background: ${(props)=> (props.status == 'PENDING'? '#ECE8D7': props.status == 'APPLIED' ? '#D5E7E4' : '#FBEEEE')};
 `;
+
+const CheckmoreTx = styled.div`
+  padding: 25px 0;
+  text-align: center;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 17px;
+  letter-spacing: -0.03em;
+  color: #594AF1;
+`
+const IconLink = styled.img`
+  padding-left:  6px;
+`
 
 export default TransactionHistory;
