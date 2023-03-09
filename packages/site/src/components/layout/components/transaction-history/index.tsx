@@ -83,9 +83,11 @@ const TransactionHistory = () => {
           setOpenModal={handleClickOutSideTxDetail}
           transaction={detailTx}
         />
-        {transactions.length > 10 && <CheckmoreTx onClick={()=>hanldeViewAccount()}>
-          Check more transaction history
-          <IconLink src={ILink} />
+        {transactions.length > 10 && <CheckmoreTx >
+          <Hyperlink onClick={()=>hanldeViewAccount()}>
+            Check more transaction history
+            <IconLink src={ILink} />
+          </Hyperlink>
         </CheckmoreTx>}
       </TransactionList>}
     </Wrapper>
@@ -188,6 +190,14 @@ const CheckmoreTx = styled.div`
   letter-spacing: -0.03em;
   color: #594AF1;
 `
+
+const Hyperlink = styled.div`
+  display:  inline-block;
+  :hover {
+    cursor: pointer;
+  }
+`
+
 const IconLink = styled.img`
   padding-left:  6px;
 `
