@@ -82,7 +82,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
       </Container>
       <ModalCommon
         open={openModal}
-        title="Account Name"
+        title="Import Private Key"
         setOpenModal={() => {
           setOpenModal(false);
         }}

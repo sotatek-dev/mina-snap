@@ -40,6 +40,7 @@ const HomePage = () => {
             activeAccount: accountInfor.publicKey as string,
             balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
             accountName: accountInfor.name as string,
+            inferredNonce: accountInfor.inferredNonce,
           }),
         );
       } else {
