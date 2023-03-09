@@ -1,4 +1,4 @@
-import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
+import { Box, Button, ButtonProps, FormHelperText, styled, TextField, TextFieldProps } from '@mui/material';
 import ModalCommon from 'components/common/modal';
 import { ethers } from 'ethers';
 import { useAppDispatch } from 'hooks/redux';
@@ -63,9 +63,11 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
               setNameAccount(e.target.value);
             }}
           />
+          {nameAccount.length > 15 && <FormHelperText error>No more than 16 characters </FormHelperText>}
         </BoxContent>
 
         <ButtonCustom
+          disabled={nameAccount.length > 15}
           variant="contained"
           disableElevation
           onClick={() => {
@@ -122,6 +124,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   backgroundColor: '#FFFFFF',
   width: '100%',
   borderRadius: '8px',
+  
   input: {
     padding: '0.5rem 1rem',
     color: '#707D96',
@@ -129,6 +132,11 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   '& input': {
     fontSize: '12px',
   },
+  '& .MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      border: '1px solid #000000',
+    }
+  }
 });
 
 const ButtonCustom = styled(Button)<ButtonProps>({

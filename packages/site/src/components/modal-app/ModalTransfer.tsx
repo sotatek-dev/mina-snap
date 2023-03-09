@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, TextField } from '@mui/material';
+import { FormControl, FormHelperText, FormHelperTextProps, TextField } from '@mui/material';
 import ButtonCommon from 'components/common/button';
 import Modal from 'components/common/modal';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import Button from 'components/common/button';
 import ModalConfirm from './ModalConfirm';
 import { useAppSelector } from 'hooks/redux';
 import { payloadSendTransaction } from 'types/transaction';
+import { useMinaSnap } from 'services';
 
 interface ModalProps {
   open: boolean;
@@ -25,7 +26,6 @@ interface Props {
 
 const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const { balance } = useAppSelector((state) => state.wallet);
-
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
@@ -42,13 +42,13 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const [showModal, setShowModal] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
-  const handleAmount = (value: any) => {
-    if (Number(value) > Number(balance)) {
-      setAmount(balance.toString());
-    } else {
-      setAmount(value);
-    }
-  };
+  const  {getAccountInfors} = useMinaSnap();
+
+  const getNonce = async () => {
+    const accountInfo = await getAccountInfors();
+    setNonce(accountInfo.nonce)
+  }
+  getNonce();
 
   const success = () => {
     setOpenModal();
@@ -72,7 +72,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   };
 
   const isPositiveInteger = (num:number) => {
-    return Number.isInteger(num) && num >= 0;
+    return Number.isInteger(num) && num > 0;
   }
 
   useEffect(() => {
@@ -121,13 +121,12 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
               <MaxAmount onClick={() => setAmount(balance.toString())}>Max</MaxAmount>
             </WTitle>
             <Input
-              error={!(Number(amount) >= 0)}
               value={amount}
               type="number"
               variant="outlined"
               placeholder="0"
               onChange={(event) => {
-                handleAmount(event.target.value);
+                setAmount(event.target.value);
               }}
               fullWidth
               size="small"
@@ -139,9 +138,10 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   fontSize:'10px',
                 },
               }}
-              isValidValue={!(Number(amount) >= 0)}
+              isValidValue={(Number(amount) < 0) || (Number(amount) > Number(balance))}
             />
-            {!(Number(amount) >= 0) && <FormHelperText error>Please enter a valid amount</FormHelperText>}
+            {(Number(amount) < 0) && <FormHelperText error>Please enter a valid amount</FormHelperText>}
+            {(Number(amount) > Number(balance)) && <FormHelperText error>Insufficient balance</FormHelperText>}
             <Tittle>Memo(Optional)</Tittle>
             <Input
               variant="outlined"
@@ -215,9 +215,9 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   }}
                 />
                 {gasFee > 10 && <FormHelperText error>Fees are much higher than average</FormHelperText>}
+                {gasFee <= 0 && <FormHelperText error>Please enter a valid transaction fee</FormHelperText>}
                 <Tittle>Nonce</Tittle>
                 <Input
-                  error={!isPositiveInteger(Number(nonce))}
                   variant="outlined"
                   placeholder="Nonce"
                   fullWidth
@@ -259,16 +259,23 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 const ContentBox = styled.div`
   min-width: 300px;
   padding: 0 10px;
+  max-height: 490px;
 `
 
 const RequiredBox = styled.div`
   border-bottom: 1px solid #d9d9d9;
   padding-bottom: 17px;
+  max-height: 273px;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const WTitle = styled.div`
   display: flex;
   justify-content: space-between;
+  position: relative;
 `;
 
 const Tittle = styled.div`
@@ -296,8 +303,8 @@ const MaxAmount = styled.div`
   font-size: 10px;
   line-height: 12px;
   position: absolute;
-  left: calc(100% - 40px);
-  top: calc(30% - 37px);
+  right: 8px;
+  top: 47px;
   color: #5972f5;
   z-index: 999;
   :hover {
@@ -306,7 +313,6 @@ const MaxAmount = styled.div`
 `;
 
 const Input = styled(TextField)<Props>`
-    position: relative;
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
     -webkit-appearance: none; 
@@ -378,7 +384,7 @@ const ButtonNext = styled(Button)<Props>`
   border: none;
   height: 34px;
   padding: 0;
-  margin: auto;
+  margin: 0 auto;
 `;
 
 export default ModalTransfer;
