@@ -11,6 +11,7 @@ export type ResultCreateAccount = {
     name: string
     address: string
     balance: string
+    inferredNonce: string
 }
 
 export type ResultAccountList = {
