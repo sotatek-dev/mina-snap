@@ -10,6 +10,7 @@ export type Account = {
 export type ResultCreateAccount = {
     name: string
     address: string
+    balance: string
 }
 
 export type ResultAccountList = {

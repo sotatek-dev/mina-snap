@@ -1,9 +1,12 @@
 import { PopperPlacementType } from '@mui/material';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { usePopperTooltip } from 'react-popper-tooltip';
 import { CSSProperties } from 'styled-components';
 import { POPOVER_DURATION } from 'utils/constants';
 import styled from 'styled-components';
+
+import { useDispatch } from 'react-redux';
+import { setIsShowListAccount } from 'slices/modalSlice';
 
 type CloseTriggers = 'timeout' | 'click' | 'hover';
 
@@ -24,6 +27,8 @@ export const PopperTooltipView = ({
   offSet,
   placement,
 }: Props) => {
+  const dispatch = useDispatch();
+
   const [popperVisible, setPopperVisible] = useState(false);
 
   const handlePopperVisibleChange = () => {
@@ -48,6 +53,9 @@ export const PopperTooltipView = ({
   const handleOnMouseLeave = () => {
     if (closeTrigger === 'hover') setPopperVisible(false);
   };
+  useEffect(() => {
+    dispatch(setIsShowListAccount(popperVisible));
+  }, [popperVisible]);
 
   const { getTooltipProps, setTooltipRef, setTriggerRef, visible } = usePopperTooltip({
     trigger: 'click',
@@ -84,10 +92,10 @@ export const Wrapper = styled.div`
 `;
 
 export const PopperContainer = styled.div`
-  border-radius: ${(props) => props.theme.corner.small};
-  background-color: ${(props) => props.theme.palette.grey.white};
+  background: #ffffff;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
   text-align: center;
-  box-shadow: 0px 0px 60px 0px rgba(106, 115, 125, 0.2);
   z-index: 10000;
 `;
 
