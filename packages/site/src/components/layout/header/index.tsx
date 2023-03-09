@@ -60,6 +60,7 @@ const Header = () => {
         activeAccount: accounts.address as string,
         balance: accounts.balance as string,
         accountName: accounts.name as string,
+        inferredNonce: accountInfor.inferredNonce as string,
       }),
     );
   };

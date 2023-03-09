@@ -48,5 +48,6 @@ export type payloadActiveAccount = {
     activeAccount: string
     balance: string
     accountName: string
+    inferredNonce: string
 }
 

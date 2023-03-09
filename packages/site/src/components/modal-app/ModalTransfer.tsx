@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, FormHelperTextProps, TextField } from '@mui/material';
+import { FormControl, FormHelperText, TextField } from '@mui/material';
 import ButtonCommon from 'components/common/button';
 import Modal from 'components/common/modal';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import Button from 'components/common/button';
 import ModalConfirm from './ModalConfirm';
 import { useAppSelector } from 'hooks/redux';
 import { payloadSendTransaction } from 'types/transaction';
-import { useMinaSnap } from 'services';
+import { addressValid } from 'helpers/formatAccountAddress';
 
 interface ModalProps {
   open: boolean;
@@ -21,16 +21,17 @@ interface Props {
   active?: boolean;
   toggle?: boolean;
   disable?: boolean;
-  isValidValue?: boolean;
+  isvalidvalue?: boolean;
 }
 
 const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
-  const { balance } = useAppSelector((state) => state.wallet);
+  const { balance, inferredNonce } = useAppSelector((state) => state.wallet);
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
   const [gasFee, setGasFee] = useState(GAS_FEE.default);
-  const [nonce, setNonce] = useState('');
+  const [nonce, setNonce] = useState(inferredNonce);
+  
   const [txInfo, setTxInfo] = useState<payloadSendTransaction>({
     to: '',
     amount: 0,
@@ -42,14 +43,6 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const [showModal, setShowModal] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
-  const  {getAccountInfors} = useMinaSnap();
-
-  const getNonce = async () => {
-    const accountInfo = await getAccountInfors();
-    setNonce(accountInfo.nonce)
-  }
-  getNonce();
-
   const success = () => {
     setOpenModal();
     handleClickOutSide();
@@ -59,7 +52,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setShowModal(disabled != true);
     const tx = {
       to: address,
-      amount: Number(amount),
+      amount:  Number(balance) == Number(amount) ? Number(amount) - Number(gasFee): Number(amount),
       memo: memo,
       fee: Number(gasFee),
       nonce: Number(nonce),
@@ -75,20 +68,27 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     return Number.isInteger(num) && num > 0;
   }
 
+  const handleNonce = (value: string) => {
+    if(value){
+      setNonce(value)
+    } else
+    setNonce(inferredNonce)
+  }
+
   useEffect(() => {
-    if (address && amount && isPositiveInteger(Number(nonce))) {
+    if (addressValid(address) && (Number(amount) > 0 && Number(amount) <= Number(balance)) && (gasFee > 0) && isPositiveInteger(Number(nonce))) {
       setDisabled(false);
     } else {
       setDisabled(true);
     }
-  }, [amount, address, nonce]);
+  }, [balance, amount, address, nonce, gasFee]);
 
   useEffect(() => {
     setAddress('');
     setAmount('');
     setGasFee(GAS_FEE.default);
-    setNonce('');
-  }, [open]);
+    setNonce(inferredNonce); 
+  }, [open, inferredNonce]);
 
   return (
     <Modal open={open} title="Send" clickOutSide={clickOutSide} setOpenModal={setOpenModal}>
@@ -115,6 +115,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                 },
               }}
             />
+            {!addressValid(address) && address && <Message error>Please enter valid address</Message>}
             <WTitle>
               <Tittle>Amount</Tittle>
               <Balance>Balance: {balance}</Balance>
@@ -138,10 +139,10 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   fontSize:'10px',
                 },
               }}
-              isValidValue={(Number(amount) < 0) || (Number(amount) > Number(balance))}
+              isvalidvalue={(Number(amount) < 0) || (Number(amount) > Number(balance))}
             />
-            {(Number(amount) < 0) && <FormHelperText error>Please enter a valid amount</FormHelperText>}
-            {(Number(amount) > Number(balance)) && <FormHelperText error>Insufficient balance</FormHelperText>}
+            {(Number(amount) < 0) && <Message error>Please enter a valid amount</Message>}
+            {(Number(amount) > Number(balance)) && <Message error>Insufficient balance</Message>}
             <Tittle>Memo(Optional)</Tittle>
             <Input
               variant="outlined"
@@ -213,9 +214,10 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                       fontSize:'10px',
                     },
                   }}
+                  isvalidvalue={gasFee <= 0||gasFee > 10}
                 />
-                {gasFee > 10 && <FormHelperText error>Fees are much higher than average</FormHelperText>}
-                {gasFee <= 0 && <FormHelperText error>Please enter a valid transaction fee</FormHelperText>}
+                {gasFee > 10 && <Message error>Fees are much higher than average</Message>}
+                {gasFee <= 0 && <Message error>Please enter a valid transaction fee</Message>}
                 <Tittle>Nonce</Tittle>
                 <Input
                   variant="outlined"
@@ -223,9 +225,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   fullWidth
                   size="small"
                   type="number"
-                  onChange={(event) => {
-                    setNonce(event.target.value);
-                  }}
+                  onChange={(event) => {handleNonce(event.target.value)}}
                   inputProps={{
                     style: {
                       height: '34px',
@@ -234,12 +234,14 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                       fontSize:'10px',
                     },
                   }}
-                  isValidValue={!isPositiveInteger(Number(nonce))}
+                  isvalidvalue={!isPositiveInteger(Number(nonce)) && nonce ? true: false}
                 />
-                {!isPositiveInteger(Number(nonce)) && <FormHelperText error>Please enter a valid nonce</FormHelperText>}
+                {!isPositiveInteger(Number(nonce)) && nonce && <Message error>Please enter a positive integer</Message>}
               </AdvancedContent>
             )}
           </AdvancedBox>
+        </ContentBox>
+        <BoxButton>
           <ButtonNext disable={disabled} onClick={handleClick} type="submit">
             Next
           </ButtonNext>
@@ -250,26 +252,23 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             setOpenModal={handleClickOutSide}
             txInfoProp={txInfo}
           />
-        </ContentBox>
+        </BoxButton>
       </FormControl>
     </Modal>
   );
 };
 
 const ContentBox = styled.div`
-  min-width: 300px;
-  padding: 0 10px;
-  max-height: 490px;
+  width: 300px;
+  padding: 0 8px;
+  max-height: 443px;
+  min-height: 443px;
+  overflow-y: scroll;
 `
 
 const RequiredBox = styled.div`
   border-bottom: 1px solid #d9d9d9;
   padding-bottom: 17px;
-  max-height: 273px;
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 const WTitle = styled.div`
@@ -320,7 +319,7 @@ const Input = styled(TextField)<Props>`
     }
     & .MuiOutlinedInput-root {
       &.Mui-focused fieldset {
-        border: 1px solid ${(props) => (props.isValidValue ? '#d32f2f' : '#594AF1')};
+        border: 1px solid ${(props) => (props.isvalidvalue ? '#d32f2f' : '#594AF1')};
       }
     }
 `;
@@ -335,7 +334,7 @@ const Option = styled(ButtonCommon)<Props>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 85px;
+  width: 92px;
   max-height: 30px;
   font-style: normal;
   font-weight: 600;
@@ -348,7 +347,6 @@ const Option = styled(ButtonCommon)<Props>`
 `;
 
 const AdvancedBox = styled.div`
-  min-height: 169px;
 `;
 
 const Toggle = styled.div`
@@ -371,20 +369,33 @@ const AdvancedIcon = styled.img<Props>`
 `;
 
 const AdvancedContent = styled.div`
-  max-height: 155px;
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+
 `;
 
+const BoxButton = styled.div`
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+`
+
 const ButtonNext = styled(Button)<Props>`
+  display: flex;
   color: #ffffff;
   background: ${(props) => (props.disable ? '#D9D9D9' : '#594AF1')};
   border: none;
   height: 34px;
+  width: 270px;
+  justify-content: center;
+  align-items: center;
   padding: 0;
-  margin: 0 auto;
 `;
+
+const Message = styled(FormHelperText)`
+  margin: 0;
+  &.css-1wc848c-MuiFormHelperText-root {
+    margin: 0;
+  }
+`
 
 export default ModalTransfer;

@@ -7,7 +7,8 @@ import { ResultTransactionList, TypeResponseTxHistory } from 'types/transaction'
 export interface WalletState {
   accountName: string,
   balance: string,
-  activeAccount: string
+  activeAccount: string,
+  inferredNonce: string,
   isInstalledWallet: boolean,
   isInstalledSnap: boolean,
   connected: boolean;
@@ -26,6 +27,7 @@ const initialState: WalletState = {
   loadingSwitchNework: false,
   accountName: '',
   balance: '',
+  inferredNonce: '',
   activeAccount: '',
   isInstalledWallet: false,
   isInstalledSnap: false,
@@ -60,6 +62,7 @@ export const walletSlice = createSlice({
       state.activeAccount = payload.activeAccount;
       state.balance = payload.balance
       state.accountName = payload.accountName
+      state.inferredNonce = payload.inferredNonce
     },
 
     setSnapInstalled: (state, { payload }: PayloadAction<boolean>) => {
