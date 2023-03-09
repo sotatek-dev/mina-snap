@@ -88,7 +88,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setAmount('');
     setGasFee(GAS_FEE.default);
     setNonce(inferredNonce); 
-  }, [open]);
+  }, [open, inferredNonce]);
 
   return (
     <Modal open={open} title="Send" clickOutSide={clickOutSide} setOpenModal={setOpenModal}>
