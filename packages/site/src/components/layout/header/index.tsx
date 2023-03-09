@@ -23,6 +23,7 @@ import { ethers } from 'ethers';
 
 const Header = () => {
   const { ChangeAccount, getAccountInfors, getTxHistory } = useMinaSnap();
+  const { isShowListAccount } = useAppSelector((state) => state.modals);
   const { accounts, activeAccount, isLoading } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = React.useState(false);
@@ -35,39 +36,44 @@ const Header = () => {
       accountIndex: item.index,
       isImported: item.isImported,
     };
-    await ChangeAccount(payload)
-      .then(async () => {
-        try {
-          const accountInfor = await getAccountInfors();
-          const txList = await getTxHistory();
-          dispatch(setTransactions(txList));
-          dispatch(
-            setActiveAccount({
-              activeAccount: accountInfor.publicKey as string,
-              balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
-              accountName: accountInfor.name as string,
-              inferredNonce: accountInfor.inferredNonce as string,
-            }),
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      })
-      .finally(() => {
-        dispatch(setIsLoading(false));
-      });
+
+    await ChangeAccount(payload);
+    const accountInfor = await getAccountInfors();
+    const txList = await getTxHistory();
+    dispatch(setTransactions(txList));
+    dispatch(
+      setActiveAccount({
+        activeAccount: accountInfor.publicKey as string,
+        balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+        accountName: accountInfor.name as string,
+      }),
+    );
+
+    dispatch(setIsLoading(false));
   };
 
   const closeModal = (accounts: ResultCreateAccount) => {
     setOpenModal(false);
+
     dispatch(
       setActiveAccount({
         activeAccount: accounts.address as string,
-        balance: '0',
+        balance: accounts.balance as string,
         accountName: accounts.name as string,
-        inferredNonce: '1',
+        inferredNonce: accountInfor.inferredNonce as string,
       }),
     );
+  };
+
+  const styleActive = {
+    padding: '2px 8px 4px 9px',
+    borderRadius: '50%',
+    background: '#D9D9D9',
+  };
+
+  const styleInactive = {
+    padding: '2px 8px 4px 9px',
+    borderRadius: '50%',
   };
 
   const handleClickCreat = () => {
@@ -135,7 +141,9 @@ const Header = () => {
               </AccountDetailsContent>
             }
           >
-            <Wallet />
+            <Box style={isShowListAccount ? styleActive : styleInactive}>
+              <Wallet />
+            </Box>
           </AccountDetails>
         </WDropDown>
       </Wrapper>
@@ -178,6 +186,7 @@ const Wrapper = styled.div`
 `;
 
 const BoxLogo = styled.div`
+  padding-top: 40px;
   display: flex;
   align-items: center;
   height: 100%;
@@ -203,9 +212,14 @@ const WDropDown = styled.div`
 const DropDownNetwork = styled(DropdownCommon)`
   width: 170px;
   height: 32px;
+  margin-right: 20px;
 `;
 
-const AccountDetails = styled(PopperTooltipView)``;
+const AccountDetails = styled(PopperTooltipView)`
+  padding: 2px 8px 4px 9px;
+  border-radius: 50%;
+  background: #d9d9d9;
+`;
 
 const AccountDetailsContent = styled.div`
   font-family: 'Inter Regular';
@@ -223,7 +237,7 @@ const Label = styled.div`
 `;
 
 const WAccount = styled.div`
-  max-height: 300px;
+  max-height: 330px;
   overflow-y: auto;
   padding: 16px;
   .disable {
@@ -278,7 +292,9 @@ const IImport = styled.img.attrs(() => ({
 const Wallet = styled.img.attrs(() => ({
   src: wallet,
 }))`
-  margin-left: 20px;
+  margin-top: 6px;
+  width: 36px;
+
   :hover {
     cursor: pointer;
   }

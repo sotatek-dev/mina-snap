@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React from 'react';
 import { useMinaSnap } from 'services';
-import { setActiveAccount, setIsLoading, setListAccounts } from 'slices/walletSlice';
+import { setActiveAccount, setIsLoading, setListAccounts, setTransactions } from 'slices/walletSlice';
 import styled from 'styled-components';
 import { payloadSendTransaction } from 'types/transaction';
 
@@ -19,7 +19,7 @@ interface ModalProps {
 type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 
 const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucces }: ModalProps) => {
-  const { SendTransaction, AccountList, getAccountInfors } = useMinaSnap();
+  const { SendTransaction, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
   const { activeAccount } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
 
@@ -29,6 +29,8 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       .then(async () => {
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
+        const txList = await getTxHistory();
+        dispatch(setTransactions(txList));
         await dispatch(setListAccounts(accountList));
         dispatch(
           setActiveAccount({
@@ -51,11 +53,12 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   return (
     <Modal
       open={open}
-      title="Confirm Transaction"
+      title="Transaction Details"
       clickOutSide={clickOutSide}
       setOpenModal={setOpenModal}
       txInfoProp={txInfoProp}
       fixedwitdth={true}
+      isClose={true}
     >
       <WTransactionConfirm>
         <BoxAmount>

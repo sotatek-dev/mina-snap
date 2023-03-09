@@ -15,15 +15,19 @@ export async function gql(url: string, query: string, variables = {}) {
         Accept: 'application/json',
         'content-type': 'application/json',
       },
-      body: JSON.stringify({ query, operationName: getOperationName(query), variables }),
+      body: JSON.stringify({
+        query,
+        operationName: getOperationName(query),
+        variables,
+      }),
     });
-    const { data, errors } = await response.json();
-    if (errors) {
-      return { error: errors[0].message };
-    }
 
-    return { data };
+    const { data, errors } = await response.json();
+    if (errors) throw new Error(errors[0].message);
+
+    return data;
   } catch (err) {
-    return { error: err.message };
+    console.error('packages/snap/src/graphql/index.ts:30', err.message);
+    throw err;
   }
 }

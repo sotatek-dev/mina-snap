@@ -1,7 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { Payment, Signed } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import { gql } from '../graphql';
-import { getTxHistoryQuery, getTxDetailQuery, sendPaymentQuery, getTxStatusQuery } from '../graphql/gqlparams';
+import {
+  getTxHistoryQuery,
+  getTxDetailQuery,
+  sendPaymentQuery,
+  getTxStatusQuery,
+  TxPendingQuery,
+} from '../graphql/gqlparams';
 import { HistoryOptions, NetworkConfig, TxInput } from '../interfaces';
 import { getMinaClient } from '../util/mina-client.util';
 import { popupNotify } from '../util/popup.util';
@@ -48,8 +54,8 @@ export const signPayment = async (
     };
     return client.signPayment(payment, privateKey);
   } catch (err) {
-    console.error('sign', err.message); // TODO - remove
-    return null;
+    console.error('packages/snap/src/mina/transaction.ts:51', err.message);
+    throw err;
   }
 };
 
@@ -64,12 +70,7 @@ export async function sendPayment(signedPayment: Signed<Payment>, networkConfig:
   const query = sendPaymentQuery(false);
   const variables = { ...signedPayment.data, ...signedPayment.signature };
 
-  const { data, error } = await gql(networkConfig.gqlUrl, query, variables);
-
-  if (error) {
-    console.error('send', error); // TODO - remove
-    return null;
-  }
+  const data = await gql(networkConfig.gqlUrl, query, variables);
 
   await popupNotify(`Payment ${data.sendPayment.payment.hash.substring(0, 10)}... has been submitted`);
 
@@ -77,29 +78,20 @@ export async function sendPayment(signedPayment: Signed<Payment>, networkConfig:
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
-  const query = getTxHistoryQuery;
-  const variables = { ...options, address };
+  const { pooledUserCommands: pendingTxs } = await gql(networkConfig.gqlUrl, TxPendingQuery, { address });
+  pendingTxs.forEach((tx: any) => (tx.status = 'PENDING'));
 
-  const { data, error } = await gql(networkConfig.gqlTxUrl, query, variables);
+  const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery, { ...options, address });
+  transactions.forEach((tx: any) => (tx.status = tx.failureReason ? 'FAILED' : 'APPLIED'));
 
-  if (error) {
-    console.error('send', error); // TODO - remove
-    return null;
-  }
-
-  return data;
+  return [...pendingTxs, ...transactions];
 }
 
 export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
   const query = getTxDetailQuery;
   const variables = { hash };
 
-  const { data, error } = await gql(networkConfig.gqlTxUrl, query, variables);
-
-  if (error) {
-    console.error('send', error); // TODO - remove
-    return null;
-  }
+  const data = await gql(networkConfig.gqlTxUrl, query, variables);
 
   return data;
 }
@@ -108,12 +100,7 @@ export async function getTxStatus(networkConfig: NetworkConfig, paymentId: strin
   const query = getTxStatusQuery;
   const variables = { paymentId };
 
-  const { data, error } = await gql(networkConfig.gqlUrl, query, variables);
-
-  if (error) {
-    console.log(error);
-    return null;
-  }
+  const data = await gql(networkConfig.gqlUrl, query, variables);
 
   return data;
 }

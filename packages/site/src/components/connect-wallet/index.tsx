@@ -4,7 +4,7 @@ import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, ButtonProps, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { connectWallet, setActiveAccount, setIsLoading } from 'slices/walletSlice';
+import { connectWallet, setActiveAccount, setIsLoading, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import wainning from 'assets/icons/wainning.svg';
 
@@ -12,7 +12,7 @@ type Props = {};
 
 const ConnectWallet: React.FC<Props> = () => {
   const reduxDispatch = useAppDispatch();
-  const { connectToSnap, getSnap, AccountList, getAccountInfors } = useMinaSnap();
+  const { connectToSnap, getSnap, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
 
   const { isInstalledWallet, isLoading } = useAppSelector((state) => state.wallet);
 
@@ -21,11 +21,13 @@ const ConnectWallet: React.FC<Props> = () => {
     try {
       reduxDispatch(setIsLoading(true));
       await connectToSnap();
+
       const isInstalledSnap = await getSnap();
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
+      const txList = await getTxHistory();
+      reduxDispatch(setTransactions(txList));
       reduxDispatch(setIsLoading(false));
-
       reduxDispatch(
         connectWallet({
           accountList,
@@ -50,9 +52,9 @@ const ConnectWallet: React.FC<Props> = () => {
   return (
     <>
       <BoxContent>
-        <BoxCenter>
+        <BoxLogo>
           <img src={logoMina} />
-        </BoxCenter>
+        </BoxLogo>
         <BoxCenter>
           <BoxInsideMetamask>Mina Snaps enable Mina network inside Metamask</BoxInsideMetamask>
         </BoxCenter>
@@ -68,7 +70,12 @@ const ConnectWallet: React.FC<Props> = () => {
           )}
         </BoxCenter>
         <BoxCenter>
-          <Button onClick={handleConnectClick}>{isLoading ? <>CONNECTING</> : 'CONNECT TO METAMASK'}</Button>
+          <Button
+            className={!isInstalledWallet ? 'isUnInstalledWallet' : 'connectMetamask'}
+            onClick={handleConnectClick}
+          >
+            {isLoading ? <>CONNECTING</> : 'CONNECT TO METAMASK'}
+          </Button>
         </BoxCenter>
       </BoxContent>
     </>
@@ -89,6 +96,10 @@ const ButtonCustomRequiredMetamask = styled(Button)<ButtonProps>(() => ({
 const BoxCenter = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'center',
+}));
+
+const BoxLogo = styled(BoxCenter)(() => ({
+  paddingTop: '40px',
 }));
 
 const BoxContent = styled(Box)(() => ({

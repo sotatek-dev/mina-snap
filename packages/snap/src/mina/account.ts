@@ -15,8 +15,8 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
   const snapConfig = await getSnapConfiguration();
   const { currentNetwork, networks } = snapConfig;
   const networkConfig = networks[currentNetwork];
-  const { importedAccounts, selectedImportedAccount } = networkConfig;
-  if (index && !isImported) {
+  const { importedAccounts, selectedImportedAccount } = networkConfig as NetworkConfig;
+  if (typeof index === 'number' && !isImported) {
     const { name, address } = networkConfig.generatedAccounts[index];
     const { privateKey } = await generateKeyPair(networkConfig, index);
     return {
@@ -25,7 +25,7 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
       privateKey,
       isImported: false,
     };
-  } else if (index && isImported) {
+  } else if (typeof index === 'number' && isImported) {
     const { name, address, privateKey } = importedAccounts[index];
     return {
       name,
@@ -34,7 +34,7 @@ export const getKeyPair = async (index?: number, isImported?: boolean) => {
       isImported: true,
     };
   }
-  if (typeof selectedImportedAccount === 'number') {
+  if (selectedImportedAccount || selectedImportedAccount == 0) {
     return {
       name: importedAccounts[selectedImportedAccount].name,
       privateKey: importedAccounts[selectedImportedAccount].privateKey,
@@ -77,14 +77,13 @@ export const generateKeyPair = async (networkConfig: NetworkConfig, index?: numb
 //   return keyPair.publicKey;
 // };
 
-export const signMessage = (message: string, keypair: Keypair, networkConfig: NetworkConfig) => {
-  const client = getMinaClient(networkConfig);
-  const signed = client.signMessage(message, keypair);
-  if (client.verifyMessage(signed)) {
-    console.log('Message was verified successfully');
+export const signMessage = async (message: string, keypair: Keypair, networkConfig: NetworkConfig) => {
+  const confirmSignMsg = await popupDialog(ESnapDialogType.CONFIRMATION, 'Sign this message?', message);
+  if (confirmSignMsg) {
+    const client = getMinaClient(networkConfig);
+    const signed = client.signMessage(message, keypair);
     return signed;
   }
-  console.log('Failed to verify message');
   return null;
 };
 
@@ -99,12 +98,8 @@ export async function getAccountInfo(publicKey: string, networkConfig: NetworkCo
   const query = getAccountInfoQuery;
   const variables = { publicKey };
 
-  const { data, error } = await gql(networkConfig.gqlUrl, query, variables);
+  const data = await gql(networkConfig.gqlUrl, query, variables);
 
-  if (error) {
-    console.error(error);
-    return null;
-  }
   /**return default data if the account does not have any tx */
   if (!data.account) {
     data.account = {
@@ -136,11 +131,8 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
         address: account.address,
       };
     } else {
-      return {
-        error: {
-          message: 'The account index is invalid',
-        },
-      };
+      console.error('packages/snap/src/mina/account.ts:138', 'The account index is invalid');
+      throw new Error('The account index is invalid');
     }
   }
   const account = generatedAccounts[index];
@@ -150,11 +142,8 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
     await updateSnapConfig(snapConfig);
     return account;
   } else {
-    return {
-      error: {
-        message: 'The account index is invalid',
-      },
-    };
+    console.error('packages/snap/src/mina/account.ts:149', 'The account index is invalid');
+    throw new Error('The account index is invalid');
   }
 };
 
@@ -196,21 +185,15 @@ export const importAccount = async (name: string, privateKey: string) => {
   try {
     publicKey = client.derivePublicKey(privateKey);
   } catch (err) {
-    return {
-      error: {
-        message: 'The account index is invalid',
-      },
-    };
+    console.error('packages/snap/src/mina/account.ts:198', err.message);
+    throw new Error('Incorrect Private Key');
   }
 
   // Check for duplicate account
   const duplicateAddress = existingAddresses.find((address) => address === publicKey);
   if (duplicateAddress) {
-    return {
-      error: {
-        message: 'Incorrect Private Key',
-      },
-    };
+    console.error('packages/snap/src/mina/account.ts:205', 'Duplicate address');
+    throw new Error('Do not import repeatedly');
   }
 
   let newAccountIndex;
@@ -274,11 +257,8 @@ export const editAccountName = async (index: number, name: string, isImported?: 
     ? networks[currentNetwork].importedAccounts[index]
     : networks[currentNetwork].generatedAccounts[index];
   if (!account) {
-    return {
-      error: {
-        message: 'The account does not exist',
-      },
-    };
+    console.error('packages/snap/src/mina/account.ts:264', 'The account does not exist');
+    throw new Error('The account does not exist');
   }
   account.name = name;
   await updateSnapConfig(snapConfig);
