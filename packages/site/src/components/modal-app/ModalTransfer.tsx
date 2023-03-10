@@ -332,6 +332,9 @@ const Input = styled(TextField)<Props>`
       &.Mui-focused fieldset {
         border: 1px solid ${(props) => (props.isvalidvalue ? '#d32f2f' : '#594AF1')};
       }
+      &:hover fieldset {
+        border: 1px solid #594AF1;
+      },
     }
 `;
 
