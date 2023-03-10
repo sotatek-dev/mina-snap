@@ -276,6 +276,9 @@ const ButtonCreate = styled(ButtonCommon)`
   display: flex;
   align-items: center;
   justify-content: center;
+  :hover {
+    background: #5446e5;
+  }
 `;
 
 const ButtonImport = styled(ButtonCommon)`
@@ -289,6 +292,9 @@ const ButtonImport = styled(ButtonCommon)`
   display: flex;
   align-items: center;
   justify-content: center;
+  :hover {
+    background: #d9d9d9;
+  }
 `;
 
 const ICreate = styled.img.attrs(() => ({

@@ -41,6 +41,9 @@ const CreateNameAccount = ({ onCloseModal }: Props) => {
     }
   };
 
+  const style0 = { transform: 'rotate(0deg)' };
+  const style180 = { transform: 'rotate(180deg)' };
+
   return (
     <>
       <Container>
@@ -76,7 +79,7 @@ const CreateNameAccount = ({ onCloseModal }: Props) => {
               }}
             >
               <IconBoxBack>
-                Result <img src={showDown} />
+                Result <img src={showDown} style={showSignature ? style180 : style0} />
               </IconBoxBack>
             </BoxButtom>
             <BoxShowSignature>
@@ -105,6 +108,7 @@ const IconBoxBack = styled(Box)({
 });
 
 const BoxButtom = styled(Box)(() => ({
+  paddingTop: '20px',
   fontFamily: 'Inter Regular',
   wordBreak: 'break-word',
   fontSize: '10px',

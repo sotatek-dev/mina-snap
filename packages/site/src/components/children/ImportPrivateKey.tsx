@@ -29,15 +29,15 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
       };
       const account = await ImportAccount(payload);
       const accountInfor = await getAccountInfors();
+      onCloseModal({
+        ...account,
+        balance: formatBalance(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei')) as string,
+      });
       const accountList = await AccountList();
       const txList = await getTxHistory();
       dispatch(setTransactions(txList));
       dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
-      onCloseModal({
-        ...account,
-        balance: formatBalance(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei')) as string,
-      });
     } catch (error) {
       dispatch(setIsLoading(false));
     }

@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { connectWallet, setActiveAccount, setIsLoading, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import wainning from 'assets/icons/wainning.svg';
-import { formatBalance } from 'helpers/formatAccountAddress';
 
 type Props = {};
 
@@ -75,7 +74,13 @@ const ConnectWallet: React.FC<Props> = () => {
             className={!isInstalledWallet ? 'isUnInstalledWallet' : 'connectMetamask'}
             onClick={handleConnectClick}
           >
-            {isLoading ? <>CONNECTING</> : 'CONNECT TO METAMASK'}
+            {isLoading ? (
+              <BoxConnecting>
+                CONNECTING<Box className="dot-elastic"></Box>
+              </BoxConnecting>
+            ) : (
+              'CONNECT TO METAMASK'
+            )}
           </Button>
         </BoxCenter>
       </BoxContent>
@@ -83,6 +88,10 @@ const ConnectWallet: React.FC<Props> = () => {
   );
 };
 
+const BoxConnecting = styled(Box)(() => ({
+  display: 'flex',
+  justifyContent: 'center',
+}));
 const BoxImg = styled(Box)(() => ({
   marginRight: '7px',
 }));
