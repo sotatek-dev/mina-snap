@@ -76,7 +76,7 @@ const ConnectWallet: React.FC<Props> = () => {
           >
             {isLoading ? (
               <BoxConnecting>
-                CONNECTING<Box className="dot-elastic"></Box>
+                CONNECTING<Box className="dot-loadding"></Box>
               </BoxConnecting>
             ) : (
               'CONNECT TO METAMASK'

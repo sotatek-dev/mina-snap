@@ -62,7 +62,7 @@
   width: 73% !important;
 }
 
-.dot-elastic {
+.dot-loadding {
   margin-left: 25px;
   margin-top: 4px;
   width: 10px;
@@ -70,34 +70,34 @@
   border-radius: 5px;
   background-color: white;
   color: white;
-  animation: dot-elastic 1s infinite linear;
+  animation: dot-loadding 1s infinite linear;
 }
-.dot-elastic::before, .dot-elastic::after {
+.dot-loadding::before, .dot-loadding::after {
   content: "";
   display: inline-block;
   position: absolute;
   top: 0;
 }
-.dot-elastic::before {
+.dot-loadding::before {
   left: -15px;
   width: 10px;
   height: 10px;
   border-radius: 5px;
   background-color: white;
   color: white;
-  animation: dot-elastic-before 1s infinite linear;
+  animation: dot-loadding-before 1s infinite linear;
 }
-.dot-elastic::after {
+.dot-loadding::after {
   left: 15px;
   width: 10px;
   height: 10px;
   border-radius: 5px;
   background-color: white;
   color: white;
-  animation: dot-elastic-after 1s infinite linear;
+  animation: dot-loadding-after 1s infinite linear;
 }
 
-@keyframes dot-elastic-before {
+@keyframes dot-loadding-before {
   0% {
     transform: scale(1, 1);
   }
@@ -114,7 +114,7 @@
     transform: scale(1, 1);
   }
 }
-@keyframes dot-elastic {
+@keyframes dot-loadding {
   0% {
     transform: scale(1, 1);
   }
@@ -131,7 +131,7 @@
     transform: scale(1, 1);
   }
 }
-@keyframes dot-elastic-after {
+@keyframes dot-loadding-after {
   0% {
     transform: scale(1, 1);
   }
