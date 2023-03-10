@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
 import { connectWallet, setIsLoading, setActiveAccount, setWalletConnection } from 'slices/walletSlice';
 import { ethers } from 'ethers';
+import { formatBalance } from 'helpers/formatAccountAddress';
 
 const HomePage = () => {
   useHasMetamaskFlask();
@@ -39,7 +40,7 @@ const HomePage = () => {
             isInstalledSnap,
           }),
         );
-        console.log(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string);
+
         reduxDispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,

@@ -35,7 +35,7 @@ const ModalCommon = ({
   return (
     <Modal
       onBackdropClick={() => {
-        clickOutSide ? setOpenModal : '';
+        setOpenModal;
       }}
       disableAutoFocus={true}
       open={open}
@@ -127,6 +127,7 @@ const CloseIconWrapperIsClose = styled(Box)({
   alignSelf: 'flex-end',
   cursor: 'pointer',
 });
+
 const CloseIconWrapper = styled(Box)({
   position: 'absolute',
   left: 15,

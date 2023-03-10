@@ -6,6 +6,7 @@ import { useMinaSnap } from 'services';
 import { useState } from 'react';
 import { setActiveAccount, setIsLoadingSwitchNetWork, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
+import { formatBalance } from 'helpers/formatAccountAddress';
 
 interface Props extends ReactDropdownProps {
   error?: boolean;
@@ -16,13 +17,11 @@ interface Props extends ReactDropdownProps {
 const DropDown = ({ disabled, error, options, label, ...otherProps }: Props) => {
   const dispatch = useDispatch();
   const { SwitchNetwork, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
-  const [value, setValue] = useState('Berkeley');
+  const [value, setValue] = useState('Mainnet');
 
   const changeNetwork = async (e: Option) => {
     setValue(e.value);
-    dispatch(
-      setTransactions([]),
-    );
+    dispatch(setTransactions([]));
     dispatch(setIsLoadingSwitchNetWork(true));
     await SwitchNetwork(e.value)
       .then(async () => {

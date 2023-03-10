@@ -146,6 +146,14 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   '& input': {
     fontSize: '12px',
   },
+  '& .MuiOutlinedInput-root': {
+    '&:hover fieldset': {
+      borderColor: '#594AF1',
+    },
+    '&.Mui-focused fieldset': {
+      border: '1px solid #594AF1',
+    },
+  },
 });
 const Container = styled(Box)(() => ({
   fontFamily: 'Inter Regular',

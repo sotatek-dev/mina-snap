@@ -5,11 +5,16 @@ export const formatAccountAddress = (address: string) => {
   const lastFiveCharacters = address.slice(address.length - 10, address.length);
   return firstFiveCharacters + '...' + lastFiveCharacters;
 };
-export const formatBalance = (balance: string) => {
+export const formatBalance = (balance: string, dec: number = 4): string => {
+
   if (Number(balance) > 0) {
-    const firstFiveCharacters = balance.slice(0, balance.length - 9);
-    const lastFiveCharacters = balance.slice(balance.length - 9, balance.length);
-    return firstFiveCharacters + '.' + lastFiveCharacters;
+    const [whole, decimal] = balance.split('.');
+    const last = decimal.slice(0, dec)
+    if (Number(last) === 0) {
+      return whole
+    }
+
+    return whole + '.' + last
   }
   return '0'
 };
@@ -22,4 +27,6 @@ export const addressValid = (address: string) => {
     return false
   }
 }
+
+
 

@@ -8,6 +8,7 @@ import { useAppSelector } from 'hooks/redux';
 
 import ModalSign from 'components/common/modal-sign';
 import SignMessage from 'components/modal-app/SignMessage';
+import { formatBalance } from 'helpers/formatAccountAddress';
 
 const Balance = () => {
   const [showModalSendToken, setShowModalSendToken] = useState(false);
@@ -24,7 +25,7 @@ const Balance = () => {
     <Wrapper>
       <Logo src={IMinaCircle} />
       <AmountToken>
-        <Amount>{balance}</Amount>
+        <Amount>{formatBalance(balance)}</Amount>
         <TokenName>MINA</TokenName>
       </AmountToken>
       <Action>
