@@ -148,3 +148,21 @@
     transform: scale(1, 1);
   }
 }
+
+
+.css-ja5taz-MuiTooltip-tooltip {
+  background-color: black !important;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Inter Regular';
+  padding: 6px 10px !important; 
+  font-size: 0.8875rem !important;
+  max-width: 300px;
+  margin-top: '0' !important;
+  word-wrap: break-word;
+  font-weight: 500;
+}
+.MuiTooltip-popper[data-popper-placement*="bottom"] .css-ja5taz-MuiTooltip-tooltip {
+  transform-origin: center top;
+  margin-top: 8px !important;
+}

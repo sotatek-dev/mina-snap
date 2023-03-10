@@ -21,6 +21,7 @@ export const DropDown = styled.select<IDropDown>``;
 
 export const DropdownStyled = styled(Dropdown) <IDropDown>`
   font-family: 'Inter Regular';
+  
   .Dropdown-control {
     border-radius: ${(props) => props.theme.corner.medium};
     box-sizing: border-box;
@@ -52,7 +53,7 @@ export const DropdownStyled = styled(Dropdown) <IDropDown>`
     align-items: center;
     justify-content: center;
   }
-
+ 
   .Dropdown-menu {
     margin-top: ${(props) => props.theme.spacing.tiny2};
     border-radius: ${(props) => props.theme.corner.medium};
@@ -77,12 +78,13 @@ export const DropdownStyled = styled(Dropdown) <IDropDown>`
     
     :hover {
       background-color: ${(props) => props.theme.palette.grey.grey4};
-   
     }
   }
   .Dropdown-option.is-selected {
     background-color: white;
     color: #594AF1;
+   
+   
   }
 `;
 
