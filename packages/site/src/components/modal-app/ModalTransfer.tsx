@@ -92,7 +92,8 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setAddress('');
     setAmount('');
     setGasFee(GAS_FEE.default);
-    setNonce(inferredNonce); 
+    setNonce(inferredNonce);
+    setIsShowContent(false);
   }, [open, inferredNonce]);
 
   return (
