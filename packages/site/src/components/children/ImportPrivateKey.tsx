@@ -1,4 +1,4 @@
-import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
+import { Box, Button, ButtonProps, Snackbar, styled, TextField, TextFieldProps } from '@mui/material';
 import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useState } from 'react';
@@ -16,6 +16,8 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
   const { AccountList, ImportAccount, getAccountInfors, getTxHistory } = useMinaSnap();
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.wallet);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('')
 
   const sendRequest = async () => {
     try {
@@ -32,7 +34,9 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
       dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
       onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
-    } catch (error) {
+    } catch (error:any) {
+      setMessage(error?.message)
+      setOpen(true)
       dispatch(setIsLoading(false));
     }
   };
@@ -62,6 +66,19 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
         >
           Confirm
         </ButtonCustom>
+        <Message
+          autoHideDuration={2000}
+          open={open}
+          onClose={() => setOpen(false)}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center"
+         }}
+        >
+          <ContentMessage>
+            {message}
+          </ContentMessage>
+        </Message>
       </Container>
     </>
   );
@@ -77,7 +94,7 @@ const BoxTitle = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
   fontWeight: '600',
-  fontSize: '12px',
+  fontSize: '10px',
   lineHeight: '12px',
   color: '#000000',
 }));
@@ -94,8 +111,8 @@ const InputCustom = styled(TextField)<TextFieldProps>({
     padding: '0.5rem 1rem',
     color: '#707D96',
   },
-  '& input': {
-    fontSize: '12px',
+  '& textarea': {
+    fontSize: '10px',
   },
 });
 
@@ -105,5 +122,30 @@ const ButtonCustom = styled(Button)<ButtonProps>({
   background: '#594AF1',
   borderRadius: '5px',
 });
+
+const Message = styled(Snackbar)({
+  '&.MuiSnackbar-root': {
+    width: '275px',
+    height: '34px',
+  },
+  '&.MuiSnackbar-anchorOriginBottomCenter': {
+    top: '50%',
+  }
+});
+
+const ContentMessage = styled(Box)({
+  width: '100%',
+  height: '100%',
+  background: '#000000',
+  borderRadius: '5px',
+  fontStyle: 'normal',
+  fontWeight: '300',
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#FFFFFF',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
 
 export default ImportPrivateKey;

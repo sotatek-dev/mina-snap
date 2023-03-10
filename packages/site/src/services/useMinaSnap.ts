@@ -162,7 +162,7 @@ export const useMinaSnap = () => {
         request: {
           method: 'mina_getTxHistory',
           params: {
-            limit: 10,
+            limit: 15,
             sortBy: "DATETIME_DESC",
             canonical: true
           }
