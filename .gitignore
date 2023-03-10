@@ -218,3 +218,7 @@ terraform.rc
 # End of https://www.toptal.com/developers/gitignore/api/terraform,node,macos
 
 *.lock.hcl
+
+#package
+
+package-lock.json
