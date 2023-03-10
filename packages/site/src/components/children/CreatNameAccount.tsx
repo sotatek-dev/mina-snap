@@ -1,6 +1,7 @@
 import { Box, Button, ButtonProps, FormHelperText, styled, TextField, TextFieldProps } from '@mui/material';
 import ModalCommon from 'components/common/modal';
 import { ethers } from 'ethers';
+import { formatBalance } from 'helpers/formatAccountAddress';
 import { useAppDispatch } from 'hooks/redux';
 import { useState } from 'react';
 import { useMinaSnap } from 'services';
@@ -32,7 +33,10 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
           const txList = await getTxHistory();
           dispatch(setTransactions(txList));
           await dispatch(setListAccounts(accountList));
-          onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
+          onCloseModal({
+            ...account,
+            balance: formatBalance(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei')) as string,
+          });
           dispatch(setIsLoading(false));
         } catch (error) {
           dispatch(setIsLoading(false));
@@ -114,9 +118,10 @@ const BoxTitle = styled(Box)(() => ({
   fontSize: '10px',
   lineHeight: '12px',
   color: '#000000',
+  paddingBottom: '5px',
 }));
 
-const BoxContent = styled(Box)(() =>({
+const BoxContent = styled(Box)(() => ({
   minHeight: '200px',
 }));
 
@@ -124,7 +129,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   backgroundColor: '#FFFFFF',
   width: '100%',
   borderRadius: '8px',
-  
+
   input: {
     padding: '0.5rem 1rem',
     color: '#707D96',
@@ -133,10 +138,13 @@ const InputCustom = styled(TextField)<TextFieldProps>({
     fontSize: '12px',
   },
   '& .MuiOutlinedInput-root': {
+    '&:hover fieldset': {
+      borderColor: '#594AF1',
+    },
     '&.Mui-focused fieldset': {
-      border: '1px solid #000000',
-    }
-  }
+      border: '1px solid #594AF1',
+    },
+  },
 });
 
 const ButtonCustom = styled(Button)<ButtonProps>({

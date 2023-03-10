@@ -20,6 +20,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { ResultCreateAccount } from 'types/account';
 import DetailsAccoust from 'components/children/DetailsAccoust';
 import { ethers } from 'ethers';
+import { formatBalance } from 'helpers/formatAccountAddress';
+import { setIsShowListAccount } from 'slices/modalSlice';
 
 const Header = () => {
   const { ChangeAccount, getAccountInfors, getTxHistory } = useMinaSnap();
@@ -64,6 +66,10 @@ const Header = () => {
         inferredNonce: accounts.inferredNonce as string,
       }),
     );
+  };
+
+  const handleShowListAccount = () => {
+    dispatch(setIsShowListAccount(!isShowListAccount));
   };
 
   const styleActive = {
@@ -142,9 +148,9 @@ const Header = () => {
               </AccountDetailsContent>
             }
           >
-            <Box style={isShowListAccount ? styleActive : styleInactive}>
+            <BoxImg onClick={handleShowListAccount} style={isShowListAccount ? styleActive : styleInactive}>
               <Wallet />
-            </Box>
+            </BoxImg>
           </AccountDetails>
         </WDropDown>
       </Wrapper>
@@ -186,8 +192,15 @@ const Wrapper = styled.div`
   }
 `;
 
+const BoxImg = styled(Box)(() => ({
+  ':hover': {
+    padding: '2px 8px 4px 9px',
+    borderRadius: '50%',
+    background: '#D9D9D9',
+  },
+}));
+
 const BoxLogo = styled.div`
-  padding-top: 40px;
   display: flex;
   align-items: center;
   height: 100%;

@@ -37,12 +37,12 @@ const Address = () => {
     <Wrapper>
       <BoxInfo>
         <AccountName>{accountName}</AccountName>
-        <WalletAddress id='walletAddress'>
+        <WalletAddress 
+          id='walletAddress' 
+          onClick={()=>handleOnClickCoppy()}
+        >
           {formatAccountAddress(activeAccount)}
-          <IconCoppy
-            src={ICoppy}
-            onClick={()=>handleOnClickCoppy()}
-          />
+          <IconCoppy src={ICoppy}/>
         </WalletAddress>
       </BoxInfo>
       <KebabMenu
@@ -116,13 +116,13 @@ const WalletAddress = styled.div`
   line-height: 15px;
   letter-spacing: -0.03em;
   color: #535a61;
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const IconCoppy = styled.img`
   padding-left: 5px;
-  :hover {
-    cursor: pointer;
-  }
 `;
 const KebabMenu = styled(PopperTooltipView)``;
 

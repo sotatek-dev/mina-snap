@@ -54,7 +54,9 @@ export const PopperTooltipView = ({
     if (closeTrigger === 'hover') setPopperVisible(false);
   };
   useEffect(() => {
-    dispatch(setIsShowListAccount(popperVisible));
+    if (!popperVisible) {
+      dispatch(setIsShowListAccount(false));
+    }
   }, [popperVisible]);
 
   const { getTooltipProps, setTooltipRef, setTriggerRef, visible } = usePopperTooltip({

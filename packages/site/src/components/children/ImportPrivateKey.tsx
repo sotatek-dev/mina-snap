@@ -1,5 +1,6 @@
 import { Box, Button, ButtonProps, Snackbar, styled, TextField, TextFieldProps } from '@mui/material';
 import { ethers } from 'ethers';
+import { formatBalance } from 'helpers/formatAccountAddress';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useState } from 'react';
 import { useMinaSnap } from 'services';
@@ -17,7 +18,7 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.wallet);
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
 
   const sendRequest = async () => {
     try {
@@ -33,10 +34,11 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
       dispatch(setTransactions(txList));
       dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
-      onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
-    } catch (error:any) {
-      setMessage(error?.message)
-      setOpen(true)
+      onCloseModal({
+        ...account,
+        balance: formatBalance(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei')) as string,
+      });
+    } catch (error) {
       dispatch(setIsLoading(false));
     }
   };
@@ -71,13 +73,11 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
           open={open}
           onClose={() => setOpen(false)}
           anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center"
-         }}
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
         >
-          <ContentMessage>
-            {message}
-          </ContentMessage>
+          <ContentMessage>{message}</ContentMessage>
         </Message>
       </Container>
     </>
@@ -99,7 +99,7 @@ const BoxTitle = styled(Box)(() => ({
   color: '#000000',
 }));
 
-const BoxContent = styled(Box)(() =>({
+const BoxContent = styled(Box)(() => ({
   minHeight: '200px',
 }));
 
@@ -113,6 +113,14 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   },
   '& textarea': {
     fontSize: '10px',
+  },
+  '& .MuiOutlinedInput-root': {
+    '&:hover fieldset': {
+      borderColor: '#594AF1',
+    },
+    '&.Mui-focused fieldset': {
+      border: '1px solid #594AF1',
+    },
   },
 });
 
@@ -130,7 +138,7 @@ const Message = styled(Snackbar)({
   },
   '&.MuiSnackbar-anchorOriginBottomCenter': {
     top: '50%',
-  }
+  },
 });
 
 const ContentMessage = styled(Box)({
@@ -146,6 +154,6 @@ const ContentMessage = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-})
+});
 
 export default ImportPrivateKey;

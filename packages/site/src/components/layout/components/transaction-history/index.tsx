@@ -1,20 +1,21 @@
 import { ethers } from 'ethers';
-import { formatAccountAddress } from 'helpers/formatAccountAddress';
+import { formatAccountAddress, formatBalance } from 'helpers/formatAccountAddress';
 import styled from 'styled-components';
 import ISendTx from 'assets/icons/icon-sent-tx.png';
-import IReceivedTx from "assets/icons/icon-received-tx.png"
-import ILink from "assets/icons/icon-link.svg"
-import { formatDateTime } from "helpers/formatDateTime";
-import ModalTransactionDetail from "components/modal-app/ModalTranstionDetail";
-import { useEffect, useState } from "react";
-import { useMinaSnap } from "services";
+import IReceivedTx from 'assets/icons/icon-received-tx.png';
+import { formatDateTime } from 'helpers/formatDateTime';
+import ModalTransactionDetail from 'components/modal-app/ModalTranstionDetail';
+import { useEffect, useState } from 'react';
+import { useMinaSnap } from 'services';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
+import { Box } from '@mui/system';
+import ILink from 'assets/icons/icon-link.svg';
 import { MINA_BERKELEY_EXPLORER } from 'utils/constants';
 
 interface Props {
-  status:string
+  status: string;
 }
 
 const TransactionHistory = () => {
@@ -29,10 +30,10 @@ const TransactionHistory = () => {
     setShowTxDetail(true);
   };
 
-    const hanldeViewAccount = () => {
+  const hanldeViewAccount = () => {
     const type = 'wallet';
     window.open(MINA_BERKELEY_EXPLORER + type + '/' + activeAccount, '_blank')?.focus();
-  }
+  };
 
   const handleClickOutSideTxDetail = () => {
     setShowTxDetail(false);
@@ -46,53 +47,93 @@ const TransactionHistory = () => {
     getListTxHistory();
   }, []);
 
+  const paddingBt = {
+    paddingBottom: '20px',
+  };
+
   return (
-    <Wrapper>
-      <Label>HISTORY</Label>
-      {transactions.length == 0 ? <NoTx>
-        You have no transactions
-      </NoTx> :
-      <TransactionList>
-        {transactions.slice(0,10).map((item, index) => {
-          return (
-            <TracsactionItem
-              key={index}
-              onClick={() => {
-                handleClick(item);
-              }}
-            >
-              <Icon src={item.from == activeAccount ? ISendTx : IReceivedTx} />
-              <TransactionDetail>
-                <TxInfo>
-                  <Address>{item.from == activeAccount ? formatAccountAddress(item.to): formatAccountAddress(item.from)}</Address>
-                  <Amount>
-                    {(item.from == activeAccount ? `- ` : `+ `) + ethers.utils.formatUnits(item.amount, 'gwei')}
-                  </Amount>
-                </TxInfo>
-                <Status>
-                  {item.status == "PENDING" ? <Detail>Nonce {item.nonce}</Detail> : <Detail>{formatDateTime(item.dateTime)}</Detail>}
-                  <TxStatus status={item.status}>{item.status}</TxStatus>
-                </Status>
-              </TransactionDetail>
-            </TracsactionItem>
-          );
-        })}
-        <ModalTransactionDetail
-          open={showTxDetail}
-          clickOutSide={true}
-          setOpenModal={handleClickOutSideTxDetail}
-          transaction={detailTx}
-        />
-        {transactions.length > 10 && <CheckmoreTx >
-          <Hyperlink onClick={()=>hanldeViewAccount()}>
-            Check more transaction history
-            <IconLink src={ILink} />
-          </Hyperlink>
-        </CheckmoreTx>}
-      </TransactionList>}
-    </Wrapper>
+    <>
+      <Wrapper>
+        <Label>HISTORY</Label>
+        <TransactionList>
+          {transactions.length > 0 ? (
+            transactions.map((item, index) => {
+              return (
+                <TracsactionItem
+                  key={index}
+                  onClick={() => {
+                    handleClick(item);
+                  }}
+                >
+                  <Icon src={item.from == activeAccount ? ISendTx : IReceivedTx} />
+                  <TransactionDetail>
+                    <TxInfo>
+                      <Address>
+                        {item.from == activeAccount ? formatAccountAddress(item.to) : formatAccountAddress(item.from)}
+                      </Address>
+                      <Amount>
+                        {(item.from == activeAccount ? `- ` : `+ `) +
+                          formatBalance(ethers.utils.formatUnits(item.amount, 'gwei'))}
+                      </Amount>
+                    </TxInfo>
+                    <Status>
+                      {item.status == 'PENDING' ? (
+                        <Detail>Nonce {item.nonce}</Detail>
+                      ) : (
+                        <Detail>{formatDateTime(item.dateTime)}</Detail>
+                      )}
+                      <TxStatus status={item.status}>{item.status}</TxStatus>
+                    </Status>
+                  </TransactionDetail>
+                </TracsactionItem>
+              );
+            })
+          ) : (
+            <BoxNoTrans sx={paddingBt}>You have no transactions</BoxNoTrans>
+          )}
+          <ModalTransactionDetail
+            open={showTxDetail}
+            clickOutSide={true}
+            setOpenModal={handleClickOutSideTxDetail}
+            transaction={detailTx}
+          />
+        </TransactionList>
+      </Wrapper>
+      {transactions.length > 0 ? (
+        <CheckmoreTx onClick={() => hanldeViewAccount()}>
+          Check more transaction history
+          <IconLink src={ILink} />
+        </CheckmoreTx>
+      ) : (
+        ''
+      )}
+    </>
   );
 };
+
+const BoxNoTrans = styled(Box)(() => ({
+  fontWeight: '400',
+  fontSize: '12px',
+  color: '#000000',
+  opacity: '0.5',
+  justifyContent: 'center',
+  display: 'flex',
+  paddingTop: '20px',
+}));
+
+const CheckmoreTx = styled.div`
+  cursor: pointer;
+  padding: 25px 0;
+  text-align: center;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 17px;
+  letter-spacing: -0.03em;
+  color: #594af1;
+`;
+const IconLink = styled.img`
+  padding-left: 6px;
+`;
 
 const Wrapper = styled.div`
   margin-top: 32px;
@@ -117,7 +158,7 @@ const NoTx = styled.div`
   line-height: 15px;
   color: #000000;
   opacity: 0.5;
-`
+`;
 
 const TransactionList = styled.div``;
 
@@ -126,7 +167,7 @@ const TracsactionItem = styled.div`
   display: flex;
   padding: 22px 15px;
   :hover {
-    background: #F1F1F1;
+    background: #f1f1f1;
     cursor: pointer;
   }
 `;
@@ -177,29 +218,8 @@ const TxStatus = styled.div<Props>`
   font-size: 12px;
   line-height: 15px;
   letter-spacing: -0.03em;
-  color: ${(props)=> (props.status == 'PENDING'? '#ECC307': props.status == 'APPLIED' ? '#0DB27C' : '#D95A5A')};
-  background: ${(props)=> (props.status == 'PENDING'? '#ECE8D7': props.status == 'APPLIED' ? '#D5E7E4' : '#FBEEEE')};
+  color: ${(props) => (props.status == 'PENDING' ? '#ECC307' : props.status == 'APPLIED' ? '#0DB27C' : '#D95A5A')};
+  background: ${(props) => (props.status == 'PENDING' ? '#ECE8D7' : props.status == 'APPLIED' ? '#D5E7E4' : '#FBEEEE')};
 `;
-
-const CheckmoreTx = styled.div`
-  padding: 25px 0;
-  text-align: center;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 17px;
-  letter-spacing: -0.03em;
-  color: #594AF1;
-`
-
-const Hyperlink = styled.div`
-  display:  inline-block;
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const IconLink = styled.img`
-  padding-left:  6px;
-`
 
 export default TransactionHistory;

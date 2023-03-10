@@ -9,6 +9,7 @@ import {
 } from './constants';
 import { Erc20Token, Erc20TokenBalance } from 'types';
 import { constants } from 'starknet';
+import { formatBalance } from 'helpers/formatAccountAddress';
 
 export const shortenAddress = (address: string, num = 3) => {
   if (!address) return '';
@@ -52,7 +53,7 @@ export const addMissingPropertiesToToken = (
 };
 
 export const getHumanReadableAmount = (asset: Erc20TokenBalance) => {
-  const amountStr = ethers.utils.formatUnits(asset.amount, asset.decimals);
+  const amountStr = formatBalance(ethers.utils.formatUnits(asset.amount, asset.decimals));
   const indexDecimal = amountStr.indexOf('.');
   return ethers.utils
     .formatUnits(asset.amount, asset.decimals)

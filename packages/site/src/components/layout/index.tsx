@@ -4,17 +4,17 @@ import Balance from './components/balance';
 import TransactionHistory from './components/transaction-history';
 import Header from './header';
 
- const Home = () => {
+const Home = () => {
   return (
     <Wrapper>
-        <Header />
-        <ColMiddle>
-            <Content>
-              <Address/>
-              <Balance />
-              <TransactionHistory/>
-            </Content>
-        </ColMiddle>
+      <Header />
+      <ColMiddle>
+        <Content>
+          <Address />
+          <Balance />
+          <TransactionHistory />
+        </Content>
+      </ColMiddle>
     </Wrapper>
   );
 };
@@ -29,7 +29,7 @@ const Wrapper = styled.div`
 `;
 
 const ColMiddle = styled.div`
-  font-family: "Inter Regular";
+  font-family: 'Inter Regular';
   max-width: 1040px;
   max-height: calc(100vh - 124px);
   margin: auto;
@@ -49,4 +49,5 @@ const Content = styled.div`
   box-shadow: 0px 50px 70px -28px rgba(106, 115, 125, 0.2);
   border-radius: ${(props) => props.theme.corner.small};
 `;
+
 export default Home;

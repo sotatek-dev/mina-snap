@@ -109,6 +109,7 @@ web_modules/
 
 # Yarn Integrity file
 .yarn-integrity
+yarn.lock
 
 # dotenv environment variable files
 .env
@@ -217,3 +218,9 @@ terraform.rc
 # End of https://www.toptal.com/developers/gitignore/api/terraform,node,macos
 
 *.lock.hcl
+
+#package
+
+package-lock.json
+./packages/site/package-lock.json
+./packages/snap/package-lock.json

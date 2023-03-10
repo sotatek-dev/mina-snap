@@ -1,6 +1,7 @@
 import Button from 'components/common/button';
 import ModalCommon from 'components/common/modal';
 import { ethers } from 'ethers';
+import { formatBalance } from 'helpers/formatAccountAddress';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React from 'react';
 import { useMinaSnap } from 'services';

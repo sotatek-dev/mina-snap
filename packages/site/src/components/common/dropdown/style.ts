@@ -77,7 +77,7 @@ export const DropdownStyled = styled(Dropdown) <IDropDown>`
     
     :hover {
       background-color: ${(props) => props.theme.palette.grey.grey4};
-      color: ${(props) => props.theme.palette.default.main};
+   
     }
   }
   .Dropdown-option.is-selected {
