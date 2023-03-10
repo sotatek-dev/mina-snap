@@ -3,8 +3,6 @@ export const handelCoppy = (data:string, id:string) => {
 
     const storage = document.createElement('textarea');
     storage.value = data as string;
-    console.log('storage.value', storage.value);
-    
     const element = document.querySelector(id);
     (element as any).appendChild(storage);
     storage.select();

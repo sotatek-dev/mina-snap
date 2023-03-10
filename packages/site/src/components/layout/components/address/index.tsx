@@ -4,11 +4,11 @@ import ICoppy from 'assets/icons/icon-coppy.svg';
 import { useAppSelector } from 'hooks/redux';
 import Button from 'components/common/button';
 import IThreeDot from 'assets/icons/icon-kebab-menu.svg';
-import { Box } from '@mui/material';
+import { Box, Snackbar } from '@mui/material';
 import { PopperTooltipView } from 'components/common/tooltip';
-import ILink from 'assets/icons/icon-link.svg';
-import IAccount from 'assets/icons/icon-account.svg';
-import { MINA_BERKELEY_EXPLORER } from 'utils/constants';
+import ILink from "assets/icons/icon-link.svg";
+import IAccount from "assets/icons/icon-account.svg";
+import {MINA_BERKELEY_EXPLORER} from "utils/constants"
 import DetailsAccout from 'components/children/DetailsAccoust';
 import { useState } from 'react';
 import ModalCommon from 'components/common/modal';
@@ -21,44 +21,46 @@ const Address = () => {
   const hanldeViewAccount = () => {
     const type = 'wallet';
     window.open(MINA_BERKELEY_EXPLORER + type + '/' + activeAccount, '_blank')?.focus();
-  };
+  }
 
-  const handleOpenModal = () => {
+  const handleOpenModal=()=> {
     setOpenModal(true);
-  };
+  }
+
+  const [open, setOpen] = useState(false);
+  const handleOnClickCoppy = () => {
+    handelCoppy(activeAccount as string, "#walletAddress");
+    setOpen(true)
+  }
 
   return (
     <Wrapper>
       <BoxInfo>
         <AccountName>{accountName}</AccountName>
-        <WalletAddress id="walletAddress" onClick={() => handelCoppy(activeAccount as string, '#walletAddress')}>
+        <WalletAddress 
+          id='walletAddress' 
+          onClick={()=>handleOnClickCoppy()}
+        >
           {formatAccountAddress(activeAccount)}
-          <IconCoppy src={ICoppy} />
+          <IconCoppy src={ICoppy}/>
         </WalletAddress>
       </BoxInfo>
       <KebabMenu
         closeTrigger="click"
         offSet={[50, 10]}
-        content={
-          <MenuContent>
-            <MenuItem onClick={() => hanldeViewAccount()}>
-              <IconLink src={ILink} />
-              View Account on Minascan
-            </MenuItem>
-            <MenuItem onClick={() => handleOpenModal()}>
-              <IconLink src={IAccount} />
-              Account details
-            </MenuItem>
-          </MenuContent>
-        }
+        content={<MenuContent>
+          <MenuItem onClick={()=>hanldeViewAccount()}><IconLink src={ILink}/>View Account on Minascan</MenuItem>
+          <MenuItem onClick={() => handleOpenModal()} ><IconLink src={IAccount}/>Account details</MenuItem>
+          
+        </MenuContent>}
       >
-        <ButtonMenu typeButton="round">
-          <PointMenu src={IThreeDot} />
+        <ButtonMenu typeButton='round'>
+        <PointMenu src={IThreeDot}/>
         </ButtonMenu>
       </KebabMenu>
       <ModalCommon
         open={openModal}
-        title="Account Details"
+        title='Account Details'
         setOpenModal={() => {
           setOpenModal(false);
         }}
@@ -67,6 +69,19 @@ const Address = () => {
       >
         <DetailsAccout></DetailsAccout>
       </ModalCommon>
+      <Message
+            autoHideDuration={2000}
+            open={open}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center"
+          }}
+          >
+            <ContentMessage>
+              Copied!
+            </ContentMessage>
+          </Message>
     </Wrapper>
   );
 };
@@ -83,7 +98,7 @@ const BoxInfo = styled(Box)`
   flex-direction: column;
   width: 100%;
   padding-left: 30px;
-`;
+`
 
 const AccountName = styled.div`
   font-style: normal;
@@ -101,19 +116,19 @@ const WalletAddress = styled.div`
   line-height: 15px;
   letter-spacing: -0.03em;
   color: #535a61;
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const IconCoppy = styled.img`
   padding-left: 5px;
-  :hover {
-    cursor: pointer;
-  }
 `;
 const KebabMenu = styled(PopperTooltipView)``;
 
 const MenuContent = styled.div`
   width: 230px;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 5px;
   box-shadow: 0px 50px 70px -28px rgba(106, 115, 125, 0.2);
   padding: 18px 0;
@@ -128,7 +143,7 @@ const MenuItem = styled.div`
   color: #000000;
   padding: 10px 18px;
   :hover {
-    background: #f1f1f1;
+    background: #F1F1F1;
     cursor: pointer;
   }
 `;
@@ -143,15 +158,40 @@ const ButtonMenu = styled(Button)`
   justify-content: center;
   width: 30px;
   height: 30px;
-  background: #ffffff;
+  background: #FFFFFF;
   border: none;
   margin-right: 8px;
   :hover {
-    background: #d9d9d9;
+    background: #D9D9D9;
   }
-`;
+`
 const PointMenu = styled.img`
   text-align: center;
 `;
+
+const Message = styled(Snackbar)({
+  '&.MuiSnackbar-root': {
+    width: '66px',
+    height: '34px',
+  },
+  '&.MuiSnackbar-anchorOriginBottomCenter': {
+    top: '5%',
+  }
+});
+
+const ContentMessage = styled(Box)({
+  width: '100%',
+  height: '100%',
+  background: '#000000',
+  borderRadius: '5px',
+  fontStyle: 'normal',
+  fontWeight: '300',
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#FFFFFF',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
 
 export default Address;
