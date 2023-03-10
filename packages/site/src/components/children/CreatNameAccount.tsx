@@ -111,7 +111,7 @@ const BoxTitle = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
   fontWeight: '600',
-  fontSize: '12px',
+  fontSize: '10px',
   lineHeight: '12px',
   color: '#000000',
 }));

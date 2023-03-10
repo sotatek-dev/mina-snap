@@ -40,23 +40,22 @@ const DetailsAccount = () => {
         <BoxContentAddress>{state?.address}</BoxContentAddress>
         <DividerCustom />
         <ListCustom>
-          <ListItem
-            button
+          <Item
             onClick={() => {
               setOpenChangeAccountName(true);
             }}
           >
-            <ListItemTextCustom primary={'Name'} secondary={state?.name}></ListItemTextCustom>
+            <ListItemTextCustom primary={'Account Name'} secondary={state?.name}></ListItemTextCustom>
             <ListItemAvatar sx={{ minWidth: '0px' }}>
               <img src={IconMore} />
             </ListItemAvatar>
-          </ListItem>
-          <ListItem button onClick={handelExportPrivateKey}>
+          </Item>
+          <Item onClick={handelExportPrivateKey}>
             <ListItemTextCustom primary={'Export Private Key'}></ListItemTextCustom>
             <ListItemAvatar sx={{ minWidth: '0px' }}>
               <img src={IconMore} />
             </ListItemAvatar>
-          </ListItem>
+          </Item>
         </ListCustom>
       </Container>
       <ChangeAccountName
@@ -87,6 +86,7 @@ const DetailsAccount = () => {
     </>
   );
 };
+
 const DividerCustom = styled(Divider)({
   paddingTop: '7px',
   marginBottom: '7px',
@@ -94,36 +94,49 @@ const DividerCustom = styled(Divider)({
     padding: 0,
   },
 });
+
 const ListCustom = styled(List)({
   paddingTop: '0px',
 });
+
+const Item = styled(ListItem)({
+  padding: '0 12px',
+  ":hover": {
+    cursor: 'pointer',
+    background: '#F1F1F1'
+  }
+})
+
 const BoxContentTitle = styled(Box)({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
   fontWeight: '600',
-  fontSize: '12px',
+  fontSize: '10px',
   lineHeight: '12px',
-  paddingTop: '17px',
+  padding: '16px 12px 0',
   color: '#000000',
 });
+
 const BoxContentAddress = styled(Box)({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
   fontWeight: '400',
   fontSize: '12px',
   lineHeight: '15px',
-  paddingTop: '4px',
+  padding: '4px 12px 0',
   color: '#000000',
   opacity: '0.4',
   wordWrap: 'break-word',
 });
+
 const ListItemTextCustom = styled(ListItemText)({
   '& .css-10hburv-MuiTypography-root': {
     fontStyle: 'normal',
     fontWeight: '600',
-    fontSize: '12px',
+    fontSize: '10px',
     lineHeight: '12px',
     color: '#000000',
+    paddingBottom: '1px'
   },
   '& .css-83ijpv-MuiTypography-root': {
     fontFamily: 'Inter Regular',
@@ -136,11 +149,11 @@ const ListItemTextCustom = styled(ListItemText)({
     wordWrap: 'break-word',
   },
 });
+
 const Container = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   width: '295px',
   height: '494px',
-  padding: '0 13px',
 }));
 
 export default DetailsAccount;
