@@ -154,7 +154,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
 });
 
 const ButtonCustom = styled(Button)<ButtonProps>({
-  width: '50%',
+  width: '100%',
   textTransform: 'none',
   background: '#594AF1',
   borderRadius: '5px',

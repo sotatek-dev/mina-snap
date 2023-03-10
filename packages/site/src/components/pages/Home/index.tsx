@@ -19,27 +19,33 @@ const HomePage = () => {
     const a = async () => {
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
-
       setIsUnlocked(isUnlocked);
+      const isInstalledSnap = await getSnap();
+
+      if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
+        setIsUnlocked(false);
+        return;
+      }
+
       if (isUnlocked) {
-        const isInstalledSnap = await getSnap();
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
           await RequestSnap();
         }
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
-
         reduxDispatch(
           connectWallet({
             accountList,
             isInstalledSnap,
           }),
         );
+        console.log(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string);
         reduxDispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
             balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
             accountName: accountInfor.name as string,
+            inferredNonce: accountInfor.inferredNonce,
           }),
         );
       } else {

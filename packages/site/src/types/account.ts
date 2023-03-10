@@ -10,6 +10,8 @@ export type Account = {
 export type ResultCreateAccount = {
     name: string
     address: string
+    balance: string
+    inferredNonce: string
 }
 
 export type ResultAccountList = {
@@ -47,5 +49,6 @@ export type payloadActiveAccount = {
     activeAccount: string
     balance: string
     accountName: string
+    inferredNonce: string
 }
 

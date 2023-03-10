@@ -11,6 +11,10 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
 
+interface Props {
+  status:string
+}
+
 const TransactionHistory = () => {
   const [showTxDetail, setShowTxDetail] = useState(false);
   const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
@@ -50,14 +54,14 @@ const TransactionHistory = () => {
               <Icon src={item.from == activeAccount ? ISendTx : IReceivedTx} />
               <TransactionDetail>
                 <TxInfo>
-                  <Address>{formatAccountAddress(item.to)}</Address>
+                  <Address>{item.from == activeAccount ? formatAccountAddress(item.to): formatAccountAddress(item.from)}</Address>
                   <Amount>
                     {(item.from == activeAccount ? `- ` : `+ `) + ethers.utils.formatUnits(item.amount, 'gwei')}
                   </Amount>
                 </TxInfo>
                 <Status>
-                  <Detail>{formatDateTime(item.dateTime)}</Detail>
-                  <TxStatus>APPLIED</TxStatus>
+                  {item.status == "PENDING" ? <Detail>Nonce {item.nonce}</Detail> : <Detail>{formatDateTime(item.dateTime)}</Detail>}
+                  <TxStatus status={item.status}>{item.status}</TxStatus>
                 </Status>
               </TransactionDetail>
             </TracsactionItem>
@@ -115,7 +119,7 @@ const TransactionDetail = styled.div`
 const TxInfo = styled.div`
   display: flex;
   justify-content: space-between;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 17px;
   letter-spacing: -0.03em;
@@ -128,7 +132,9 @@ const Status = styled.div`
 
 const Address = styled.div``;
 
-const Amount = styled.div``;
+const Amount = styled.div`
+  font-weight: 500;
+`;
 
 const Detail = styled.div`
   font-style: normal;
@@ -138,14 +144,14 @@ const Detail = styled.div`
   letter-spacing: -0.03em;
 `;
 
-const TxStatus = styled.div`
+const TxStatus = styled.div<Props>`
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
   line-height: 15px;
   letter-spacing: -0.03em;
-  color: #0db27c;
-  background: #d5e7e4;
+  color: ${(props)=> (props.status == 'PENDING'? '#ECC307': props.status == 'APPLIED' ? '#0DB27C' : '#D95A5A')};
+  background: ${(props)=> (props.status == 'PENDING'? '#ECE8D7': props.status == 'APPLIED' ? '#D5E7E4' : '#FBEEEE')};
 `;
 
 export default TransactionHistory;

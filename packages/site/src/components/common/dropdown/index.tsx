@@ -16,14 +16,12 @@ interface Props extends ReactDropdownProps {
 const DropDown = ({ disabled, error, options, label, ...otherProps }: Props) => {
   const dispatch = useDispatch();
   const { SwitchNetwork, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
-  const [value, setValue] = useState('Devnet');
+  const [value, setValue] = useState('Berkeley');
 
   const changeNetwork = async (e: Option) => {
     setValue(e.value);
     dispatch(
-      setTransactions({
-        transactions: [],
-      }),
+      setTransactions([]),
     );
     dispatch(setIsLoadingSwitchNetWork(true));
     await SwitchNetwork(e.value)
@@ -38,6 +36,7 @@ const DropDown = ({ disabled, error, options, label, ...otherProps }: Props) => 
             activeAccount: accountInfor.publicKey as string,
             balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
             accountName: accountInfor.name as string,
+            inferredNonce: accountInfor.inferredNonce as string,
           }),
         );
       })

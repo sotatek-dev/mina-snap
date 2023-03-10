@@ -1,9 +1,10 @@
-import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
+import { Box, Button, ButtonProps, FormHelperText, styled, TextField, TextFieldProps } from '@mui/material';
 import ModalCommon from 'components/common/modal';
+import { ethers } from 'ethers';
 import { useAppDispatch } from 'hooks/redux';
 import { useState } from 'react';
 import { useMinaSnap } from 'services';
-import { setIsLoading, setListAccounts } from 'slices/walletSlice';
+import { setIsLoading, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ResultCreateAccount } from 'types/account';
 import ImportPrivateKey from './ImportPrivateKey';
 
@@ -15,10 +16,10 @@ type Props = {
 
 const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
   const [nameAccount, setNameAccount] = useState('');
-  const { CreateAccount, AccountList } = useMinaSnap();
+  const { CreateAccount, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = useState(false);
-  const nameDefault = "Account " + index;
+  const nameDefault = 'Account ' + index;
 
   const sendRequest = async () => {
     switch (type) {
@@ -27,8 +28,11 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
           dispatch(setIsLoading(true));
           const account = await CreateAccount(nameAccount || nameDefault);
           const accountList = await AccountList();
+          const accountInfor = await getAccountInfors();
+          const txList = await getTxHistory();
+          dispatch(setTransactions(txList));
           await dispatch(setListAccounts(accountList));
-          onCloseModal(account);
+          onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
           dispatch(setIsLoading(false));
         } catch (error) {
           dispatch(setIsLoading(false));
@@ -49,7 +53,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
       <Container>
         <BoxTitle>Please enter your account name</BoxTitle>
 
-        <Box sx={{ paddingBottom: '5rem' }}>
+        <BoxContent>
           <InputCustom
             sx={{ paddingTop: '5px' }}
             variant={'outlined'}
@@ -59,9 +63,11 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
               setNameAccount(e.target.value);
             }}
           />
-        </Box>
+          {nameAccount.length > 15 && <FormHelperText error>No more than 16 characters </FormHelperText>}
+        </BoxContent>
 
         <ButtonCustom
+          disabled={nameAccount.length > 15}
           variant="contained"
           disableElevation
           onClick={() => {
@@ -80,7 +86,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
       </Container>
       <ModalCommon
         open={openModal}
-        title="Account Name"
+        title="Import Private Key"
         setOpenModal={() => {
           setOpenModal(false);
         }}
@@ -97,31 +103,40 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
 };
 
 const Container = styled(Box)(() => ({
-  paddingTop: '16px',
-  paddingLeft: '5px',
-  paddingRight: '5px',
-  paddingBottom: '0px',
+  width: '276px',
+  height: '246px',
+  padding: '12px 12px 0',
 }));
 const BoxTitle = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
-  fontSize: '10px',
+  fontWeight: '600',
+  fontSize: '12px',
   lineHeight: '12px',
   color: '#000000',
+}));
+
+const BoxContent = styled(Box)(() =>({
+  minHeight: '200px',
 }));
 
 const InputCustom = styled(TextField)<TextFieldProps>({
   backgroundColor: '#FFFFFF',
   width: '100%',
   borderRadius: '8px',
+  
   input: {
     padding: '0.5rem 1rem',
     color: '#707D96',
   },
   '& input': {
-    fontSize: '10px',
+    fontSize: '12px',
   },
+  '& .MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      border: '1px solid #000000',
+    }
+  }
 });
 
 const ButtonCustom = styled(Button)<ButtonProps>({

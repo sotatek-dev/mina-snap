@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React from 'react';
 import { useMinaSnap } from 'services';
-import { setActiveAccount, setIsLoading, setListAccounts } from 'slices/walletSlice';
+import { setActiveAccount, setIsLoading, setListAccounts, setTransactions } from 'slices/walletSlice';
 import styled from 'styled-components';
 import { payloadSendTransaction } from 'types/transaction';
 
@@ -19,7 +19,7 @@ interface ModalProps {
 type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 
 const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucces }: ModalProps) => {
-  const { SendTransaction, AccountList, getAccountInfors } = useMinaSnap();
+  const { SendTransaction, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
   const { activeAccount } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
 
@@ -29,12 +29,15 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       .then(async () => {
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
+        const txList = await getTxHistory();
+        dispatch(setTransactions(txList));
         await dispatch(setListAccounts(accountList));
         dispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
             balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
             accountName: accountInfor.name as string,
+            inferredNonce: accountInfor.inferredNonce as string,
           }),
         );
         closeSucces();
@@ -50,16 +53,17 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   return (
     <Modal
       open={open}
-      title="Confirm Transaction"
+      title="Transaction Details"
       clickOutSide={clickOutSide}
       setOpenModal={setOpenModal}
       txInfoProp={txInfoProp}
       fixedwitdth={true}
+      isClose={true}
     >
       <WTransactionConfirm>
         <BoxAmount>
           <TitleAmount>Amount</TitleAmount>
-          <Amount>{txInfoProp?.amount}</Amount>
+          <Amount>{txInfoProp?.amount} MINA</Amount>
         </BoxAmount>
         <BoxInfo>
           To
@@ -73,7 +77,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
           Fee
           <Content>{txInfoProp?.fee} MINA</Content>
         </BoxInfo>
-        {txInfoProp?.nonce && (
+        {txInfoProp?.nonce != 0 && (
           <BoxInfo>
             Nonce
             <Content>{txInfoProp.nonce}</Content>
@@ -85,7 +89,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
             <Content>{txInfoProp.memo}</Content>
           </BoxInfo>
         )}
-        <Button onClick={handleSend}>Confirm</Button>
+        <ButtonConfirm onClick={handleSend}>Confirm</ButtonConfirm>
       </WTransactionConfirm>
     </Modal>
   );
@@ -98,21 +102,23 @@ const Modal = styled(ModalCommon)<ContainerProps>`
 const WTransactionConfirm = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 15px;
 `;
 
 const BoxAmount = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 0px;
+  padding: 20px 0px 10px;
 `;
 
 const TitleAmount = styled.div`
   font-family: 'Inter Regular';
   font-style: normal;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 15px;
+  color: #767677;
 `;
 
 const Amount = styled.div`
@@ -140,5 +146,9 @@ const Content = styled.div`
   font-size: 14px;
   line-height: 17px;
   color: #000000;
+`;
+
+const ButtonConfirm = styled(Button)`
+  margin-top: 12px;
 `;
 export default ModalConfirm;

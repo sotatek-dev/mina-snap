@@ -1,8 +1,9 @@
 import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
+import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useState } from 'react';
 import { useMinaSnap } from 'services';
-import { setIsLoading, setListAccounts } from 'slices/walletSlice';
+import { setIsLoading, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ResultCreateAccount } from 'types/account';
 
 type Props = {
@@ -12,7 +13,7 @@ type Props = {
 
 const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
   const [privateKey, setPrivateKey] = useState('');
-  const { AccountList, ImportAccount } = useMinaSnap();
+  const { AccountList, ImportAccount, getAccountInfors, getTxHistory } = useMinaSnap();
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.wallet);
 
@@ -24,10 +25,13 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
         privateKey: privateKey,
       };
       const account = await ImportAccount(payload);
+      const accountInfor = await getAccountInfors();
       const accountList = await AccountList();
+      const txList = await getTxHistory();
+      dispatch(setTransactions(txList));
       dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
-      onCloseModal(account);
+      onCloseModal({ ...account, balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string });
     } catch (error) {
       dispatch(setIsLoading(false));
     }
@@ -37,7 +41,7 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
     <>
       <Container>
         <BoxTitle>Please enter Private Key</BoxTitle>
-        <Box sx={{ paddingBottom: '5rem' }}>
+        <BoxContent>
           <InputCustom
             sx={{ paddingTop: '5px' }}
             variant={'outlined'}
@@ -47,7 +51,7 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
               setPrivateKey(e.target.value);
             }}
           />
-        </Box>
+        </BoxContent>
         <ButtonCustom
           className={!privateKey || isLoading ? 'disable' : ''}
           variant="contained"
@@ -64,18 +68,22 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
 };
 
 const Container = styled(Box)(() => ({
-  paddingTop: '16px',
-  paddingLeft: '5px',
-  paddingRight: '5px',
-  paddingBottom: '0px',
+  width: '276px',
+  height: '246px',
+  padding: '12px 12px 0',
 }));
+
 const BoxTitle = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
-  fontSize: '10px',
+  fontWeight: '600',
+  fontSize: '12px',
   lineHeight: '12px',
   color: '#000000',
+}));
+
+const BoxContent = styled(Box)(() =>({
+  minHeight: '200px',
 }));
 
 const InputCustom = styled(TextField)<TextFieldProps>({
@@ -87,7 +95,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
     color: '#707D96',
   },
   '& input': {
-    fontSize: '10px',
+    fontSize: '12px',
   },
 });
 
@@ -97,6 +105,5 @@ const ButtonCustom = styled(Button)<ButtonProps>({
   background: '#594AF1',
   borderRadius: '5px',
 });
-
 
 export default ImportPrivateKey;

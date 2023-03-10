@@ -3,17 +3,19 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface modalState {
   infoModalVisible: boolean;
   minVersionModalVisible: boolean;
+  isShowListAccount: boolean;
 }
 
 const initialState: modalState = {
   infoModalVisible: false,
   minVersionModalVisible: false,
+  isShowListAccount: false
 };
 
 export const modalSlice = createSlice({
   name: 'modal',
   initialState,
-  // The `reducers` field lets us define reducers and generate associated actions
+
   reducers: {
     setInfoModalVisible: (state, { payload }) => {
       state.infoModalVisible = payload;
@@ -21,9 +23,13 @@ export const modalSlice = createSlice({
     setMinVersionModalVisible: (state, { payload }) => {
       state.minVersionModalVisible = payload;
     },
+    setIsShowListAccount: (state, { payload }) => {
+      state.isShowListAccount = payload;
+      console.log(state.isShowListAccount, 'state.isShowListAccount');
+    },
   },
 });
 
-export const { setInfoModalVisible, setMinVersionModalVisible } = modalSlice.actions;
+export const { setInfoModalVisible, setMinVersionModalVisible, setIsShowListAccount } = modalSlice.actions;
 
 export default modalSlice.reducer;

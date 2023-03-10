@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Modal, styled, ModalProps, LinearProgress } from '@mui/material';
 import IconBack from 'assets/icons/icon-back.svg';
+import close from 'assets/icons/close.svg';
 import { useAppSelector } from 'hooks/redux';
 
 interface IModalCommon extends ModalProps {
@@ -11,11 +12,14 @@ interface IModalCommon extends ModalProps {
   fixedheight?: boolean;
   clickOutSide?: boolean;
   fixedwitdth?: boolean;
+  isClose?: boolean;
 }
 
 type ModalCommonProps = React.PropsWithChildren<IModalCommon>;
 
 type ContainerProps = React.PropsWithChildren<Omit<IModalCommon, 'open' | 'setOpenModal'>>;
+
+type header = React.PropsWithChildren<Omit<ContainerProps, 'open' | 'setOpenModal' | 'children'>>;
 
 const ModalCommon = ({
   open,
@@ -24,6 +28,7 @@ const ModalCommon = ({
   children,
   clickOutSide,
   fixedheight,
+  isClose,
   fixedwitdth,
 }: ModalCommonProps) => {
   const { isLoading } = useAppSelector((state) => state.wallet);
@@ -36,18 +41,32 @@ const ModalCommon = ({
       open={open}
     >
       <Container fixedwitdth={fixedwitdth} sx={{ height: fixedheight ? '100%' : 'auto' }}>
-        <ContainerContent>
-          <BoxTitleModal>
-            <CloseIconWrapper onClick={setOpenModal}>
-              <IconBoxBack>
-                <img src={IconBack} />
-              </IconBoxBack>
-            </CloseIconWrapper>
-            {title}
-            {isLoading && <LinearProgressCustom />}
-          </BoxTitleModal>
+        <>
+          {isClose ? (
+            <BoxTitleModalIsClose>
+              {title}
+              <CloseIconWrapperIsClose onClick={setOpenModal}>
+                <IconBoxBackClose>
+                  <img src={close} />
+                </IconBoxBackClose>
+              </CloseIconWrapperIsClose>
+
+              {isLoading && <LinearProgressCustom />}
+            </BoxTitleModalIsClose>
+          ) : (
+            <BoxTitleModal>
+              <CloseIconWrapper onClick={setOpenModal}>
+                <IconBoxBack>
+                  <img src={IconBack} />
+                </IconBoxBack>
+              </CloseIconWrapper>
+              {title}
+              {isLoading && <LinearProgressCustom />}
+            </BoxTitleModal>
+          )}
+
           {children}
-        </ContainerContent>
+        </>
       </Container>
     </Modal>
   );
@@ -61,11 +80,10 @@ const Container = styled(Box)<ContainerProps>((Prop) => ({
   top: '50%',
   background: '#FFFFFF',
   left: '50%',
-  maxHeight: '550px',
   transform: 'translate(-50%, -50%)',
   boxSizing: 'border-box',
-  width: Prop.fixedwitdth ? '310px' : '322px',
-  padding: '16px 0px',
+  width: Prop.fixedwitdth ? '310px' : 'auto',
+  padding: '16px 0px 16px',
   border: '1px solid #ECECF6',
   boxShadow: '0px 0px 3px 1px rgba(0, 0, 0, 0.1)',
   borderRadius: '5px',
@@ -74,20 +92,41 @@ const Container = styled(Box)<ContainerProps>((Prop) => ({
   },
 }));
 
-const ContainerContent = styled(Box)(() => ({
-  padding: '0px 13px',
+const IconBoxBackClose = styled(Box)({
+  '& img': {
+    animation: 'rotation 2s infinite linear',
+    width: '14px',
+    height: '14px',
+  },
+});
+
+const BoxTitleModalIsClose = styled(Box)<header>((Prop) => ({
+  padding: Prop.isClose ? '' : '0px 15px',
+  fontFamily: 'Inter Regular',
+  fontStyle: 'normal',
+  fontWeight: '600',
+  fontSize: '16px',
+  lineHeight: '17px',
+  display: 'flex',
+  color: '#000000',
 }));
 
 const BoxTitleModal = styled(Box)({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
   fontWeight: '600',
-  fontSize: '16px',
+  fontSize: '14px',
   lineHeight: '17px',
   textAlign: 'center',
   color: '#000000',
 });
 
+const CloseIconWrapperIsClose = styled(Box)({
+  position: 'absolute',
+  right: 15,
+  alignSelf: 'flex-end',
+  cursor: 'pointer',
+});
 const CloseIconWrapper = styled(Box)({
   position: 'absolute',
   left: 15,
