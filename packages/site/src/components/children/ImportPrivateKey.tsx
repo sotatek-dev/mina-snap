@@ -77,7 +77,7 @@ const BoxTitle = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
   fontWeight: '600',
-  fontSize: '12px',
+  fontSize: '10px',
   lineHeight: '12px',
   color: '#000000',
 }));
@@ -94,8 +94,8 @@ const InputCustom = styled(TextField)<TextFieldProps>({
     padding: '0.5rem 1rem',
     color: '#707D96',
   },
-  '& input': {
-    fontSize: '12px',
+  '& textarea': {
+    fontSize: '10px',
   },
 });
 
