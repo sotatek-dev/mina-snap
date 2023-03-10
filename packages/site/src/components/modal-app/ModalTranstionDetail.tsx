@@ -18,20 +18,23 @@ interface Props {
   status?: string;
 }
 
+const getStatus = (status: string | undefined) => {
+  switch (status) {
+    case 'PENDING':
+      return TRANSACTION_STATUS.Pending;
+    case 'APPLIED':
+      return TRANSACTION_STATUS.Success;
+    default:
+      return TRANSACTION_STATUS.Fail;
+  }
+};
+
 const ModalTransactionDetail = ({ open, clickOutSide, setOpenModal, transaction }: ModalProps) => {
   return (
     <Modal open={open} title="Transaction Details" clickOutSide={clickOutSide} setOpenModal={setOpenModal}>
       <Wrapper>
         <BoxIcon>
-          <Icon
-            src={
-              transaction?.status == 'PENDING'
-                ? TRANSACTION_STATUS.Pending
-                : transaction?.status == 'APPLIED'
-                ? TRANSACTION_STATUS.Success
-                : TRANSACTION_STATUS.Fail
-            }
-          ></Icon>
+          <Icon src={getStatus(transaction?.status)}></Icon>
           <Status status={transaction?.status}>
             {transaction?.status == 'PENDING' ? 'Wait' : transaction?.status == 'APPLIED' ? 'Success' : 'Failed'}
           </Status>
