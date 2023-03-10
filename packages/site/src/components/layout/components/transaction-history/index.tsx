@@ -99,7 +99,7 @@ const TransactionHistory = () => {
           />
         </TransactionList>
       </Wrapper>
-      {transactions.length > 0 ? (
+      {transactions.length > 10 ? (
         <CheckmoreTx onClick={() => hanldeViewAccount()}>
           Check more transaction history
           <IconLink src={ILink} />
@@ -147,17 +147,6 @@ const Label = styled.div`
   text-align: center;
   padding-bottom: 12px;
   border-bottom: 1.5px solid #000000;
-`;
-
-const NoTx = styled.div`
-  padding-top: 35px;
-  font-style: normal;
-  text-align: center;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 15px;
-  color: #000000;
-  opacity: 0.5;
 `;
 
 const TransactionList = styled.div``;
