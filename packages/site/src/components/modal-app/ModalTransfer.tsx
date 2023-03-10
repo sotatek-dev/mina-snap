@@ -10,6 +10,7 @@ import ModalConfirm from './ModalConfirm';
 import { useAppSelector } from 'hooks/redux';
 import { payloadSendTransaction } from 'types/transaction';
 import { addressValid } from 'helpers/formatAccountAddress';
+import { blockInvalidChar, toPlainString } from 'utils/utils';
 
 interface ModalProps {
   open: boolean;
@@ -75,6 +76,10 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setNonce(inferredNonce)
   }
 
+  const handleOnChangeBalance = (event:any) => {
+      setAmount(event.target.value)
+  }
+
   useEffect(() => {
     if (addressValid(address) && (Number(amount) > 0 && Number(amount) <= Number(balance)) && (gasFee > 0) && isPositiveInteger(Number(nonce))) {
       setDisabled(false);
@@ -122,12 +127,13 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
               <MaxAmount onClick={() => setAmount(balance.toString())}>Max</MaxAmount>
             </WTitle>
             <Input
+              onKeyDown={blockInvalidChar}
               value={amount}
               type="number"
               variant="outlined"
               placeholder="0"
               onChange={(event) => {
-                setAmount(event.target.value);
+                handleOnChangeBalance(event);
               }}
               fullWidth
               size="small"
@@ -160,7 +166,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             />
             <WTitle>
               <Tittle>Fee</Tittle>
-              <Balance>{gasFee}</Balance>
+              <Balance>{toPlainString(gasFee)}</Balance>
             </WTitle>
             <WOption>
               <Option
@@ -198,6 +204,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
               <AdvancedContent>
                 <Tittle>Transaction Fee</Tittle>
                 <Input
+                  onKeyDown={blockInvalidChar}
                   type="number"
                   variant="outlined"
                   placeholder={gasFee.toString()}
@@ -214,12 +221,15 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                       fontSize:'10px',
                     },
                   }}
-                  isvalidvalue={gasFee <= 0||gasFee > 10}
+                  isvalidvalue={gasFee < GAS_FEE.slow||gasFee > 10}
                 />
                 {gasFee > 10 && <Message error>Fees are much higher than average</Message>}
                 {gasFee <= 0 && <Message error>Please enter a valid transaction fee</Message>}
+                {gasFee < GAS_FEE.slow && gasFee > 0 && <Message error>Invalid user command. Fee {toPlainString(gasFee)} is less than the minimum fee of {GAS_FEE.slow}.</Message>}
+
                 <Tittle>Nonce</Tittle>
                 <Input
+                  onKeyDown={blockInvalidChar}
                   variant="outlined"
                   placeholder="Nonce"
                   fullWidth
@@ -236,7 +246,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   }}
                   isvalidvalue={!isPositiveInteger(Number(nonce)) && nonce ? true: false}
                 />
-                {!isPositiveInteger(Number(nonce)) && nonce && <Message error>Please enter a positive integer</Message>}
+                {!isPositiveInteger(Number(nonce)) && nonce && <Message error>Please enter a valid nonce</Message>}
               </AdvancedContent>
             )}
           </AdvancedBox>
