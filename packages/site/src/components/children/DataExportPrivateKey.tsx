@@ -56,7 +56,7 @@ const ButtonCustom = styled(Button)<ButtonProps>({
   fontWeight: '600',
   padding: '0',
   minWidth: '20px',
-  fontSize: '10px',
+  fontSize: '12px',
 });
 const BoxCustomText = styled(Box)({
   fontFamily: 'Inter Regular',
