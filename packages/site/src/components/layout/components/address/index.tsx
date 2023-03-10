@@ -4,7 +4,7 @@ import ICoppy from 'assets/icons/icon-coppy.svg';
 import { useAppSelector } from 'hooks/redux';
 import Button from 'components/common/button';
 import IThreeDot from 'assets/icons/icon-kebab-menu.svg';
-import { Box } from '@mui/material';
+import { Box, Snackbar } from '@mui/material';
 import { PopperTooltipView } from 'components/common/tooltip';
 import ILink from "assets/icons/icon-link.svg";
 import IAccount from "assets/icons/icon-account.svg";
@@ -27,6 +27,12 @@ const Address = () => {
     setOpenModal(true);
   }
 
+  const [open, setOpen] = useState(false);
+  const handleOnClickCoppy = () => {
+    handelCoppy(activeAccount as string, "#walletAddress");
+    setOpen(true)
+  }
+
   return (
     <Wrapper>
       <BoxInfo>
@@ -35,7 +41,7 @@ const Address = () => {
           {formatAccountAddress(activeAccount)}
           <IconCoppy
             src={ICoppy}
-            onClick={()=>handelCoppy(activeAccount as string, "#walletAddress")}
+            onClick={()=>handleOnClickCoppy()}
           />
         </WalletAddress>
       </BoxInfo>
@@ -53,16 +59,29 @@ const Address = () => {
         </ButtonMenu>
       </KebabMenu>
       <ModalCommon
-            open={openModal}
-            title='Account Details'
-            setOpenModal={() => {
-              setOpenModal(false);
-            }}
-            fixedheight={false}
-            fixedwitdth={false}
+        open={openModal}
+        title='Account Details'
+        setOpenModal={() => {
+          setOpenModal(false);
+        }}
+        fixedheight={false}
+        fixedwitdth={false}
+      >
+        <DetailsAccout></DetailsAccout>
+      </ModalCommon>
+      <Message
+            autoHideDuration={2000}
+            open={open}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center"
+          }}
           >
-            <DetailsAccout></DetailsAccout>
-          </ModalCommon>
+            <ContentMessage>
+              Copied!
+            </ContentMessage>
+          </Message>
     </Wrapper>
   );
 };
@@ -149,5 +168,30 @@ const ButtonMenu = styled(Button)`
 const PointMenu = styled.img`
   text-align: center;
 `;
+
+const Message = styled(Snackbar)({
+  '&.MuiSnackbar-root': {
+    width: '66px',
+    height: '34px',
+  },
+  '&.MuiSnackbar-anchorOriginBottomCenter': {
+    top: '5%',
+  }
+});
+
+const ContentMessage = styled(Box)({
+  width: '100%',
+  height: '100%',
+  background: '#000000',
+  borderRadius: '5px',
+  fontStyle: 'normal',
+  fontWeight: '300',
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#FFFFFF',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
 
 export default Address;

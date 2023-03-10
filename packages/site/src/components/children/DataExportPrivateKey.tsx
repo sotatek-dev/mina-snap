@@ -1,6 +1,7 @@
-import { Box, Button, ButtonProps, styled } from '@mui/material';
+import { Box, Button, ButtonProps, Snackbar, styled } from '@mui/material';
 import coppy from 'assets/icons/coppy.svg';
 import { handelCoppy } from 'helpers/handleCoppy';
+import { useState } from 'react';
 
 type Props = {
   address?: string;
@@ -9,6 +10,12 @@ type Props = {
 };
 
 const DataExportPrivateKey = ({ address, privateKey, onDone }: Props) => {
+  const [open, setOpen] = useState(false);
+  const handleOnClickCoppy = () => {
+    handelCoppy(privateKey as string, "#privateKey");
+    setOpen(true)
+  }
+
   return (
     <>
       <Container>
@@ -16,12 +23,25 @@ const DataExportPrivateKey = ({ address, privateKey, onDone }: Props) => {
         <BoxContentAddress>{address}</BoxContentAddress>
         <ContainerContent>
           <BoxCustomText id="privateKey">{privateKey}</BoxCustomText>
-          <ButtonCustom onClick={()=>handelCoppy(privateKey as string, "#privateKey")} variant="text" disableElevation>
+          <ButtonCustom onClick={()=>handleOnClickCoppy()} variant="text" disableElevation>
             <CustomImg>
               <img src={coppy}></img>
             </CustomImg>
             Copy to clipboard
           </ButtonCustom>
+          <Message
+            autoHideDuration={2000}
+            open={open}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center"
+          }}
+          >
+            <ContentMessage>
+              Copied!
+            </ContentMessage>
+          </Message>
         </ContainerContent>
         <BoxAccton>
           <ButtonCustomDone variant="contained" disableElevation onClick={onDone}>
@@ -58,6 +78,32 @@ const ButtonCustom = styled(Button)<ButtonProps>({
   minWidth: '20px',
   fontSize: '12px',
 });
+
+const Message = styled(Snackbar)({
+  '&.MuiSnackbar-root': {
+    width: '66px',
+    height: '34px',
+  },
+  '&.MuiSnackbar-anchorOriginBottomCenter': {
+    top: '40%',
+  }
+});
+
+const ContentMessage = styled(Box)({
+  width: '100%',
+  height: '100%',
+  background: '#000000',
+  borderRadius: '5px',
+  fontStyle: 'normal',
+  fontWeight: '300',
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#FFFFFF',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
+
 const BoxCustomText = styled(Box)({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
