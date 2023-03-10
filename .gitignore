@@ -222,3 +222,5 @@ terraform.rc
 #package
 
 package-lock.json
+./packages/site/package-lock.json
+./packages/snap/package-lock.json
