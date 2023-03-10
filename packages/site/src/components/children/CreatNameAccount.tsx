@@ -22,6 +22,14 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
   const [openModal, setOpenModal] = useState(false);
   const nameDefault = 'Account ' + index;
 
+  const handleOnChangeAccountName = (value:string) => {
+    if (value.length > 16)
+    {
+      return 0;
+    }
+    else setNameAccount(value);
+  }
+
   const sendRequest = async () => {
     switch (type) {
       case 'create':
@@ -63,15 +71,11 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
             variant={'outlined'}
             placeholder={nameDefault}
             value={nameAccount}
-            onChange={(e) => {
-              setNameAccount(e.target.value);
-            }}
+            onChange={(e) => handleOnChangeAccountName(e.target.value)}
           />
-          {nameAccount.length > 15 && <FormHelperText error>No more than 16 characters </FormHelperText>}
         </BoxContent>
 
         <ButtonCustom
-          disabled={nameAccount.length > 15}
           variant="contained"
           disableElevation
           onClick={() => {

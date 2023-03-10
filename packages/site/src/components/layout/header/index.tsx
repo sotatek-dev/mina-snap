@@ -20,7 +20,6 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { ResultCreateAccount } from 'types/account';
 import DetailsAccoust from 'components/children/DetailsAccoust';
 import { ethers } from 'ethers';
-import { formatBalance } from 'helpers/formatAccountAddress';
 import { setIsShowListAccount } from 'slices/modalSlice';
 
 const Header = () => {
