@@ -83,7 +83,7 @@ const Container = styled(Box)<ContainerProps>((Prop) => ({
   transform: 'translate(-50%, -50%)',
   boxSizing: 'border-box',
   width: Prop.fixedwitdth ? '310px' : 'auto',
-  padding: '16px 0px 16px',
+  padding: '24px 0px 24px',
   border: '1px solid #ECECF6',
   boxShadow: '0px 0px 3px 1px rgba(0, 0, 0, 0.1)',
   borderRadius: '5px',

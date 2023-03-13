@@ -1,7 +1,6 @@
 import Button from 'components/common/button';
 import ModalCommon from 'components/common/modal';
 import { ethers } from 'ethers';
-import { formatBalance } from 'helpers/formatAccountAddress';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React from 'react';
 import { useMinaSnap } from 'services';
@@ -21,7 +20,8 @@ type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 
 const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucces }: ModalProps) => {
   const { SendTransaction, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
-  const { activeAccount } = useAppSelector((state) => state.wallet);
+  const {inferredNonce, activeAccount } = useAppSelector((state) => state.wallet);
+  
   const dispatch = useAppDispatch();
 
   const handleSend = async () => {
@@ -78,7 +78,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
           Fee
           <Content>{txInfoProp?.fee} MINA</Content>
         </BoxInfo>
-        {txInfoProp?.nonce != 0 && (
+        {txInfoProp?.nonce != Number(inferredNonce) && (
           <BoxInfo>
             Nonce
             <Content>{txInfoProp.nonce}</Content>

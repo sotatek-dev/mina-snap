@@ -57,7 +57,7 @@ const TransactionHistory = () => {
         <Label>HISTORY</Label>
         <TransactionList>
           {transactions.length > 0 ? (
-            transactions.map((item, index) => {
+            transactions.slice(0,10).map((item, index) => {
               return (
                 <TracsactionItem
                   key={index}

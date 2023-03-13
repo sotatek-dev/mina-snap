@@ -30,7 +30,7 @@ const DataExportPrivateKey = ({ address, privateKey, onDone }: Props) => {
             Copy to clipboard
           </ButtonCustom>
           <Message
-            autoHideDuration={2000}
+            autoHideDuration={5000}
             open={open}
             onClose={() => setOpen(false)}
             anchorOrigin={{

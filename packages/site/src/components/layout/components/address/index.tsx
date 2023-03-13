@@ -55,15 +55,17 @@ const Address = () => {
           disableTouchListener
           title="Copied!"
         >
-          <WalletAddress
-            id="walletAddress"
-            onClick={() => {
-              handleOnClickCoppy();
-            }}
-          >
-            {formatAccountAddress(activeAccount)}
-            <IconCoppy src={ICoppy} />
-          </WalletAddress>
+          <BoxWalletAddress> 
+            <WalletAdress
+              id="walletAddress"
+              onClick={() => {
+                handleOnClickCoppy();
+              }}
+            >
+              {formatAccountAddress(activeAccount)}
+              <IconCoppy src={ICoppy} />
+            </WalletAdress>
+          </BoxWalletAddress>
         </Tooltip>
       </BoxInfo>
       <KebabMenu
@@ -124,17 +126,21 @@ const AccountName = styled.div`
   padding: 8px 0 3px;
 `;
 
-const WalletAddress = styled.div`
+const BoxWalletAddress = styled.div`
   font-style: normal;
   font-weight: 300;
   font-size: 12px;
   line-height: 15px;
   letter-spacing: -0.03em;
   color: #535a61;
+`;
+
+const WalletAdress = styled.div`
+  display: inline-block;
   :hover {
     cursor: pointer;
   }
-`;
+`
 
 const IconCoppy = styled.img`
   padding-left: 5px;

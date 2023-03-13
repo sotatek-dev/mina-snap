@@ -136,7 +136,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
 
   input: {
     padding: '0.5rem',
-    color: '#707D96',
+    color: '#000000',
   },
   '& input': {
     fontSize: '12px',
