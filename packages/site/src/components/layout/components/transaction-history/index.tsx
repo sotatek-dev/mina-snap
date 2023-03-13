@@ -185,6 +185,7 @@ const TxInfo = styled.div`
 const Status = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-top: 5px;
 `;
 
 const Address = styled.div``;
@@ -199,6 +200,7 @@ const Detail = styled.div`
   font-size: 12px;
   line-height: 15px;
   letter-spacing: -0.03em;
+  color: #767677;
 `;
 
 const TxStatus = styled.div<Props>`

@@ -101,6 +101,7 @@ const ListCustom = styled(List)({
 
 const Item = styled(ListItem)({
   padding: '0 12px',
+  height: '40px',
   ":hover": {
     cursor: 'pointer',
     background: '#F1F1F1'
@@ -113,7 +114,7 @@ const BoxContentTitle = styled(Box)({
   fontWeight: '600',
   fontSize: '10px',
   lineHeight: '12px',
-  padding: '16px 12px 0',
+  padding: '20px 12px 0',
   color: '#000000',
 });
 

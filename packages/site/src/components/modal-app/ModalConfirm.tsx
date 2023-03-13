@@ -1,12 +1,14 @@
+import { Box, Snackbar } from '@mui/material';
 import Button from 'components/common/button';
 import ModalCommon from 'components/common/modal';
 import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import React from 'react';
+import React, { useState } from 'react';
 import { useMinaSnap } from 'services';
 import { setActiveAccount, setIsLoading, setListAccounts, setTransactions } from 'slices/walletSlice';
 import styled from 'styled-components';
 import { payloadSendTransaction } from 'types/transaction';
+import { getRealErrorMsg, toPlainString } from 'utils/utils';
 
 interface ModalProps {
   open: boolean;
@@ -21,11 +23,17 @@ type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucces }: ModalProps) => {
   const { SendTransaction, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
   const {inferredNonce, activeAccount } = useAppSelector((state) => state.wallet);
+
+  const [message, setMessage] = useState('');
+  const [openToastMsg, setOpenToastMsg] = useState(false);
+
   
   const dispatch = useAppDispatch();
 
   const handleSend = async () => {
     dispatch(setIsLoading(true));
+    // console.log('x', await SendTransaction(txInfoProp));
+    
     await SendTransaction(txInfoProp)
       .then(async () => {
         const accountList = await AccountList();
@@ -43,8 +51,10 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
         );
         closeSucces();
       })
-      .catch((e) => {
-        console.log(e);
+      .catch((e:any) => {
+        const message = getRealErrorMsg(e.message);
+        setMessage(message);
+        setOpenToastMsg(true);
         dispatch(setIsLoading(false));
       })
       .finally(() => {
@@ -76,7 +86,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
         </BoxInfo>
         <BoxInfo>
           Fee
-          <Content>{txInfoProp?.fee} MINA</Content>
+          <Content>{toPlainString(txInfoProp?.fee)} MINA</Content>
         </BoxInfo>
         {txInfoProp?.nonce != Number(inferredNonce) && (
           <BoxInfo>
@@ -91,6 +101,17 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
           </BoxInfo>
         )}
         <ButtonConfirm onClick={handleSend}>Confirm</ButtonConfirm>
+        <Message
+          autoHideDuration={5000}
+          open={openToastMsg}
+          onClose={() => setOpenToastMsg(false)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          <ContentMessage>{message}</ContentMessage>
+        </Message>
       </WTransactionConfirm>
     </Modal>
   );
@@ -152,4 +173,31 @@ const Content = styled.div`
 const ButtonConfirm = styled(Button)`
   margin-top: 12px;
 `;
+
+const Message = styled(Snackbar)({
+  '&.MuiSnackbar-root': {
+    width: '275px',
+    height: '34px',
+    padding: '8px 4px',
+    background: '#000000',
+    borderRadius: '5px',
+  },
+  '&.MuiSnackbar-anchorOriginBottomCenter': {
+    top: '47%',
+  },
+});
+
+const ContentMessage = styled(Box)({
+  width: '100%',
+  height: '100%',
+  fontStyle: 'normal',
+  fontWeight: '300',
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#FFFFFF',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
+
 export default ModalConfirm;
