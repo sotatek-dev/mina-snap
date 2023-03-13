@@ -75,7 +75,7 @@ export async function submitPayment(signedPayment: Signed<Payment>, networkConfi
 
   await popupNotify(`Payment ${data.sendPayment.payment.hash.substring(0, 10)}... has been submitted`);
 
-  return data;
+  return data.sendPayment.payment;
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
@@ -140,5 +140,5 @@ export const submitStakeDelegation = async (signedStakeTx: Signed<StakeDelegatio
 
   await popupNotify(`Stake delegation ${data.sendDelegation.delegation.hash.substring(0, 10)}... has been submitted`);
 
-  return data;
+  return data.sendDelegation.delegation;
 };
