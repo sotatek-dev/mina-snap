@@ -91,7 +91,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   useEffect(() => {
     if (
       address &&
-      Number(amount) > 0 &&
+      Number(amount) >= 0 &&
       Number(amount) <= Number(balance) &&
       gasFee >= 0 &&
       isPositiveInteger(Number(nonce))
