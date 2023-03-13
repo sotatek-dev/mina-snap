@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, TextField } from '@mui/material';
+import { Box, FormControl, FormHelperText, Snackbar, TextField } from '@mui/material';
 import ButtonCommon from 'components/common/button';
 import Modal from 'components/common/modal';
 import { useEffect, useState } from 'react';
@@ -32,6 +32,8 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const [memo, setMemo] = useState('');
   const [gasFee, setGasFee] = useState(GAS_FEE.default);
   const [nonce, setNonce] = useState(inferredNonce);
+  const [message, setMessage] = useState('');
+  const [openToastMsg, setOpenToastMsg] = useState(false);
 
   const [txInfo, setTxInfo] = useState<payloadSendTransaction>({
     to: '',
@@ -50,7 +52,14 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   };
 
   const handleClick = () => {
-    setShowModal(disabled != true);
+    if(addressValid(address)) {
+      setShowModal(disabled != true);
+    }
+    else{
+      setMessage('Please enter valid address');
+      setOpenToastMsg(true);
+    }
+
     const tx = {
       to: address,
       amount: Number(balance) == Number(amount) ? Number(amount) - Number(gasFee) : Number(amount),
@@ -81,10 +90,10 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 
   useEffect(() => {
     if (
-      addressValid(address) &&
+      address &&
       Number(amount) > 0 &&
       Number(amount) <= Number(balance) &&
-      gasFee > 0 &&
+      gasFee >= 0 &&
       isPositiveInteger(Number(nonce))
     ) {
       setDisabled(false);
@@ -109,6 +118,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             <Tittle>To</Tittle>
 
             <Input
+              autoComplete='off'
               value={address}
               onChange={(event) => {
                 setAddress(event.target.value);
@@ -126,7 +136,6 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                 },
               }}
             />
-            {!addressValid(address) && address && <Message error>Please enter valid address</Message>}
             <WTitle>
               <Tittle>Amount</Tittle>
               <Balance>Balance: {balance}</Balance>
@@ -153,7 +162,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
               }}
               isvalidvalue={Number(amount) < 0 || Number(amount) > Number(balance)}
             />
-            {Number(amount) < 0 && <Message error>Please enter a valid amount</Message>}
+            {Number(amount) < 0 && <Message error>Please enter a valid transaction amount</Message>}
             {Number(amount) > Number(balance) && <Message error>Insufficient balance</Message>}
             <Tittle>Memo(Optional)</Tittle>
             <Input
@@ -227,15 +236,10 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                       fontSize: '10px',
                     },
                   }}
-                  isvalidvalue={gasFee < GAS_FEE.slow || gasFee > 10}
+                  isvalidvalue={gasFee < 0}
                 />
-                {gasFee > 10 && <Message error>Fees are much higher than average</Message>}
-                {gasFee <= 0 && <Message error>Please enter a valid transaction fee</Message>}
-                {gasFee < GAS_FEE.slow && gasFee > 0 && (
-                  <Message error>
-                    Invalid user command. Fee {toPlainString(gasFee)} is less than the minimum fee of {GAS_FEE.slow}.
-                  </Message>
-                )}
+                {gasFee > 10 && <Message >Fees are much higher than average</Message>}
+                {gasFee < 0 && <Message error>Please enter a valid transaction fee</Message>}
                 <Tittle>Nonce</Tittle>
                 <Input
                   onKeyDown={blockInvalidInt}
@@ -273,6 +277,17 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             setOpenModal={handleClickOutSide}
             txInfoProp={txInfo}
           />
+          <ToastMessage
+            autoHideDuration={5000}
+            open={openToastMsg}
+            // onClose={() => setOpenToastMsg(false)}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+          >
+            <ContentMessage>{message}</ContentMessage>
+          </ToastMessage>
         </BoxButton>
       </FormControl>
     </Modal>
@@ -343,7 +358,7 @@ const Input = styled(TextField)<Props>`
         border: 1px solid ${(props) => (props.isvalidvalue ? '#d32f2f' : '#594AF1')};
       }
       &:hover fieldset {
-        border: 1px solid #594AF1;
+        border: 1px solid ${(props) => (props.isvalidvalue ? '#d32f2f' : '#594AF1')};
       },
     }
 `;
@@ -418,5 +433,30 @@ const Message = styled(FormHelperText)`
     margin: 0;
   }
 `;
+
+const ToastMessage = styled(Snackbar)({
+  '&.MuiSnackbar-root': {
+    width: '207px',
+    height: '34px',
+    background: '#000000',
+    borderRadius: '5px',
+  },
+  '&.MuiSnackbar-anchorOriginBottomCenter': {
+    top: '37%',
+  },
+});
+
+const ContentMessage = styled(Box)({
+  width: '100%',
+  height: '100%',
+  fontStyle: 'normal',
+  fontWeight: '300',
+  fontSize: '12px',
+  lineHeight: '15px',
+  color: '#FFFFFF',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});
 
 export default ModalTransfer;

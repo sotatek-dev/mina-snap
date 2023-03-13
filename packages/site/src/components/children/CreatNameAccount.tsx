@@ -67,6 +67,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
 
         <BoxContent>
           <InputCustom
+            autoComplete='off'
             sx={{ paddingTop: '5px' }}
             variant={'outlined'}
             placeholder={nameDefault}
