@@ -38,11 +38,13 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
         ...account,
         balance: formatBalance(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei')) as string,
       });
-    } catch (error) {
+    } catch (error:any) {
+      setMessage(error?.message);
+      setOpen(true);
       dispatch(setIsLoading(false));
     }
   };
-
+  
   return (
     <>
       <Container>
