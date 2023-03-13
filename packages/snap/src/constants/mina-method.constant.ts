@@ -15,4 +15,6 @@ export enum EMinaMethod {
   EDIT_ACCOUNT_NAME = 'mina_editAccountName',
   ACCOUNT_LIST = 'mina_accountList',
   EXPORT_PRIVATE_KEY = 'mina_exportPrivateKey',
+  SEND_STAKE_DELEGATION = 'mina_sendStakeDelegation',
+  VERIFY_MESSAGE = 'mina_verifyMessage',
 }

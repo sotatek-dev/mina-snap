@@ -83,3 +83,19 @@ export type HistoryOptions = {
     | 'TOKEN_ASC';
   canonical: boolean;
 };
+
+export type VerifyMessageInput = {
+  publicKey: string;
+  payload: string;
+  signature: {
+    field: string;
+    scalar: string;
+  }
+}
+
+export type StakeTxInput = {
+  to: string;
+  fee: number;
+  memo?: string;
+  nonce?: number;
+};

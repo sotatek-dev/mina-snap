@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Payment, Signed } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
+import { Payment, Signed, StakeDelegation } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import { gql } from '../graphql';
 import {
   getTxHistoryQuery,
@@ -7,8 +7,9 @@ import {
   sendPaymentQuery,
   getTxStatusQuery,
   TxPendingQuery,
+  sendStakeDelegationGql,
 } from '../graphql/gqlparams';
-import { HistoryOptions, NetworkConfig, TxInput } from '../interfaces';
+import { HistoryOptions, NetworkConfig, StakeTxInput, TxInput } from '../interfaces';
 import { getMinaClient } from '../util/mina-client.util';
 import { popupNotify } from '../util/popup.util';
 import { getAccountInfo } from './account';
@@ -66,7 +67,7 @@ export const signPayment = async (
  * @param networkConfig - Selected network config.
  * @returns `null` if error.
  */
-export async function sendPayment(signedPayment: Signed<Payment>, networkConfig: NetworkConfig) {
+export async function submitPayment(signedPayment: Signed<Payment>, networkConfig: NetworkConfig) {
   const query = sendPaymentQuery(false);
   const variables = { ...signedPayment.data, ...signedPayment.signature };
 
@@ -104,3 +105,40 @@ export async function getTxStatus(networkConfig: NetworkConfig, paymentId: strin
 
   return data;
 }
+
+export const signStakePayment = async (
+  args: StakeTxInput,
+  publicKey: string,
+  privateKey: string,
+  networkConfig: NetworkConfig,
+) => {
+  const client = getMinaClient(networkConfig);
+  const { to, fee, memo, nonce } = args;
+  const { account } = await getAccountInfo(publicKey, networkConfig);
+  try {
+    let decimal = new BigNumber(10).pow(networkConfig.token.decimals);
+    let sendFee = new BigNumber(fee).multipliedBy(decimal).toNumber();
+    const stakeTx = {
+      to,
+      from: publicKey,
+      fee: sendFee,
+      nonce: nonce || account.inferredNonce,
+      memo,
+    };
+    return client.signStakeDelegation(stakeTx, privateKey);
+  } catch (err) {
+    console.error('Sign stake delegation tx error:', err.message);
+    throw err;
+  }
+};
+
+export const submitStakeDelegation = async (signedStakeTx: Signed<StakeDelegation>, networkConfig: NetworkConfig) => {
+  const txGql = sendStakeDelegationGql(false);
+  const variables = { ...signedStakeTx.data, ...signedStakeTx.signature };
+
+  const data = await gql(networkConfig.gqlUrl, txGql, variables);
+
+  await popupNotify(`Stake delegation ${data.sendDelegation.delegation.hash.substring(0, 10)}... has been submitted`);
+
+  return data;
+};
