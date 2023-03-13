@@ -38,7 +38,9 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
       dispatch(setTransactions(txList));
       dispatch(setIsLoading(false));
       await dispatch(setListAccounts(accountList));
-    } catch (error) {
+    } catch (error: any) {
+      setMessage(error?.message);
+      setOpen(true);
       dispatch(setIsLoading(false));
     }
   };

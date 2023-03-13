@@ -1,4 +1,4 @@
-import { Box, Button, ButtonProps, FormHelperText, styled, TextField, TextFieldProps } from '@mui/material';
+import { Box, Button, ButtonProps, styled, TextField, TextFieldProps } from '@mui/material';
 import ModalCommon from 'components/common/modal';
 import { ethers } from 'ethers';
 import { formatBalance } from 'helpers/formatAccountAddress';
@@ -112,7 +112,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
 
 const Container = styled(Box)(() => ({
   width: '276px',
-  height: '246px',
+  height: '251px',
   padding: '12px 12px 0',
 }));
 const BoxTitle = styled(Box)(() => ({
@@ -135,7 +135,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   borderRadius: '8px',
 
   input: {
-    padding: '0.5rem 1rem',
+    padding: '0.5rem',
     color: '#707D96',
   },
   '& input': {

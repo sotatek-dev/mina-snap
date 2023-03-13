@@ -58,7 +58,7 @@ const BoxAccton = styled(Box)({
   textAlign: 'center',
 });
 const ButtonCustomDone = styled(Button)<ButtonProps>({
-  width: '270px',
+  width: '256px',
   textTransform: 'none',
   background: '#594AF1',
   borderRadius: '5px',
@@ -66,7 +66,7 @@ const ButtonCustomDone = styled(Button)<ButtonProps>({
 
 });
 const CustomImg = styled(Box)({
-  height: '14px',
+  height: '21px',
   marginRight: '5px',
 });
 
@@ -85,7 +85,7 @@ const Message = styled(Snackbar)({
     height: '34px',
   },
   '&.MuiSnackbar-anchorOriginBottomCenter': {
-    top: '40%',
+    top: '65%',
   }
 });
 
@@ -150,7 +150,7 @@ const ContainerContent = styled(Box)(() => ({
 
 const Container = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
-  width: '300px',
+  width: '280px',
 }));
 
 export default DataExportPrivateKey;
