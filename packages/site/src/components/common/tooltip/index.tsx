@@ -81,7 +81,14 @@ export const PopperTooltipView = ({
 
       {visible && (
         <PopperContainer ref={setTooltipRef} {...getTooltipProps({})}>
-          <ToolTipContent style={contentStyle}>{content}</ToolTipContent>
+          <ToolTipContent
+            style={contentStyle}
+            onClick={() => {
+              setPopperVisible(false);
+            }}
+          >
+            {content}
+          </ToolTipContent>
         </PopperContainer>
       )}
     </>

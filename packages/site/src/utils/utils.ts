@@ -118,13 +118,15 @@ export const isFlask = async () => {
   }
 };
 
-export const blockInvalidChar = (e:any) => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+export const blockInvalidChar = (e: any) => ['e', 'E', '+', '-',].includes(e.key) && e.preventDefault();
 
-export const toPlainString =(num:number) => {
-  return (''+ +num).replace(/(-?)(\d*)\.?(\d*)e([+-]\d+)/,
-    function(a,b,c,d,e) {
+export const blockInvalidInt = (e: any) => ['e', 'E', '+', '-', '.'].includes(e.key) && e.preventDefault();
+
+export const toPlainString = (num: number) => {
+  return ('' + +num).replace(/(-?)(\d*)\.?(\d*)e([+-]\d+)/,
+    function (a, b, c, d, e) {
       return e < 0
-        ? b + '0.' + Array(1-e-c.length).join("0") + c + d
-        : b + c + d + Array(e-d.length+1).join("0");
+        ? b + '0.' + Array(1 - e - c.length).join("0") + c + d
+        : b + c + d + Array(e - d.length + 1).join("0");
     });
 }

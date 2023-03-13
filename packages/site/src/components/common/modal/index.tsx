@@ -35,7 +35,7 @@ const ModalCommon = ({
   return (
     <Modal
       onBackdropClick={() => {
-        setOpenModal;
+        setOpenModal();
       }}
       disableAutoFocus={true}
       open={open}

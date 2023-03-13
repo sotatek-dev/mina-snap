@@ -65,12 +65,26 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
     }
   };
 
+  const handleChangeInput = (value: string) => {
+    if (value.length < 16) {
+      setNameAccount(value);
+      return;
+    }
+    return;
+  };
+
   useEffect(() => {
     setNameAccount('');
   }, [open]);
 
   return (
-    <Modal disableAutoFocus={true} open={open}>
+    <Modal
+      disableAutoFocus={true}
+      open={open}
+      onBackdropClick={() => {
+        onClose();
+      }}
+    >
       <Container>
         <ContainerContent>
           <BoxTitleModal>Change Account Name</BoxTitleModal>
@@ -81,7 +95,7 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
             value={nameAccount}
             disabled={isLoading}
             onChange={(e) => {
-              setNameAccount(e.target.value);
+              handleChangeInput(e.target.value);
             }}
           />
         </ContainerContent>

@@ -10,7 +10,7 @@ import ModalConfirm from './ModalConfirm';
 import { useAppSelector } from 'hooks/redux';
 import { payloadSendTransaction } from 'types/transaction';
 import { addressValid } from 'helpers/formatAccountAddress';
-import { blockInvalidChar, toPlainString } from 'utils/utils';
+import { blockInvalidChar, blockInvalidInt, toPlainString } from 'utils/utils';
 
 interface ModalProps {
   open: boolean;
@@ -32,7 +32,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const [memo, setMemo] = useState('');
   const [gasFee, setGasFee] = useState(GAS_FEE.default);
   const [nonce, setNonce] = useState(inferredNonce);
-  
+
   const [txInfo, setTxInfo] = useState<payloadSendTransaction>({
     to: '',
     amount: 0,
@@ -53,35 +53,40 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setShowModal(disabled != true);
     const tx = {
       to: address,
-      amount:  Number(balance) == Number(amount) ? Number(amount) - Number(gasFee): Number(amount),
+      amount: Number(balance) == Number(amount) ? Number(amount) - Number(gasFee) : Number(amount),
       memo: memo,
       fee: Number(gasFee),
       nonce: Number(nonce),
     };
     setTxInfo(tx);
   };
-  
+
   const handleClickOutSide = () => {
     setShowModal(false);
   };
 
-  const isPositiveInteger = (num:number) => {
+  const isPositiveInteger = (num: number) => {
     return Number.isInteger(num) && num > 0;
-  }
+  };
 
-  const handleNonce = (value: string) => {
-    if(value){
-      setNonce(value)
-    } else
-    setNonce(inferredNonce)
-  }
+  const handleNonce = (e: any) => {
+    if (e.target.value) {
+      setNonce(e.target.value);
+    } else setNonce(inferredNonce);
+  };
 
-  const handleOnChangeBalance = (event:any) => {
-      setAmount(event.target.value)
-  }
+  const handleOnChangeBalance = (event: any) => {
+    setAmount(event.target.value);
+  };
 
   useEffect(() => {
-    if (addressValid(address) && (Number(amount) > 0 && Number(amount) <= Number(balance)) && (gasFee > 0) && isPositiveInteger(Number(nonce))) {
+    if (
+      addressValid(address) &&
+      Number(amount) > 0 &&
+      Number(amount) <= Number(balance) &&
+      gasFee > 0 &&
+      isPositiveInteger(Number(nonce))
+    ) {
       setDisabled(false);
     } else {
       setDisabled(true);
@@ -117,7 +122,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   height: '34px',
                   margin: '0 7px',
                   padding: '0px 0px',
-                  fontSize:'10px',
+                  fontSize: '10px',
                 },
               }}
             />
@@ -143,13 +148,13 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   height: '34px',
                   margin: '0 7px',
                   padding: '0px 0px',
-                  fontSize:'10px',
+                  fontSize: '10px',
                 },
               }}
-              isvalidvalue={(Number(amount) < 0) || (Number(amount) > Number(balance))}
+              isvalidvalue={Number(amount) < 0 || Number(amount) > Number(balance)}
             />
-            {(Number(amount) < 0) && <Message error>Please enter a valid amount</Message>}
-            {(Number(amount) > Number(balance)) && <Message error>Insufficient balance</Message>}
+            {Number(amount) < 0 && <Message error>Please enter a valid amount</Message>}
+            {Number(amount) > Number(balance) && <Message error>Insufficient balance</Message>}
             <Tittle>Memo(Optional)</Tittle>
             <Input
               variant="outlined"
@@ -161,7 +166,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   height: '34px',
                   margin: '0 7px',
                   padding: '0px 0px',
-                  fontSize:'10px',
+                  fontSize: '10px',
                 },
               }}
             />
@@ -219,33 +224,39 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                       height: '34px',
                       margin: '0 7px',
                       padding: '0px 0px',
-                      fontSize:'10px',
+                      fontSize: '10px',
                     },
                   }}
-                  isvalidvalue={gasFee < GAS_FEE.slow||gasFee > 10}
+                  isvalidvalue={gasFee < GAS_FEE.slow || gasFee > 10}
                 />
                 {gasFee > 10 && <Message error>Fees are much higher than average</Message>}
                 {gasFee <= 0 && <Message error>Please enter a valid transaction fee</Message>}
-                {gasFee < GAS_FEE.slow && gasFee > 0 && <Message error>Invalid user command. Fee {toPlainString(gasFee)} is less than the minimum fee of {GAS_FEE.slow}.</Message>}
+                {gasFee < GAS_FEE.slow && gasFee > 0 && (
+                  <Message error>
+                    Invalid user command. Fee {toPlainString(gasFee)} is less than the minimum fee of {GAS_FEE.slow}.
+                  </Message>
+                )}
 
                 <Tittle>Nonce</Tittle>
                 <Input
-                  onKeyDown={blockInvalidChar}
+                  onKeyDown={blockInvalidInt}
                   variant="outlined"
                   placeholder="Nonce"
                   fullWidth
                   size="small"
                   type="number"
-                  onChange={(event) => {handleNonce(event.target.value)}}
+                  onChange={(event) => {
+                    handleNonce(event);
+                  }}
                   inputProps={{
                     style: {
                       height: '34px',
                       margin: '0 7px',
                       padding: '0px 0px',
-                      fontSize:'10px',
+                      fontSize: '10px',
                     },
                   }}
-                  isvalidvalue={!isPositiveInteger(Number(nonce)) && nonce ? true: false}
+                  isvalidvalue={!isPositiveInteger(Number(nonce)) && nonce ? true : false}
                 />
                 {!isPositiveInteger(Number(nonce)) && nonce && <Message error>Please enter a valid nonce</Message>}
               </AdvancedContent>
@@ -275,7 +286,7 @@ const ContentBox = styled.div`
   max-height: 443px;
   min-height: 443px;
   overflow-y: scroll;
-`
+`;
 
 const RequiredBox = styled.div`
   border-bottom: 1px solid #d9d9d9;
@@ -360,8 +371,7 @@ const Option = styled(ButtonCommon)<Props>`
   border-radius: 4px;
 `;
 
-const AdvancedBox = styled.div`
-`;
+const AdvancedBox = styled.div``;
 
 const Toggle = styled.div`
   display: flex;
@@ -382,16 +392,14 @@ const AdvancedIcon = styled.img<Props>`
   margin-left: 4px;
 `;
 
-const AdvancedContent = styled.div`
-
-`;
+const AdvancedContent = styled.div``;
 
 const BoxButton = styled.div`
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: end;
-`
+`;
 
 const ButtonNext = styled(Button)<Props>`
   display: flex;
@@ -410,6 +418,6 @@ const Message = styled(FormHelperText)`
   &.css-1wc848c-MuiFormHelperText-root {
     margin: 0;
   }
-`
+`;
 
 export default ModalTransfer;

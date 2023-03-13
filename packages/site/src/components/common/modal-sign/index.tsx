@@ -21,7 +21,7 @@ const ModalCommon = ({ open, title, setOpenModal, children, clickOutSide }: Moda
   return (
     <Modal
       onBackdropClick={() => {
-        clickOutSide ? setOpenModal : '';
+        setOpenModal();
       }}
       disableAutoFocus={true}
       open={open}
