@@ -280,7 +280,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
           <ToastMessage
             autoHideDuration={5000}
             open={openToastMsg}
-            // onClose={() => setOpenToastMsg(false)}
+            onClose={() => setOpenToastMsg(false)}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'center',
