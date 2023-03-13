@@ -106,7 +106,7 @@ export async function getTxStatus(networkConfig: NetworkConfig, paymentId: strin
   return data;
 }
 
-export const signStakePayment = async (
+export const signStakeDelegation = async (
   args: StakeTxInput,
   publicKey: string,
   privateKey: string,
