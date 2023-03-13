@@ -71,7 +71,7 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
           Confirm
         </ButtonCustom>
         <Message
-          autoHideDuration={2000}
+          autoHideDuration={5000}
           open={open}
           onClose={() => setOpen(false)}
           anchorOrigin={{
@@ -110,13 +110,16 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   width: '100%',
   borderRadius: '8px',
   input: {
-    padding: '0.5rem 1rem',
     color: '#707D96',
   },
   '& textarea': {
     fontSize: '10px',
+    lineHeight: '12px',
   },
   '& .MuiOutlinedInput-root': {
+    padding: '11px 6px',
+    height: '68px',
+    alignItems: 'start',
     '&:hover fieldset': {
       borderColor: '#594AF1',
     },
@@ -139,7 +142,7 @@ const Message = styled(Snackbar)({
     height: '34px',
   },
   '&.MuiSnackbar-anchorOriginBottomCenter': {
-    top: '50%',
+    top: '47%',
   },
 });
 

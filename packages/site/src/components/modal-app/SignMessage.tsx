@@ -112,7 +112,7 @@ const BoxButtom = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   wordBreak: 'break-word',
   fontSize: '10px',
-  fontWeight: '500',
+  fontWeight: '600',
   cursor: 'pointer',
   color: '#000000',
 }));
@@ -138,7 +138,7 @@ const Container = styled(Box)(() => ({
 const BoxTitle = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
   fontStyle: 'normal',
-  fontWeight: '500',
+  fontWeight: '600',
   fontSize: '10px',
   lineHeight: '12px',
   color: '#000000',
@@ -149,11 +149,19 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   width: '100%',
   borderRadius: '8px',
   input: {
-    padding: '0.5rem 1rem',
-    color: '#707D96',
+    padding: '11px 7px',
+    color: '#000000',
   },
   '& input': {
     fontSize: '10px',
+  },
+  '& .MuiOutlinedInput-root': {
+    '&:hover fieldset': {
+      borderColor: '#594AF1',
+    },
+    '&.Mui-focused fieldset': {
+      border: '1px solid #594AF1',
+    },
   },
 });
 
