@@ -2,7 +2,7 @@ import { ESnapDialogType } from '../constants/snap-method.constant';
 import { NetworkConfig, StakeTxInput, TxInput } from '../interfaces';
 import { popupDialog, popupNotify } from '../util/popup.util';
 import { getKeyPair } from './account';
-import { submitPayment, submitStakeDelegation, signPayment, signStakePayment } from './transaction';
+import { submitPayment, submitStakeDelegation, signPayment, signStakeDelegation } from './transaction';
 
 export { getSnapConfiguration, changeNetwork, getNetworkConfig, resetSnapConfiguration } from './configuration';
 
@@ -47,7 +47,7 @@ export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: Net
     return null;
   }
 
-  const signedStakeTx = await signStakePayment(args, publicKey, privateKey, networkConfig);
+  const signedStakeTx = await signStakeDelegation(args, publicKey, privateKey, networkConfig);
   if (!signedStakeTx) {
     await popupNotify('Sign stake transaction error');
     return null;
