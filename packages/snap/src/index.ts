@@ -1,7 +1,7 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
-import { sendTransaction, getNetworkConfig, changeNetwork, resetSnapConfiguration, getSnapConfiguration } from './mina';
-import { HistoryOptions, TxInput } from './interfaces';
+import { sendPayment, changeNetwork, resetSnapConfiguration, getSnapConfiguration, sendStakeDelegation } from './mina';
+import { HistoryOptions, StakeTxInput, TxInput, VerifyMessageInput } from './interfaces';
 import { popupDialog } from './util/popup.util';
 import {
   changeAccount,
@@ -12,11 +12,11 @@ import {
   getKeyPair,
   importAccount,
   signMessage,
+  verifyMessage,
 } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
 import { getTxHistory, getTxDetail, getTxStatus } from './mina/transaction';
-import { updateSnapConfig } from './mina/configuration';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -103,7 +103,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
 
     case EMinaMethod.SEND_PAYMENT: {
       const txInput = request.params as TxInput;
-      const response = await sendTransaction(txInput, networkConfig);
+      const response = await sendPayment(txInput, networkConfig);
       console.log('sendTxResponse:', response);
 
       return response;
@@ -144,6 +144,28 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       console.log(status);
 
       return status;
+    }
+
+    case EMinaMethod.VERIFY_MESSAGE: {
+      const { publicKey, payload, signature } = request.params as VerifyMessageInput;
+      const signedData = {
+        data: {
+          publicKey,
+          message: payload,
+        },
+        signature: { ...signature, signer: publicKey },
+      };
+      const verifyResult = verifyMessage(networkConfig, signedData);
+      console.log(`-verifyResult:`, verifyResult);
+      return verifyResult;
+    }
+
+    case EMinaMethod.SEND_STAKE_DELEGATION: {
+      const stakeTxInput = request.params as StakeTxInput;
+      const response = await sendStakeDelegation(stakeTxInput, networkConfig);
+      console.log('sendStakeTxResponse:', response);
+
+      return response;
     }
 
     default:

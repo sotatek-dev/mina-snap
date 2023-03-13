@@ -98,3 +98,34 @@ query transaction($hash: String!) {
 	}
 }
 `;
+
+export const sendStakeDelegationGql = (isRawSignature: boolean) => `
+mutation stakeTx($fee:UInt64!,
+  $to: PublicKey!, $from: PublicKey!, $nonce:UInt32, $memo: String,
+  $validUntil: UInt32,${isRawSignature ? '$rawSignature: String' : '$scalar: String, $field: String'}) {
+    sendDelegation(
+      input: {
+        fee: $fee,
+        to: $to,
+        from: $from,
+        memo: $memo,
+        nonce: $nonce,
+        validUntil: $validUntil
+      },
+      signature: { ${isRawSignature ? 'rawSignature: $rawSignature' : 'field: $field, scalar: $scalar'}}) {
+      delegation {
+        amount
+        fee
+        feeToken
+        from
+        hash
+        id
+        isDelegation
+        memo
+        nonce
+        kind
+        to
+      }
+    }
+  }
+`;

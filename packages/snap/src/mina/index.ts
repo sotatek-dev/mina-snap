@@ -1,12 +1,12 @@
 import { ESnapDialogType } from '../constants/snap-method.constant';
-import { NetworkConfig, TxInput } from '../interfaces';
+import { NetworkConfig, StakeTxInput, TxInput } from '../interfaces';
 import { popupDialog, popupNotify } from '../util/popup.util';
 import { getKeyPair } from './account';
-import { sendPayment, signPayment } from './transaction';
+import { submitPayment, submitStakeDelegation, signPayment, signStakePayment } from './transaction';
 
 export { getSnapConfiguration, changeNetwork, getNetworkConfig, resetSnapConfiguration } from './configuration';
 
-export const sendTransaction = async (args: TxInput, networkConfig: NetworkConfig) => {
+export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig) => {
   const { publicKey, privateKey } = await getKeyPair();
 
   const confirmation = await popupDialog(
@@ -25,11 +25,39 @@ export const sendTransaction = async (args: TxInput, networkConfig: NetworkConfi
     return null;
   }
 
-  const payment = await sendPayment(signedPayment, networkConfig);
+  const payment = await submitPayment(signedPayment, networkConfig);
   if (!payment) {
-    await popupNotify('Send payment error');
+    await popupNotify('Submit payment error');
     return null;
   }
 
   return payment;
 };
+
+export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: NetworkConfig) => {
+  const { publicKey, privateKey } = await getKeyPair();
+
+  const confirmation = await popupDialog(
+    ESnapDialogType.CONFIRMATION,
+    'Confirm transaction',
+    `Block producer address: ${args.to}\nFrom: ${publicKey}\nFee: ${args.fee} MINA`,
+  );
+  if (!confirmation) {
+    await popupNotify('Transaction rejected');
+    return null;
+  }
+
+  const signedStakeTx = await signStakePayment(args, publicKey, privateKey, networkConfig);
+  if (!signedStakeTx) {
+    await popupNotify('Sign stake transaction error');
+    return null;
+  }
+
+  const stakeTx = await submitStakeDelegation(signedStakeTx, networkConfig);
+  if (!stakeTx) {
+    await popupNotify('Submit stake tx error');
+    return null;
+  }
+
+  return stakeTx;
+}
