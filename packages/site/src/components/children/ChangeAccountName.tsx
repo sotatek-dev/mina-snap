@@ -127,14 +127,14 @@ const ButtonCustomCancel = styled(Button)<ButtonProps>({
   width: '100%',
   textTransform: 'none',
   color: '#000000',
-  fontWeight: '500',
+  fontWeight: '600',
   fontSize: '10px',
 });
 const ButtonCustomConfirm = styled(Button)<ButtonProps>({
   width: '100%',
   textTransform: 'none',
   color: '#594AF1',
-  fontWeight: '500',
+  fontWeight: '600',
   fontSize: '12px',
 });
 const GridItem = styled(Grid)({
@@ -155,7 +155,7 @@ const InputCustom = styled(TextField)<TextFieldProps>({
   borderRadius: '8px',
   input: {
     padding: '0.5rem 1rem',
-    color: '#707D96',
+    color: '#000000',
   },
   '& input': {
     fontSize: '12px',
@@ -180,7 +180,7 @@ const Container = styled(Box)(() => ({
   height: '158px',
   transform: 'translate(-50%, -50%)',
   boxSizing: 'border-box',
-  width: '300px',
+  width: '280px',
   padding: '16px 0px 0px 0px',
   border: '1px solid #ECECF6',
   boxShadow: '0px 0px 3px 1px rgba(0, 0, 0, 0.1)',

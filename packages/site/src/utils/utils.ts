@@ -130,3 +130,32 @@ export const toPlainString = (num: number) => {
         : b + c + d + Array(e - d.length + 1).join("0");
     });
 }
+
+export const getRealErrorMsg =(error:any) => {
+  let errorMessage = ""
+  try {
+      if (error.message) {
+          errorMessage = error.message
+      }
+      if (Array.isArray(error) && error.length > 0) {
+          // postError
+          errorMessage = error[0].message
+          // buildError
+          if(!errorMessage && error.length > 1){
+              errorMessage = error[1].c
+          }
+      }
+      if (typeof error === 'string') {
+          let lastErrorIndex = error.lastIndexOf("Error:")
+          if (lastErrorIndex !== -1) {
+              errorMessage = error.slice(lastErrorIndex)
+          } else {
+              errorMessage = error
+          }
+      }
+  } catch (error) {
+    console.log(error);
+    
+  }
+  return errorMessage
+}

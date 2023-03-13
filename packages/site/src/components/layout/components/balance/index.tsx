@@ -113,6 +113,7 @@ const Send = styled.div`
 
 const IconSend = styled.img`
   max-width: 30px;
+  padding-bottom: 3px;
 `;
 
 const Sign = styled.div`
@@ -128,6 +129,7 @@ const Sign = styled.div`
 
 const IconSign = styled.img`
   max-width: 30px;
+  padding-bottom: 3px;
 `;
 
 export default Balance;

@@ -236,12 +236,11 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                     Invalid user command. Fee {toPlainString(gasFee)} is less than the minimum fee of {GAS_FEE.slow}.
                   </Message>
                 )}
-
                 <Tittle>Nonce</Tittle>
                 <Input
                   onKeyDown={blockInvalidInt}
                   variant="outlined"
-                  placeholder="Nonce"
+                  placeholder={`Nonce` + ' ' + nonce}
                   fullWidth
                   size="small"
                   type="number"
