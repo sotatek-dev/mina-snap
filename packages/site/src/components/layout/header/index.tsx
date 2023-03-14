@@ -107,6 +107,9 @@ const Header = () => {
     setIsShowDetail(true);
     setOpenModal(true);
   };
+  const handldeCloseAccount = () => {
+    dispatch(setIsShowListAccount(false));
+  }
 
   return (
     <>
@@ -116,12 +119,14 @@ const Header = () => {
           <Title />
         </BoxLogo>
         <WDropDown>
-          <DropDownNetwork options={OPTIONS_NETWORK} />
+          <BoxDropDown onClick={() =>handldeCloseAccount()}> 
+            <DropDownNetwork options={OPTIONS_NETWORK} />
+          </BoxDropDown>
           <AccountDetails
             closeTrigger="click"
             offSet={[-140, 10]}
-            content={
-              <AccountDetailsContent>
+            content={ isShowListAccount &&
+              (<AccountDetailsContent>
                 <Label>Account Management</Label>
                 {isLoading && <LinearProgressCustom />}
                 <WAccount className={isLoading ? 'disable' : ''}>
@@ -153,7 +158,7 @@ const Header = () => {
                     Import
                   </ButtonImport>
                 </WButton>
-              </AccountDetailsContent>
+              </AccountDetailsContent>)
             }
           >
             <BoxImg onClick={handleShowListAccount} style={isShowListAccount ? styleActive : styleInactive}>
@@ -229,6 +234,10 @@ const WDropDown = styled.div`
   display: flex;
   align-items: center;
   height: 100%;
+`;
+
+const BoxDropDown = styled.div`
+  height: 40px;
 `;
 
 const DropDownNetwork = styled(DropdownCommon)`

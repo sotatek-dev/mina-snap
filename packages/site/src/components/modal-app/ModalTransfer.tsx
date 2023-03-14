@@ -93,6 +93,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
       setShowModal(disabled != true);
     }
     else{
+      if(disabled) return
       if(!addressValid(address)){
         setMessage('Please enter valid address');
         setOpenToastMsg(true);
