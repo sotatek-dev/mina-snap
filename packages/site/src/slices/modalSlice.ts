@@ -4,12 +4,14 @@ export interface modalState {
   infoModalVisible: boolean;
   minVersionModalVisible: boolean;
   isShowListAccount: boolean;
+  isShowKebabMenu: boolean;
 }
 
 const initialState: modalState = {
   infoModalVisible: false,
   minVersionModalVisible: false,
-  isShowListAccount: false
+  isShowListAccount: false,
+  isShowKebabMenu: false,
 };
 
 export const modalSlice = createSlice({
@@ -25,11 +27,13 @@ export const modalSlice = createSlice({
     },
     setIsShowListAccount: (state, { payload }) => {
       state.isShowListAccount = payload;
-      console.log(state.isShowListAccount, 'state.isShowListAccount');
+    },
+    setIsShowKebabMenu: (state, { payload }) => {
+      state.isShowKebabMenu = payload;
     },
   },
 });
 
-export const { setInfoModalVisible, setMinVersionModalVisible, setIsShowListAccount } = modalSlice.actions;
+export const { setInfoModalVisible, setMinVersionModalVisible, setIsShowListAccount, setIsShowKebabMenu} = modalSlice.actions;
 
 export default modalSlice.reducer;
