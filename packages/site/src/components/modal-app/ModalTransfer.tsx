@@ -88,7 +88,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
       Number(amount) >= 0 && 
       Number(amount) < Number(balance) && 
       gasFee >= 0 && 
-      Number(nonceValue) > 0
+      Number(nonceValue) >= 0
     ) {
       setShowModal(disabled != true);
     }
@@ -340,7 +340,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 };
 
 const ContentBox = styled.div`
-  width: 300px;
+  width: 310px;
   padding: 0 8px;
   max-height: 443px;
   min-height: 443px;
@@ -435,7 +435,7 @@ const AdvancedBox = styled.div``;
 const Toggle = styled.div`
   display: flex;
   align-items: center;
-  padding-top: 4px;
+  padding-top: 12px;
   font-style: normal;
   font-weight: 500;
   font-size: 10px;
