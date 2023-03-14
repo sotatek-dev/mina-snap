@@ -15,6 +15,7 @@ import DataExportPrivateKey from './DataExportPrivateKey';
 
 const DetailsAccount = () => {
   const { detailsAccount } = useAppSelector((state) => state.wallet);
+  const { getAccountInfors } = useMinaSnap();
   const [openChangeAccountName, setOpenChangeAccountName] = React.useState<boolean>(false);
   const [state, setState] = React.useState<ResultAccountList | undefined>(undefined);
   const [openModal, setOpenModal] = React.useState<boolean>(false);
@@ -31,8 +32,12 @@ const DetailsAccount = () => {
   };
 
   useEffect(() => {
-    setState(detailsAccount);
+    const funt = async () => {
+      setState((detailsAccount ? detailsAccount : await getAccountInfors()) as any);
+    };
+    funt();
   }, [detailsAccount]);
+
   return (
     <>
       <Container>
@@ -102,11 +107,11 @@ const ListCustom = styled(List)({
 const Item = styled(ListItem)({
   padding: '0 12px',
   height: '40px',
-  ":hover": {
+  ':hover': {
     cursor: 'pointer',
-    background: '#F1F1F1'
-  }
-})
+    background: '#F1F1F1',
+  },
+});
 
 const BoxContentTitle = styled(Box)({
   fontFamily: 'Inter Regular',
@@ -137,7 +142,7 @@ const ListItemTextCustom = styled(ListItemText)({
     fontSize: '10px',
     lineHeight: '12px',
     color: '#000000',
-    paddingBottom: '1px'
+    paddingBottom: '1px',
   },
   '& .css-83ijpv-MuiTypography-root': {
     fontFamily: 'Inter Regular',
