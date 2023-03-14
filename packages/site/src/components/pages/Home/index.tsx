@@ -13,7 +13,6 @@ import {
   setListAccounts,
 } from 'slices/walletSlice';
 import { ethers } from 'ethers';
-import { formatBalance } from 'helpers/formatAccountAddress';
 
 const HomePage = () => {
   useHasMetamaskFlask();
