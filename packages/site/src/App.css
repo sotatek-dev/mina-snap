@@ -51,15 +51,16 @@
 
 .isUnInstalledWallet{
   opacity: 0.5;
-  border: 1px solid #000000;
-  border-radius: 5px 0px;
+  border: 1px solid #000000 !important;
+  border-radius: 5px 0px !important;
   background: #FC6643 !important;
   pointer-events: none;
-  width: 73% !important;
+  width: 244px !important;
 }
 .connectMetamask{ 
   border: 1px solid #000000 !important;
-  width: 73% !important;
+  border-radius: 5px 0px !important;
+  width: 244px !important;
 }
 
 .dot-loadding {
