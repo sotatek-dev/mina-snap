@@ -11,13 +11,15 @@ import { formatBalance } from 'helpers/formatAccountAddress';
 const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
-  const { getSnap, AccountList, getAccountInfors, RequestSnap } = useMinaSnap();
+  const { getSnap, AccountList, getAccountInfors, RequestSnap, SwitchNetwork } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState(false);
   const { connected } = useAppSelector((state) => state.wallet);
 
   useEffect(() => {
     reduxDispatch(setIsLoading(false));
+
     const a = async () => {
+      await SwitchNetwork(process.env.NODE_ENV == 'production' ? 'Mainnet' : 'Berkeley');
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
@@ -34,6 +36,7 @@ const HomePage = () => {
         }
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
+
         reduxDispatch(
           connectWallet({
             accountList,
