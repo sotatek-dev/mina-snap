@@ -54,7 +54,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const handleClick = () => {
     if(
       addressValid(address) && 
-      Number(amount) > 0 && 
+      Number(amount) >= 0 && 
       Number(amount) < Number(balance) && 
       gasFee >= 0 && 
       Number(nonce) > 0
