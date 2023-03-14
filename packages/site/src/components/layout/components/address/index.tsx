@@ -55,7 +55,7 @@ const Address = () => {
           disableTouchListener
           title="Copied!"
         >
-          <BoxWalletAddress> 
+          <BoxWalletAddress>
             <WalletAdress
               id="walletAddress"
               onClick={() => {
@@ -140,7 +140,7 @@ const WalletAdress = styled.div`
   :hover {
     cursor: pointer;
   }
-`
+`;
 
 const IconCoppy = styled.img`
   padding-left: 5px;
