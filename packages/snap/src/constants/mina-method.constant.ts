@@ -17,4 +17,5 @@ export enum EMinaMethod {
   EXPORT_PRIVATE_KEY = 'mina_exportPrivateKey',
   SEND_STAKE_DELEGATION = 'mina_sendStakeDelegation',
   VERIFY_MESSAGE = 'mina_verifyMessage',
+  REQUEST_NETWORK_NAME = 'mina_requestNetwork',
 }
