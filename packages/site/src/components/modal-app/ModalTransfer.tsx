@@ -33,7 +33,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const placeHolderGasFee = GAS_FEE.default;
   const placeHolderNonce = `Nonce`+' '+inferredNonce
   const [gasFeeValue, setGasFee] = useState(GAS_FEE.default);
-  const [nonceValue, setNonceValue] = useState(inferredNonce);
+  const [nonceValue, setNonceValue] = useState('');
   const [message, setMessage] = useState('');
   const [openToastMsg, setOpenToastMsg] = useState(false);
   const [maxlength, setMaxlength] = useState(500000);
@@ -44,6 +44,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     memo: '',
     fee: 0,
     nonce: 0,
+    nonceValue:''
   });
   const [isShowCotent, setIsShowContent] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -63,27 +64,12 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     return gasFee
   }, [gasFee])
 
-  const nonce = useMemo (()=> {
-    if(nonceValue != placeHolderNonce){
-      return nonceValue
-    }
-    return placeHolderNonce
-  }, [nonceValue, placeHolderNonce])
-
-  const nonceDisplay = useMemo(()=> {
-    if(nonce == inferredNonce){
-      return ""
-    }
-    return nonce
-  }, [nonce, inferredNonce])
-
-
   const success = () => {
     setOpenModal();
     handleClickOutSide();
   };
 
-  const handleClick = () => {
+  const handleClick = (nonceValue:string) => {
     if(
       addressValid(address) && 
       Number(amount) >= 0 && 
@@ -127,7 +113,8 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
       amount: Number(balance) == Number(amount) ? Number(amount) - Number(gasFee) : Number(amount),
       memo: memo,
       fee: Number(gasFee),
-      nonce: Number(nonceValue),
+      nonce: Number(nonceValue) ===0 ?Number(inferredNonce) : Number(nonceValue) ,
+      nonceValue:nonceValue
     };
     setTxInfo(tx);
   };
@@ -137,9 +124,11 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   };
 
   const handleNonce = (e: any) => {
-    if (e.target.value) {
+    // if (e.target.value) {
       setNonceValue(e.target.value);
-    } else setNonceValue(inferredNonce);
+    // } else setNonceValue(inferredNonce);
+  
+    
   };
 
   const handleOnChangeBalance = (event: any) => {
@@ -162,7 +151,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setAmount('');
     setGasFee(GAS_FEE.default);
     setMemo('');
-    setNonceValue(inferredNonce);
+    // setNonceValue(inferredNonce);
     setIsShowContent(false);
   }, [open, inferredNonce]);
 
@@ -306,7 +295,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   onKeyDown={blockInvalidInt}
                   variant="outlined"
                   placeholder={placeHolderNonce}
-                  value={nonceDisplay}
+                  value={nonceValue}
                   fullWidth
                   size="small"
                   type="number"
@@ -327,7 +316,9 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
           </AdvancedBox>
         </ContentBox>
         <BoxButton>
-          <ButtonNext disable={disabled} onClick={handleClick} type="submit">
+          <ButtonNext disable={disabled} onClick={()=>{
+            handleClick(nonceValue)
+          }} type="submit">
             Next
           </ButtonNext>
           <ModalConfirm
