@@ -98,7 +98,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.NETWORK_CONFIG: {
-      return networkConfig;
+      const { name, gqlUrl, gqlTxUrl, token } = networkConfig;
+      return {
+        name, gqlUrl, gqlTxUrl, token
+      };
     }
 
     case EMinaMethod.SEND_PAYMENT: {
@@ -166,6 +169,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       console.log('sendStakeTxResponse:', response);
 
       return response;
+    }
+
+    case EMinaMethod.REQUEST_NETWORK_NAME: {
+      return networkConfig.name;
     }
 
     default:

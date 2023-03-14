@@ -53,3 +53,5 @@ Connect to the snap by calling `wallet_requestSnaps` method with `npm:test-mina-
 | mina_getTxHistory              | Return transaction history by user address    |
 | mina_getTxDetail               | Return transaction detail by transaction hash |
 | mina_getTxStatus               | Return transaciton status by transaction id   |
+| mina_sendStakeDelegation       | Send stake delegation                         |
+| mina_verifyMessage             | Verify signed message                         |

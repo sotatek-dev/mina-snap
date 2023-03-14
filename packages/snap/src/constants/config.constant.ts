@@ -55,6 +55,6 @@ const networks ={
 };
 
 export const defaultSnapConfig: SnapConfig = {
-  currentNetwork: ENetworkName.BERKELEY,
+  currentNetwork: ENetworkName.MAINNET,
   networks,
 };
