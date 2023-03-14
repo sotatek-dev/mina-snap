@@ -17,9 +17,9 @@ export type ResultCreateAccount = {
 export type ResultAccountList = {
     name: string
     address: string
-    index: number
-    balance: { total: string }
-    isImported: boolean
+    index?: number
+    balance?: { total: string }
+    isImported?: boolean
 }
 
 export type PayloadChangeAccount = {

@@ -1,7 +1,7 @@
 import { formatAccountAddress } from 'helpers/formatAccountAddress';
 import styled from 'styled-components';
 import ICoppy from 'assets/icons/icon-coppy.svg';
-import { useAppSelector } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import Button from 'components/common/button';
 import IThreeDot from 'assets/icons/icon-kebab-menu.svg';
 import { Box } from '@mui/material';
@@ -14,11 +14,13 @@ import { useState } from 'react';
 import ModalCommon from 'components/common/modal';
 import { handelCoppy } from 'helpers/handleCoppy';
 import Tooltip from '@mui/material/Tooltip';
+import { setDetailsAccount } from 'slices/walletSlice';
 
 const Address = () => {
-  const { activeAccount, accountName } = useAppSelector((state) => state.wallet);
+  const { activeAccount, accountName, accounts } = useAppSelector((state) => state.wallet);
   const [openModal, setOpenModal] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
+  const dispatch = useAppDispatch();
 
   const hanldeViewAccount = () => {
     const type = 'wallet';
@@ -26,7 +28,11 @@ const Address = () => {
   };
 
   const handleOpenModal = () => {
-    setOpenModal(true);
+    const obj = accounts.find((element) => element.address === activeAccount);
+    if (obj) {
+      dispatch(setDetailsAccount(obj));
+      setOpenModal(true);
+    }
   };
 
   const handleOnClickCoppy = () => {

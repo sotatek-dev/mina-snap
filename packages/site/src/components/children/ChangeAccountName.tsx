@@ -13,7 +13,8 @@ import {
 import { ResultAccountList } from 'types/account';
 import { useMinaSnap } from 'services';
 import { useAppDispatch } from 'hooks/redux';
-import { setListAccounts } from 'slices/walletSlice';
+import { setActiveAccount, setListAccounts } from 'slices/walletSlice';
+import { ethers } from 'ethers';
 
 interface IChangeAccountName {
   open: boolean;
@@ -24,7 +25,7 @@ interface IChangeAccountName {
 
 const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName) => {
   const [nameAccount, setNameAccount] = React.useState<string>('');
-  const { EditAccountName, AccountList } = useMinaSnap();
+  const { EditAccountName, AccountList, getAccountInfors } = useMinaSnap();
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const reduxDispatch = useAppDispatch();
   const state = data;
@@ -36,11 +37,12 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
       isImported: state?.isImported as boolean,
       name: nameAccount,
     });
+    const accountInfor = await getAccountInfors();
     const accountList = await AccountList().finally(() => {
       const dataChange: ResultAccountList = {
         address: state?.address as string,
         balance: {
-          total: state?.balance.total as string,
+          total: state?.balance?.total as string,
         },
         index: Number(state?.index),
         isImported: state?.isImported as boolean,
@@ -50,6 +52,14 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
       onClose();
       onChange(dataChange);
     });
+    reduxDispatch(
+      setActiveAccount({
+        activeAccount: accountInfor.publicKey as string,
+        balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+        accountName: accountInfor.name as string,
+        inferredNonce: accountInfor.inferredNonce as string,
+      }),
+    );
     await reduxDispatch(setListAccounts(accountList));
   };
 

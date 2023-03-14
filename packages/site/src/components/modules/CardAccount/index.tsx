@@ -40,7 +40,8 @@ const CardAccount: React.FC<Props> = ({ active, imported, data, handleShowDetail
       </AccountName>
       <Address active={active}>{data && formatAccountAddress(data.address)}</Address>
       <Balance active={active}>
-        {data && ((data.balance.total > 0 ? formatBalance(ethers.utils.formatUnits(data.balance.total, 'gwei')) : 0)) + ' '}
+        {data &&
+          (data.balance.total > 0 ? formatBalance(ethers.utils.formatUnits(data.balance.total, 'gwei')) : 0) + ' '}
         MINA
         <More active={active} typeButton="round" onClick={showDetails}>
           <PointMenu src={active ? pointMenu : pointMenuDark} />

@@ -15,7 +15,6 @@ import DataExportPrivateKey from './DataExportPrivateKey';
 
 const DetailsAccount = () => {
   const { detailsAccount } = useAppSelector((state) => state.wallet);
-  const { getAccountInfors } = useMinaSnap();
   const [openChangeAccountName, setOpenChangeAccountName] = React.useState<boolean>(false);
   const [state, setState] = React.useState<ResultAccountList | undefined>(undefined);
   const [openModal, setOpenModal] = React.useState<boolean>(false);
@@ -32,12 +31,8 @@ const DetailsAccount = () => {
   };
 
   useEffect(() => {
-    const funt = async () => {
-      setState((detailsAccount ? detailsAccount : await getAccountInfors()) as any);
-    };
-    funt();
+    setState(detailsAccount);
   }, [detailsAccount]);
-
   return (
     <>
       <Container>
