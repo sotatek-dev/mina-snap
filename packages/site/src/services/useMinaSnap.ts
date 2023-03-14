@@ -13,6 +13,7 @@ import {
 
 } from 'types/account';
 import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature, TypeResponseTxHistory } from 'types/transaction';
+import { ResponseNetworkConfig } from 'types/snap';
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
@@ -212,8 +213,23 @@ export const useMinaSnap = () => {
     });
   };
 
+  const GetNetworkConfigSnap = async (): Promise<ResponseNetworkConfig> => {
+
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_networkConfig',
+
+        },
+      },
+    });
+  };
+
 
   return {
+    GetNetworkConfigSnap,
     RequestSnap,
     SwitchNetwork,
     Signature,

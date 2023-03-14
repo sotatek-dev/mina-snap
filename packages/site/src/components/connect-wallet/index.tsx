@@ -101,7 +101,10 @@ const ButtonCustomRequiredMetamask = styled(Button)<ButtonProps>(() => ({
   border: '1px solid #000000',
   display: 'flex',
   justifyContent: 'center',
-  width: '330px'
+  width: '330px',
+  ':hover' : {
+    cursor: 'default'
+  }
 }));
 
 const BoxCenter = styled(Box)(() => ({

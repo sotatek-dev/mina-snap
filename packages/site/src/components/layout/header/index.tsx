@@ -33,6 +33,15 @@ const Header = () => {
 
   const handleChangeAccount = async (item: any) => {
     dispatch(setIsLoading(true));
+    dispatch(setTransactions([]));
+    dispatch(
+      setActiveAccount({
+        activeAccount: '',
+        balance: '',
+        accountName: '',
+        inferredNonce: '',
+      }),
+    );
     const payload = {
       accountIndex: item.index,
       isImported: item.isImported,

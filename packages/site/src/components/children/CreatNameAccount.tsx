@@ -22,18 +22,18 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
   const [openModal, setOpenModal] = useState(false);
   const nameDefault = 'Account ' + index;
 
-  const handleOnChangeAccountName = (value:string) => {
-    if (value.length > 16)
-    {
+  const handleOnChangeAccountName = (value: string) => {
+    if (value.length > 16) {
       return 0;
-    }
-    else setNameAccount(value);
-  }
+    } else setNameAccount(value);
+  };
 
   const sendRequest = async () => {
     switch (type) {
       case 'create':
         try {
+          dispatch(setTransactions([]));
+          dispatch(setListAccounts([]));
           dispatch(setIsLoading(true));
           const account = await CreateAccount(nameAccount || nameDefault);
           const accountList = await AccountList();
@@ -67,7 +67,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
 
         <BoxContent>
           <InputCustom
-            autoComplete='off'
+            autoComplete="off"
             sx={{ paddingTop: '5px' }}
             variant={'outlined'}
             placeholder={nameDefault}

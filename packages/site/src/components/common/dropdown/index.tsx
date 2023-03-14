@@ -3,9 +3,10 @@ import 'react-dropdown/style.css';
 import { Group, Option, ReactDropdownProps } from 'react-dropdown';
 import { useDispatch } from 'react-redux';
 import { useMinaSnap } from 'services';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { setActiveAccount, setIsLoadingSwitchNetWork, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
+import { ResponseNetworkConfig } from 'types/snap';
 
 interface Props extends ReactDropdownProps {
   error?: boolean;
@@ -15,11 +16,21 @@ interface Props extends ReactDropdownProps {
 
 const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
   const dispatch = useDispatch();
-  const { SwitchNetwork, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
+  const { SwitchNetwork, AccountList, getAccountInfors, getTxHistory, GetNetworkConfigSnap } = useMinaSnap();
   const [value, setValue] = useState('Mainnet');
 
   const changeNetwork = async (e: Option) => {
     setValue(e.value);
+    dispatch(setTransactions([]));
+    dispatch(setListAccounts([]));
+    dispatch(
+      setActiveAccount({
+        activeAccount: '',
+        balance: '',
+        accountName: '',
+        inferredNonce: '',
+      }),
+    );
     dispatch(setTransactions([]));
     dispatch(setIsLoadingSwitchNetWork(true));
     await SwitchNetwork(e.value)
@@ -42,6 +53,12 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
         dispatch(setIsLoadingSwitchNetWork(false));
       });
   };
+
+  useEffect(() => {
+    GetNetworkConfigSnap().then((Res: ResponseNetworkConfig) => {
+      setValue(Res.name);
+    });
+  }, []);
   return (
     <Wrapper>
       <DropdownStyled

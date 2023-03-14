@@ -21,6 +21,8 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
   const [message, setMessage] = useState('');
 
   const sendRequest = async () => {
+    dispatch(setTransactions([]));
+    dispatch(setListAccounts([]));
     try {
       dispatch(setIsLoading(true));
       const payload = {
