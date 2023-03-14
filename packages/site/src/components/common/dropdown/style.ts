@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Dropdown from 'react-dropdown';
 import selectArrow from 'assets/images/select-arrow.svg';
+import icon from 'assets/images/arrow-up.svg';
 
 interface IDropDown {
   error?: boolean;
@@ -53,7 +54,10 @@ export const DropdownStyled = styled(Dropdown) <IDropDown>`
     align-items: center;
     justify-content: center;
   }
- 
+  &.is-open .Dropdown-control {
+    background-image: url(${icon});
+  }
+
   .Dropdown-menu {
     margin-top: ${(props) => props.theme.spacing.tiny2};
     border-radius: ${(props) => props.theme.corner.medium};

@@ -22,7 +22,7 @@ type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 
 const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucces }: ModalProps) => {
   const { SendTransaction, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
-  const {inferredNonce, activeAccount } = useAppSelector((state) => state.wallet);
+  const { activeAccount } = useAppSelector((state) => state.wallet);
 
   const [message, setMessage] = useState('');
   const [openToastMsg, setOpenToastMsg] = useState(false);
