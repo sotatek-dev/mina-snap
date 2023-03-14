@@ -6,7 +6,7 @@ import { POPOVER_DURATION } from 'utils/constants';
 import styled from 'styled-components';
 
 import { useDispatch } from 'react-redux';
-import { setIsShowListAccount } from 'slices/modalSlice';
+import { setIsShowKebabMenu, setIsShowListAccount } from 'slices/modalSlice';
 
 type CloseTriggers = 'timeout' | 'click' | 'hover';
 
@@ -56,6 +56,8 @@ export const PopperTooltipView = ({
   useEffect(() => {
     if (!popperVisible) {
       dispatch(setIsShowListAccount(false));
+      dispatch(setIsShowKebabMenu(false));
+
     }
   }, [popperVisible]);
 
