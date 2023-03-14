@@ -52,12 +52,41 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   };
 
   const handleClick = () => {
-    if(addressValid(address)) {
+    if(
+      addressValid(address) && 
+      Number(amount) > 0 && 
+      Number(amount) < Number(balance) && 
+      gasFee >= 0 && 
+      Number(nonce) > 0
+    ) {
       setShowModal(disabled != true);
     }
     else{
-      setMessage('Please enter valid address');
-      setOpenToastMsg(true);
+      if(!addressValid(address)){
+        setMessage('Please enter valid address');
+        setOpenToastMsg(true);
+        return
+      } 
+      if(Number(amount) < 0){
+        setMessage('Please enter a valid transaction amount');
+        setOpenToastMsg(true);
+        return
+      } 
+      if(Number(amount) > Number(balance)){
+        setMessage('Insufficient balance');
+        setOpenToastMsg(true);
+        return
+      }
+      if(gasFee < 0){
+        setMessage('Please enter a valid transaction fee');
+        setOpenToastMsg(true);
+        return
+      }
+      if(Number(nonce) <= 0){
+        setMessage('Please enter a valid nonce');
+        setOpenToastMsg(true);
+        return
+      }
     }
 
     const tx = {
@@ -74,10 +103,6 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setShowModal(false);
   };
 
-  const isPositiveInteger = (num: number) => {
-    return Number.isInteger(num) && num > 0;
-  };
-
   const handleNonce = (e: any) => {
     if (e.target.value) {
       setNonce(e.target.value);
@@ -89,13 +114,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   };
 
   useEffect(() => {
-    if (
-      address &&
-      Number(amount) >= 0 &&
-      Number(amount) <= Number(balance) &&
-      gasFee >= 0 &&
-      isPositiveInteger(Number(nonce))
-    ) {
+    if (address && amount) {
       setDisabled(false);
     } else {
       setDisabled(true);
@@ -160,10 +179,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   fontSize: '10px',
                 },
               }}
-              isvalidvalue={Number(amount) < 0 || Number(amount) > Number(balance)}
             />
-            {Number(amount) < 0 && <Message error>Please enter a valid transaction amount</Message>}
-            {Number(amount) > Number(balance) && <Message error>Insufficient balance</Message>}
             <Tittle>Memo(Optional)</Tittle>
             <Input
               variant="outlined"
@@ -236,10 +252,8 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                       fontSize: '10px',
                     },
                   }}
-                  isvalidvalue={gasFee < 0}
                 />
                 {gasFee > 10 && <Message >Fees are much higher than average</Message>}
-                {gasFee < 0 && <Message error>Please enter a valid transaction fee</Message>}
                 <Tittle>Nonce</Tittle>
                 <Input
                   onKeyDown={blockInvalidInt}
@@ -259,9 +273,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                       fontSize: '10px',
                     },
                   }}
-                  isvalidvalue={!isPositiveInteger(Number(nonce)) && nonce ? true : false}
                 />
-                {!isPositiveInteger(Number(nonce)) && nonce && <Message error>Please enter a valid nonce</Message>}
               </AdvancedContent>
             )}
           </AdvancedBox>
@@ -440,6 +452,7 @@ const ToastMessage = styled(Snackbar)({
     height: '34px',
     background: '#000000',
     borderRadius: '5px',
+    padding: '0 8px'
   },
   '&.MuiSnackbar-anchorOriginBottomCenter': {
     top: '37%',
