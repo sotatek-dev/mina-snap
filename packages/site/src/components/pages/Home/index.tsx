@@ -4,7 +4,14 @@ import { useHasMetamaskFlask } from 'hooks/useHasMetamaskFlask';
 import Home from 'components/layout/index';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
-import { connectWallet, setIsLoading, setActiveAccount, setWalletConnection } from 'slices/walletSlice';
+import {
+  connectWallet,
+  setIsLoading,
+  setActiveAccount,
+  setWalletConnection,
+  setTransactions,
+  setListAccounts,
+} from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import { formatBalance } from 'helpers/formatAccountAddress';
 
@@ -19,21 +26,30 @@ const HomePage = () => {
     reduxDispatch(setIsLoading(false));
 
     const a = async () => {
-      await SwitchNetwork('Mainnet');
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
       const isInstalledSnap = await getSnap();
+      reduxDispatch(setTransactions([]));
+      reduxDispatch(setListAccounts([]));
+      reduxDispatch(
+        setActiveAccount({
+          activeAccount: '',
+          balance: '',
+          accountName: '',
+          inferredNonce: '',
+        }),
+      );
 
       if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
         setIsUnlocked(false);
         return;
       }
-
       if (isUnlocked) {
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
           await RequestSnap();
         }
+        await SwitchNetwork('Mainnet');
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
 

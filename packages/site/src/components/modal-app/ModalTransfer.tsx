@@ -31,7 +31,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
   const placeHolderGasFee = GAS_FEE.default;
-  const placeHolderNonce = `Nonce`+' '+inferredNonce
+  const placeHolderNonce = `Nonce` + ' ' + inferredNonce;
   const [gasFeeValue, setGasFee] = useState(GAS_FEE.default);
   const [nonceValue, setNonceValue] = useState(inferredNonce);
   const [message, setMessage] = useState('');
@@ -50,32 +50,31 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 
   const gasFee = useMemo(() => {
     if (gasFeeValue != placeHolderGasFee) {
-      return gasFeeValue
+      return gasFeeValue;
     }
-    return GAS_FEE.default
-  }, [gasFeeValue, placeHolderGasFee])
+    return GAS_FEE.default;
+  }, [gasFeeValue, placeHolderGasFee]);
 
   const gasFeeDisplay = useMemo(() => {
     if (gasFee == GAS_FEE.default || gasFee == GAS_FEE.slow || gasFee == GAS_FEE.fast || gasFee == 0) {
-      return ""
+      return '';
     }
-    return gasFee
-  }, [gasFee])
+    return gasFee;
+  }, [gasFee]);
 
-  const nonce = useMemo (()=> {
-    if(nonceValue != placeHolderNonce){
-      return nonceValue
+  const nonce = useMemo(() => {
+    if (nonceValue != placeHolderNonce) {
+      return nonceValue;
     }
-    return placeHolderNonce
-  }, [nonceValue, placeHolderNonce])
+    return placeHolderNonce;
+  }, [nonceValue, placeHolderNonce]);
 
-  const nonceDisplay = useMemo(()=> {
-    if(nonce == inferredNonce){
-      return ""
+  const nonceDisplay = useMemo(() => {
+    if (nonce == '0') {
+      return '';
     }
-    return nonce
-  }, [nonce, inferredNonce])
-
+    return nonce;
+  }, [nonce]);
 
   const success = () => {
     setOpenModal();
@@ -83,41 +82,42 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   };
 
   const handleClick = () => {
-    if(
-      addressValid(address) && 
-      Number(amount) >= 0 && 
-      Number(amount) < Number(balance) && 
-      gasFee >= 0 && 
+    if (
+      addressValid(address) &&
+      Number(amount) >= 0 &&
+      Number(amount) < Number(balance) &&
+      gasFee >= 0 &&
       Number(nonceValue) >= 0
     ) {
       setShowModal(disabled != true);
-    }
-    else{
-      if(disabled) return
-      if(!addressValid(address)){
+    } else {
+      if (disabled) {
+        return;
+      }
+      if (!addressValid(address)) {
         setMessage('Please enter valid address');
         setOpenToastMsg(true);
-        return
-      } 
-      if(Number(amount) < 0){
+        return;
+      }
+      if (Number(amount) < 0) {
         setMessage('Please enter a valid transaction amount');
         setOpenToastMsg(true);
-        return
-      } 
-      if(Number(amount) > Number(balance)){
+        return;
+      }
+      if (Number(amount) > Number(balance)) {
         setMessage('Insufficient balance');
         setOpenToastMsg(true);
-        return
+        return;
       }
-      if(gasFee < 0){
+      if (gasFee < 0) {
         setMessage('Please enter a valid transaction fee');
         setOpenToastMsg(true);
-        return
+        return;
       }
-      if(Number(nonceValue) < 0){
+      if (Number(nonceValue) < 0) {
         setMessage('Please enter a valid nonce');
         setOpenToastMsg(true);
-        return
+        return;
       }
     }
 
@@ -156,6 +156,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   useEffect(() => {
     setAddress('');
     setAmount('');
+    setMemo('');
     setGasFee(GAS_FEE.default);
     setMemo('');
     setNonceValue(inferredNonce);
@@ -170,7 +171,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             <Tittle>To</Tittle>
 
             <Input
-              autoComplete='off'
+              autoComplete="off"
               value={address}
               onChange={(event) => {
                 setAddress(event.target.value);
@@ -287,7 +288,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                     },
                   }}
                 />
-                {gasFee > 10 && <Message >Fees are much higher than average</Message>}
+                {gasFee > 10 && <Message>Fees are much higher than average</Message>}
                 <Tittle>Nonce</Tittle>
                 <Input
                   onKeyDown={blockInvalidInt}
@@ -487,7 +488,7 @@ const ToastMessage = styled(Snackbar)({
     height: '34px',
     background: '#000000',
     borderRadius: '5px',
-    padding: '0 8px'
+    padding: '0 8px',
   },
   '&.MuiSnackbar-anchorOriginBottomCenter': {
     top: '37%',
