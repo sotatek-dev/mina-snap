@@ -19,8 +19,7 @@ const HomePage = () => {
     reduxDispatch(setIsLoading(false));
 
     const a = async () => {
-      console.log(process.env.NODE_ENV, 'process.env.NODE_ENV');
-      await SwitchNetwork(process.env.NODE_ENV == 'production' ? 'Mainnet' : 'Berkeley');
+      await SwitchNetwork('Mainnet');
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
