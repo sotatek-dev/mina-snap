@@ -70,11 +70,11 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   }, [nonceValue, placeHolderNonce])
 
   const nonceDisplay = useMemo(()=> {
-    if(nonce == "0"){
+    if(nonce == inferredNonce){
       return ""
     }
     return nonce
-  }, [nonce])
+  }, [nonce, inferredNonce])
 
 
   const success = () => {
@@ -157,6 +157,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setAddress('');
     setAmount('');
     setGasFee(GAS_FEE.default);
+    setMemo('');
     setNonceValue(inferredNonce);
     setIsShowContent(false);
   }, [open, inferredNonce]);
@@ -342,7 +343,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 
 const ContentBox = styled.div`
   width: 310px;
-  padding: 0 8px;
+  padding: 0 8px 0 16px;
   max-height: 443px;
   min-height: 443px;
   overflow-y: scroll;
