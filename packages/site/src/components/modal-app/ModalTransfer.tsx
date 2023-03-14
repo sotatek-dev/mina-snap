@@ -481,6 +481,7 @@ const ButtonNext = styled(Button)<Props>`
 const Message = styled(FormHelperText)`
   margin: 0;
   &.css-1wc848c-MuiFormHelperText-root {
+    color: #E4B200;
     margin: 0;
   }
 `;
