@@ -4,6 +4,7 @@ export type payloadSendTransaction = {
     memo: string,
     fee: number,
     nonce: number,
+    nonceValue:string
 }
 
 export type TypeResponseSendTransaction = {

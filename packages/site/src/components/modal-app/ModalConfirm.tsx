@@ -88,7 +88,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
           Fee
           <Content>{toPlainString(txInfoProp?.fee)} MINA</Content>
         </BoxInfo>
-        {txInfoProp?.nonce != Number(inferredNonce) && (
+        { !!txInfoProp.nonceValue&& (
           <BoxInfo>
             Nonce
             <Content>{txInfoProp.nonce}</Content>
