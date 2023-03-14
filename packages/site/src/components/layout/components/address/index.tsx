@@ -14,16 +14,15 @@ import { useState } from 'react';
 import ModalCommon from 'components/common/modal';
 import { handelCoppy } from 'helpers/handleCoppy';
 import Tooltip from '@mui/material/Tooltip';
+import { setDetailsAccount } from 'slices/walletSlice';
 import { setIsShowKebabMenu } from 'slices/modalSlice';
 
 const Address = () => {
-  const { activeAccount, accountName } = useAppSelector((state) => state.wallet);
+  const { activeAccount, accountName, accounts } = useAppSelector((state) => state.wallet);
   const [openModal, setOpenModal] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
   const dispatch = useAppDispatch();
   const { isShowKebabMenu } = useAppSelector((state) => state.modals);
-
-
 
   const hanldeViewAccount = () => {
     const type = 'wallet';
@@ -31,7 +30,11 @@ const Address = () => {
   };
 
   const handleOpenModal = () => {
-    setOpenModal(true);
+    const obj = accounts.find((element) => element.address === activeAccount);
+    if (obj) {
+      dispatch(setDetailsAccount(obj));
+      setOpenModal(true);
+    }
   };
 
   const handleOnClickCoppy = () => {
@@ -41,7 +44,6 @@ const Address = () => {
       setOpenTooltip(false);
     }, 5000);
   };
-
   const styleActive = {
     padding: '2px 8px 4px 9px',
     borderRadius: '50%',
@@ -105,7 +107,7 @@ const Address = () => {
         }
       >
         <ButtonMenu onClick={handleShowKebabMenu} style={isShowKebabMenu ? styleActive : styleInactive} typeButton="round">
-          <PointMenu  src={IThreeDot} />
+          <PointMenu src={IThreeDot} />
         </ButtonMenu>
       </KebabMenu>
       <ModalCommon

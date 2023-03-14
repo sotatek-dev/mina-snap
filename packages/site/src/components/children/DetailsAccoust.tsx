@@ -102,11 +102,11 @@ const ListCustom = styled(List)({
 const Item = styled(ListItem)({
   padding: '0 12px',
   height: '40px',
-  ":hover": {
+  ':hover': {
     cursor: 'pointer',
-    background: '#F1F1F1'
-  }
-})
+    background: '#F1F1F1',
+  },
+});
 
 const BoxContentTitle = styled(Box)({
   fontFamily: 'Inter Regular',
@@ -137,7 +137,7 @@ const ListItemTextCustom = styled(ListItemText)({
     fontSize: '10px',
     lineHeight: '12px',
     color: '#000000',
-    paddingBottom: '1px'
+    paddingBottom: '1px',
   },
   '& .css-83ijpv-MuiTypography-root': {
     fontFamily: 'Inter Regular',

@@ -59,6 +59,7 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
       setValue(Res.name);
     });
   }, []);
+
   return (
     <Wrapper>
       <DropdownStyled
