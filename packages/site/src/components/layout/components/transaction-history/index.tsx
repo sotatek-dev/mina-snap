@@ -209,6 +209,8 @@ const TxStatus = styled.div<Props>`
   font-size: 12px;
   line-height: 15px;
   letter-spacing: -0.03em;
+  border-radius: 3px;
+  padding: 4px;
   color: ${(props) => (props.status == 'PENDING' ? '#ECC307' : props.status == 'APPLIED' ? '#0DB27C' : '#D95A5A')};
   background: ${(props) => (props.status == 'PENDING' ? '#ECE8D7' : props.status == 'APPLIED' ? '#D5E7E4' : '#FBEEEE')};
 `;
