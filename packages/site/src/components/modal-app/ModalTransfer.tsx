@@ -36,6 +36,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const [nonceValue, setNonceValue] = useState(inferredNonce);
   const [message, setMessage] = useState('');
   const [openToastMsg, setOpenToastMsg] = useState(false);
+  const [maxlength, setMaxlength] = useState(500000);
 
   const [txInfo, setTxInfo] = useState<payloadSendTransaction>({
     to: '',
@@ -142,7 +143,10 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   };
 
   const handleOnChangeBalance = (event: any) => {
-    setAmount(event.target.value);
+    if (event.target.value.length < maxlength) {
+      setAmount(event.target.value);
+      return;
+    }
   };
 
   useEffect(() => {
@@ -161,6 +165,13 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setNonceValue(inferredNonce);
     setIsShowContent(false);
   }, [open, inferredNonce]);
+
+  useEffect(() => {
+    const [fist, last] = amount.split('.');
+    if (last) {
+      setMaxlength(fist.length + 11);
+    }
+  }, [amount]);
 
   return (
     <Modal open={open} title="Send" clickOutSide={clickOutSide} setOpenModal={setOpenModal}>
