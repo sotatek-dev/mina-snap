@@ -73,6 +73,7 @@ const HomePage = () => {
         );
         reduxDispatch(setIsLoadingGlobal(false));
       } else {
+        reduxDispatch(setIsLoadingGlobal(false));
         reduxDispatch(setWalletConnection(false));
       }
     };
