@@ -9,7 +9,7 @@ import Button from 'components/common/button';
 import ModalConfirm from './ModalConfirm';
 import { useAppSelector } from 'hooks/redux';
 import { payloadSendTransaction } from 'types/transaction';
-import { addressValid } from 'helpers/formatAccountAddress';
+import { addressValid, formatBalance } from 'helpers/formatAccountAddress';
 import { blockInvalidChar, blockInvalidInt, toPlainString } from 'utils/utils';
 
 interface ModalProps {
@@ -187,8 +187,8 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             />
             <WTitle>
               <Tittle>Amount</Tittle>
-              <Balance>Balance: {balance}</Balance>
-              <MaxAmount onClick={() => setAmount(balance.toString())}>Max</MaxAmount>
+              <Balance>Balance: {formatBalance(balance)}</Balance>
+              <MaxAmount onClick={() => setAmount(formatBalance(balance.toString()))}>Max</MaxAmount>
             </WTitle>
             <Input
               onKeyDown={blockInvalidChar}

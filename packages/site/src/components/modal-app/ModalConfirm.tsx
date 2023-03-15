@@ -171,6 +171,7 @@ const Content = styled.div`
 `;
 
 const ButtonConfirm = styled(Button)`
+  line-height: 14px;
   margin-top: 12px;
 `;
 
