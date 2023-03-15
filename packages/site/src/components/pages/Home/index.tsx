@@ -71,6 +71,7 @@ const HomePage = () => {
             inferredNonce: accountInfor.inferredNonce,
           }),
         );
+
         reduxDispatch(setIsLoadingGlobal(false));
       } else {
         reduxDispatch(setIsLoadingGlobal(false));

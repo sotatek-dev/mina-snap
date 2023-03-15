@@ -21,8 +21,8 @@ const ConnectWallet: React.FC<Props> = () => {
     if (isLoading) return;
     try {
       reduxDispatch(setIsLoading(true));
-      // await connectToSnap();
-      await WALLET[`MetamaskFlask`].methods.connectToSnap();
+      await connectToSnap();
+      // await WALLET[`MetamaskFlask`].methods.connectToSnap();
 
       const isInstalledSnap = await getSnap();
       const accountList = await AccountList();
