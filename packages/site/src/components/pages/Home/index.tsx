@@ -11,7 +11,7 @@ import {
   setWalletConnection,
   setTransactions,
   setListAccounts,
-  setIsLoadingSwitchNetWork,
+  setIsLoadingGlobal,
 } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 
@@ -34,7 +34,7 @@ const HomePage = () => {
           inferredNonce: '',
         }),
       );
-      await reduxDispatch(setIsLoadingSwitchNetWork(true));
+      await reduxDispatch(setIsLoadingGlobal(true));
       await reduxDispatch(setIsLoading(false));
       await await SwitchNetwork('Mainnet');
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
@@ -70,7 +70,7 @@ const HomePage = () => {
             inferredNonce: accountInfor.inferredNonce,
           }),
         );
-        reduxDispatch(setIsLoadingSwitchNetWork(false));
+        reduxDispatch(setIsLoadingGlobal(false));
       } else {
         reduxDispatch(setWalletConnection(false));
       }

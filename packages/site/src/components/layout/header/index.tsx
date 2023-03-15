@@ -14,7 +14,7 @@ import React from 'react';
 import { useMinaSnap } from 'services';
 import ModalCommon from 'components/common/modal';
 import CreatNameAccount from 'components/children/CreatNameAccount';
-import { setActiveAccount, setIsLoading, setTransactions } from 'slices/walletSlice';
+import { setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions } from 'slices/walletSlice';
 import LinearProgress from '@mui/material/LinearProgress';
 import { ResultCreateAccount } from 'types/account';
 import DetailsAccoust from 'components/children/DetailsAccoust';
@@ -31,6 +31,7 @@ const Header = () => {
   const [isShowDetail, setIsShowDetail] = React.useState(false);
 
   const handleChangeAccount = async (item: any) => {
+    await dispatch(setIsLoadingGlobal(true));
     dispatch(setIsLoading(true));
     dispatch(setTransactions([]));
     dispatch(
@@ -49,8 +50,8 @@ const Header = () => {
     await ChangeAccount(payload);
     const accountInfor = await getAccountInfors();
     const txList = await getTxHistory();
-    dispatch(setTransactions(txList));
-    dispatch(
+    await dispatch(setTransactions(txList));
+    await dispatch(
       setActiveAccount({
         activeAccount: accountInfor.publicKey as string,
         balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
@@ -59,7 +60,8 @@ const Header = () => {
       }),
     );
 
-    dispatch(setIsLoading(false));
+    await dispatch(setIsLoading(false));
+    await dispatch(setIsLoadingGlobal(false));
   };
 
   const closeModal = (accounts: ResultCreateAccount) => {
@@ -109,7 +111,7 @@ const Header = () => {
   const handldeCloseAccount = () => {
     dispatch(setIsShowListAccount(false));
     dispatch(setIsShowKebabMenu(false));
-  }
+  };
 
   return (
     <>
@@ -119,46 +121,48 @@ const Header = () => {
           <Title />
         </BoxLogo>
         <WDropDown>
-          <BoxDropDown onClick={() =>handldeCloseAccount()}> 
+          <BoxDropDown onClick={() => handldeCloseAccount()}>
             <DropDownNetwork options={OPTIONS_NETWORK} />
           </BoxDropDown>
           <AccountDetails
             closeTrigger="click"
             offSet={[-140, 10]}
-            content={ isShowListAccount &&
-              (<AccountDetailsContent>
-                <Label>Account Management</Label>
-                {isLoading && <LinearProgressCustom />}
-                <WAccount className={isLoading ? 'disable' : ''}>
-                  {accounts.map((item, index) => {
-                    return (
-                      <Box
-                        key={index}
-                        onClick={() => {
-                          handleChangeAccount(item);
-                        }}
-                      >
-                        <CardAccount
-                          handleShowDetail={showDetails}
-                          active={activeAccount === item.address}
-                          data={item}
-                          imported={item.isImported}
-                        ></CardAccount>
-                      </Box>
-                    );
-                  })}
-                </WAccount>
-                <WButton>
-                  <ButtonCreate className={isLoading ? 'disable' : ''} onClick={handleClickCreat}>
-                    <ICreate />
-                    Create
-                  </ButtonCreate>
-                  <ButtonImport className={isLoading ? 'disable' : ''} onClick={handleClickImport}>
-                    <IImport />
-                    Import
-                  </ButtonImport>
-                </WButton>
-              </AccountDetailsContent>)
+            content={
+              isShowListAccount && (
+                <AccountDetailsContent>
+                  <Label>Account Management</Label>
+                  {isLoading && <LinearProgressCustom />}
+                  <WAccount className={isLoading ? 'disable' : ''}>
+                    {accounts.map((item, index) => {
+                      return (
+                        <Box
+                          key={index}
+                          onClick={() => {
+                            handleChangeAccount(item);
+                          }}
+                        >
+                          <CardAccount
+                            handleShowDetail={showDetails}
+                            active={activeAccount === item.address}
+                            data={item}
+                            imported={item.isImported}
+                          ></CardAccount>
+                        </Box>
+                      );
+                    })}
+                  </WAccount>
+                  <WButton>
+                    <ButtonCreate className={isLoading ? 'disable' : ''} onClick={handleClickCreat}>
+                      <ICreate />
+                      Create
+                    </ButtonCreate>
+                    <ButtonImport className={isLoading ? 'disable' : ''} onClick={handleClickImport}>
+                      <IImport />
+                      Import
+                    </ButtonImport>
+                  </WButton>
+                </AccountDetailsContent>
+              )
             }
           >
             <BoxImg onClick={handleShowListAccount} style={isShowListAccount ? styleActive : styleInactive}>
@@ -299,7 +303,7 @@ const ButtonCreate = styled.div`
   border: 1px solid;
   outline: none;
   box-sizing: border-box;
-  border-color: #594AF1;
+  border-color: #594af1;
   border-width: 2px;
   :hover {
     background: #5446e5;
@@ -317,7 +321,7 @@ const ButtonImport = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-color: #594AF1;
+  border-color: #594af1;
   border-width: 2px;
   line-height: 20px;
   border-radius: 5px;

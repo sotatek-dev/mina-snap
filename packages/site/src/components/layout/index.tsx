@@ -8,7 +8,7 @@ import TransactionHistory from './components/transaction-history';
 import Header from './header';
 
 const Home = () => {
-  const { loadingSwitchNework } = useAppSelector((state) => state.wallet);
+  const { isLoadingGlobal } = useAppSelector((state) => state.wallet);
   return (
     <Wrapper>
       <Header />
@@ -19,7 +19,7 @@ const Home = () => {
           <TransactionHistory />
         </Content>
       </ColMiddle>
-      <Modal sx={{ outline: 'none' }} open={loadingSwitchNework}>
+      <Modal sx={{ outline: 'none' }} open={isLoadingGlobal}>
         <Container>
           <Box className="dot-loadding"></Box>
         </Container>

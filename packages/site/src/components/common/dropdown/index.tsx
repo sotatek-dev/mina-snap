@@ -4,7 +4,7 @@ import { Group, Option, ReactDropdownProps } from 'react-dropdown';
 import { useDispatch } from 'react-redux';
 import { useMinaSnap } from 'services';
 import { useState } from 'react';
-import { setActiveAccount, setIsLoadingSwitchNetWork, setListAccounts, setTransactions } from 'slices/walletSlice';
+import { setActiveAccount, setIsLoadingGlobal, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 
 interface Props extends ReactDropdownProps {
@@ -19,7 +19,7 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
   const [value, setValue] = useState('Mainnet');
 
   const changeNetwork = async (e: Option) => {
-    dispatch(setIsLoadingSwitchNetWork(true));
+    dispatch(setIsLoadingGlobal(true));
     setValue(e.value);
     dispatch(setTransactions([]));
     dispatch(setListAccounts([]));
@@ -48,10 +48,10 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
             inferredNonce: accountInfor.inferredNonce as string,
           }),
         );
-        dispatch(setIsLoadingSwitchNetWork(false));
+        dispatch(setIsLoadingGlobal(false));
       })
       .finally(() => {
-        dispatch(setIsLoadingSwitchNetWork(false));
+        dispatch(setIsLoadingGlobal(false));
       });
   };
 
