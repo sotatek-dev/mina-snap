@@ -3,10 +3,9 @@ import 'react-dropdown/style.css';
 import { Group, Option, ReactDropdownProps } from 'react-dropdown';
 import { useDispatch } from 'react-redux';
 import { useMinaSnap } from 'services';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { setActiveAccount, setIsLoadingSwitchNetWork, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
-import { ResponseNetworkConfig } from 'types/snap';
 
 interface Props extends ReactDropdownProps {
   error?: boolean;
@@ -20,6 +19,7 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
   const [value, setValue] = useState('Mainnet');
 
   const changeNetwork = async (e: Option) => {
+    dispatch(setIsLoadingSwitchNetWork(true));
     setValue(e.value);
     dispatch(setTransactions([]));
     dispatch(setListAccounts([]));
@@ -32,15 +32,15 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
       }),
     );
     dispatch(setTransactions([]));
-    dispatch(setIsLoadingSwitchNetWork(true));
+
     await SwitchNetwork(e.value)
       .then(async () => {
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
         const txList = await getTxHistory();
-        dispatch(setTransactions(txList));
-        dispatch(setListAccounts(accountList));
-        dispatch(
+        await dispatch(setTransactions(txList));
+        await dispatch(setListAccounts(accountList));
+        await dispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
             balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
@@ -48,17 +48,12 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
             inferredNonce: accountInfor.inferredNonce as string,
           }),
         );
+        dispatch(setIsLoadingSwitchNetWork(false));
       })
       .finally(() => {
         dispatch(setIsLoadingSwitchNetWork(false));
       });
   };
-
-  useEffect(() => {
-    // GetNetworkConfigSnap().then((Res: ResponseNetworkConfig) => {
-    //   setValue(Res.name);
-    // });
-  }, []);
 
   return (
     <Wrapper>

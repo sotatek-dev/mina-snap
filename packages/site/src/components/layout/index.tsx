@@ -1,3 +1,6 @@
+import { Modal } from '@mui/material';
+import { Box } from '@mui/system';
+import { useAppSelector } from 'hooks/redux';
 import styled from 'styled-components';
 import Address from './components/address';
 import Balance from './components/balance';
@@ -5,6 +8,7 @@ import TransactionHistory from './components/transaction-history';
 import Header from './header';
 
 const Home = () => {
+  const { loadingSwitchNework } = useAppSelector((state) => state.wallet);
   return (
     <Wrapper>
       <Header />
@@ -15,9 +19,27 @@ const Home = () => {
           <TransactionHistory />
         </Content>
       </ColMiddle>
+      <Modal sx={{ outline: 'none' }} open={loadingSwitchNework}>
+        <Container>
+          <Box className="dot-loadding"></Box>
+        </Container>
+      </Modal>
     </Wrapper>
   );
 };
+
+const Container = styled(Box)({
+  position: 'absolute',
+  display: 'flex',
+  top: '50%',
+  background: 'unset',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  padding: 20,
+  '&:focus-visible': {
+    outline: 'none',
+  },
+});
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.palette.grey.grey3};

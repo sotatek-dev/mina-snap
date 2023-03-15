@@ -21,6 +21,7 @@ export interface WalletState {
   transactions: Array<ResultTransactionList>;
   detailTransaction?: ResultTransactionList;
   loadingSwitchNework: boolean;
+
 }
 
 const initialState: WalletState = {

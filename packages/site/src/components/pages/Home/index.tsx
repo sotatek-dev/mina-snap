@@ -11,6 +11,7 @@ import {
   setWalletConnection,
   setTransactions,
   setListAccounts,
+  setIsLoadingSwitchNetWork,
 } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 
@@ -22,18 +23,10 @@ const HomePage = () => {
   const { connected } = useAppSelector((state) => state.wallet);
 
   useEffect(() => {
-    reduxDispatch(setIsLoading(false));
-
     const a = async () => {
-      await SwitchNetwork('Mainnet');
-      const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
-      const isUnlocked = (await getIsUnlocked()) as boolean;
-      setIsUnlocked(isUnlocked);
-      const isInstalledSnap = await getSnap();
-      localStorage.clear();
-      reduxDispatch(setTransactions([]));
-      reduxDispatch(setListAccounts([]));
-      reduxDispatch(
+      await reduxDispatch(setTransactions([]));
+      await reduxDispatch(setListAccounts([]));
+      await reduxDispatch(
         setActiveAccount({
           activeAccount: '',
           balance: '',
@@ -41,6 +34,14 @@ const HomePage = () => {
           inferredNonce: '',
         }),
       );
+      await reduxDispatch(setIsLoadingSwitchNetWork(true));
+      await reduxDispatch(setIsLoading(false));
+      await await SwitchNetwork('Mainnet');
+      const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
+      const isUnlocked = (await getIsUnlocked()) as boolean;
+      setIsUnlocked(isUnlocked);
+      const isInstalledSnap = await getSnap();
+      localStorage.clear();
 
       if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
         setIsUnlocked(false);
@@ -54,14 +55,14 @@ const HomePage = () => {
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
 
-        reduxDispatch(
+        await reduxDispatch(
           connectWallet({
             accountList,
             isInstalledSnap,
           }),
         );
 
-        reduxDispatch(
+        await reduxDispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
             balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
@@ -69,6 +70,7 @@ const HomePage = () => {
             inferredNonce: accountInfor.inferredNonce,
           }),
         );
+        reduxDispatch(setIsLoadingSwitchNetWork(false));
       } else {
         reduxDispatch(setWalletConnection(false));
       }
