@@ -5,7 +5,6 @@ import DropdownCommon from 'components/common/dropdown';
 import wallet from 'assets/icons/wallet.png';
 import { OPTIONS_NETWORK } from 'utils/constants';
 import { PopperTooltipView } from 'components/common/tooltip';
-import ButtonCommon from 'components/common/button';
 import iconCreate from 'assets/icons/icon-create.svg';
 import iconImport from 'assets/icons/icon-import.svg';
 import CardAccount from 'components/modules/CardAccount';
@@ -283,7 +282,7 @@ const WButton = styled.div`
   padding: 20px 16px;
 `;
 
-const ButtonCreate = styled(ButtonCommon)`
+const ButtonCreate = styled.div`
   width: 118px;
   height: 34px;
   background: ${(props) => props.theme.palette.default.main};
@@ -294,12 +293,20 @@ const ButtonCreate = styled(ButtonCommon)`
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid;
+  outline: none;
+  box-sizing: border-box;
+  border-color: #594AF1;
+  border-width: 2px;
   :hover {
     background: #5446e5;
   }
 `;
 
-const ButtonImport = styled(ButtonCommon)`
+const ButtonImport = styled.div`
   width: 118px;
   height: 34px;
   background: ${(props) => props.theme.palette.default.contrastText};
@@ -310,7 +317,16 @@ const ButtonImport = styled(ButtonCommon)`
   display: flex;
   align-items: center;
   justify-content: center;
+  border-color: #594AF1;
+  border-width: 2px;
+  line-height: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid;
+  outline: none;
+  box-sizing: border-box;
   :hover {
+    cursor: pointer;
     background: #d9d9d9;
   }
 `;
