@@ -92,7 +92,7 @@ export async function getTxHistory(networkConfig: NetworkConfig, options: Histor
     tx.status = tx.failureReason ? 'FAILED' : 'APPLIED';
   });
 
-  return [...pendingTxs, ...transactions];
+  return [...pendingTxs.reverse(), ...transactions];
 }
 
 export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {

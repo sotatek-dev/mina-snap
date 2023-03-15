@@ -67,7 +67,7 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
     if (!nameAccount) {
       return 'disableButton';
     }
-    if (nameAccount.length > 16) {
+    if (nameAccount.length >= 16) {
       return 'disableButton';
     }
     if (isLoading) {
@@ -76,7 +76,7 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
   };
 
   const handleChangeInput = (value: string) => {
-    if (value.length < 16) {
+    if (value.length <= 16) {
       setNameAccount(value);
       return;
     }
@@ -138,7 +138,7 @@ const ButtonCustomCancel = styled(Button)<ButtonProps>({
   textTransform: 'none',
   color: '#000000',
   fontWeight: '600',
-  fontSize: '10px',
+  fontSize: '12px',
 });
 const ButtonCustomConfirm = styled(Button)<ButtonProps>({
   width: '100%',
