@@ -34,9 +34,7 @@ const HomePage = () => {
           inferredNonce: '',
         }),
       );
-      await reduxDispatch(setIsLoadingGlobal(true));
-      await reduxDispatch(setIsLoading(false));
-      await await SwitchNetwork('Mainnet');
+
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
@@ -48,6 +46,9 @@ const HomePage = () => {
         return;
       }
       if (isUnlocked) {
+        await reduxDispatch(setIsLoadingGlobal(true));
+        await reduxDispatch(setIsLoading(false));
+        await await SwitchNetwork('Mainnet');
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
           await RequestSnap();
         }

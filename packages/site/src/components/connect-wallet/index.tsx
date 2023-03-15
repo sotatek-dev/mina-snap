@@ -4,9 +4,10 @@ import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, ButtonProps, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { connectWallet, setActiveAccount, setIsLoading, setTransactions } from 'slices/walletSlice';
+import { connectWallet, setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import wainning from 'assets/icons/wainning.svg';
+import { WALLET } from 'services/multipleWallet';
 
 type Props = {};
 
@@ -20,21 +21,22 @@ const ConnectWallet: React.FC<Props> = () => {
     if (isLoading) return;
     try {
       reduxDispatch(setIsLoading(true));
-      await connectToSnap();
+      // await connectToSnap();
+      await WALLET[`MetamaskFlask`].methods.connectToSnap();
 
       const isInstalledSnap = await getSnap();
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
       const txList = await getTxHistory();
-      reduxDispatch(setTransactions(txList));
-      reduxDispatch(setIsLoading(false));
-      reduxDispatch(
+      await reduxDispatch(setTransactions(txList));
+      await reduxDispatch(setIsLoading(false));
+      await reduxDispatch(
         connectWallet({
           accountList,
           isInstalledSnap,
         }),
       );
-      reduxDispatch(
+      await reduxDispatch(
         setActiveAccount({
           activeAccount: accountInfor.publicKey as string,
           balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
@@ -42,6 +44,7 @@ const ConnectWallet: React.FC<Props> = () => {
           inferredNonce: accountInfor.inferredNonce as string,
         }),
       );
+      await reduxDispatch(setIsLoadingGlobal(false));
     } catch (e) {
       console.log(e);
     } finally {
@@ -102,9 +105,9 @@ const ButtonCustomRequiredMetamask = styled(Button)<ButtonProps>(() => ({
   display: 'flex',
   justifyContent: 'center',
   width: '330px',
-  ':hover' : {
-    cursor: 'default'
-  }
+  ':hover': {
+    cursor: 'default',
+  },
 }));
 
 const BoxCenter = styled(Box)(() => ({
