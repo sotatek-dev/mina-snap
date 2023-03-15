@@ -93,7 +93,7 @@ const Address = () => {
       <KebabMenu
         closeTrigger="click"
         offSet={[50, 10]}
-        content={
+        content={isShowKebabMenu && 
           <MenuContent>
             <MenuItem onClick={() => hanldeViewAccount()}>
               <IconLink src={ILink} />
