@@ -1,4 +1,5 @@
 import { Buffer } from 'safe-buffer';
+import bs58check from 'bs58check';
 
 export const reverse = (bytes: any) => {
   const reversed = Buffer.alloc(bytes.length);
@@ -23,3 +24,13 @@ export function getOperationName(query: string) {
 
   throw new Error('GQL not valid');
 }
+
+export const decodeMemo = (encode: string) => {
+  try {
+    const encoded = bs58check.decode(encode);
+    const res = encoded.slice(3, 3 + encoded[2]).toString('utf-8');
+    return res;
+  } catch (err) {
+    return encode;
+  }
+};

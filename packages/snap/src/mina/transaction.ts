@@ -10,6 +10,7 @@ import {
   sendStakeDelegationGql,
 } from '../graphql/gqlparams';
 import { HistoryOptions, NetworkConfig, StakeTxInput, TxInput } from '../interfaces';
+import { decodeMemo } from '../util/helper';
 import { getMinaClient } from '../util/mina-client.util';
 import { popupNotify } from '../util/popup.util';
 import { getAccountInfo } from './account';
@@ -80,10 +81,16 @@ export async function submitPayment(signedPayment: Signed<Payment>, networkConfi
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
   const { pooledUserCommands: pendingTxs } = await gql(networkConfig.gqlUrl, TxPendingQuery, { address });
-  pendingTxs.forEach((tx: any) => (tx.status = 'PENDING'));
+  pendingTxs.forEach((tx: any) => {
+    tx.memo = decodeMemo(tx.memo);
+    tx.status = 'PENDING';
+  });
 
   const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery, { ...options, address });
-  transactions.forEach((tx: any) => (tx.status = tx.failureReason ? 'FAILED' : 'APPLIED'));
+  transactions.forEach((tx: any) => {
+    tx.memo = decodeMemo(tx.memo);
+    tx.status = tx.failureReason ? 'FAILED' : 'APPLIED';
+  });
 
   return [...pendingTxs, ...transactions];
 }
