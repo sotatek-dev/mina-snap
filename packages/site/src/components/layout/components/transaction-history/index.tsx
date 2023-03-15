@@ -156,7 +156,7 @@ const TransactionList = styled.div``;
 const TracsactionItem = styled.div`
   border-bottom: 1.6px solid #d9d9d9;
   display: flex;
-  padding: 20px 15px;
+  padding: 20px 20px;
   :hover {
     background: #f1f1f1;
     cursor: pointer;
@@ -207,7 +207,7 @@ const Detail = styled.div`
 
 const TxStatus = styled.div<Props>`
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   line-height: 15px;
   letter-spacing: -0.03em;

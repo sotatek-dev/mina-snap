@@ -51,6 +51,10 @@ const ModalTransactionDetail = ({ open, clickOutSide, setOpenModal, transaction 
           From
           <Content>{transaction?.from}</Content>
         </BoxInfo>
+        {transaction?.memo && <BoxInfo>
+          Memo
+          <Content>{transaction?.memo}</Content>
+        </BoxInfo>}
         <BoxInfo>
           Fee
           <Content>{formatBalance(ethers.utils.formatUnits(transaction?.fee || 0, 'gwei'))} MINA</Content>
