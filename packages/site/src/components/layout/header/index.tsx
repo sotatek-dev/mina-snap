@@ -20,7 +20,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { ResultCreateAccount } from 'types/account';
 import DetailsAccoust from 'components/children/DetailsAccoust';
 import { ethers } from 'ethers';
-import { setIsShowListAccount } from 'slices/modalSlice';
+import { setIsShowKebabMenu, setIsShowListAccount } from 'slices/modalSlice';
 
 const Header = () => {
   const { ChangeAccount, getAccountInfors, getTxHistory } = useMinaSnap();
@@ -109,6 +109,7 @@ const Header = () => {
   };
   const handldeCloseAccount = () => {
     dispatch(setIsShowListAccount(false));
+    dispatch(setIsShowKebabMenu(false));
   }
 
   return (
