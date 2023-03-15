@@ -55,9 +55,9 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
   };
 
   useEffect(() => {
-    GetNetworkConfigSnap().then((Res: ResponseNetworkConfig) => {
-      setValue(Res.name);
-    });
+    // GetNetworkConfigSnap().then((Res: ResponseNetworkConfig) => {
+    //   setValue(Res.name);
+    // });
   }, []);
 
   return (

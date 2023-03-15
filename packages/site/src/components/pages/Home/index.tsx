@@ -23,12 +23,14 @@ const HomePage = () => {
 
   useEffect(() => {
     reduxDispatch(setIsLoading(false));
-    SwitchNetwork('Mainnet');
+
     const a = async () => {
+      await SwitchNetwork('Mainnet');
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
       const isInstalledSnap = await getSnap();
+      localStorage.clear();
       reduxDispatch(setTransactions([]));
       reduxDispatch(setListAccounts([]));
       reduxDispatch(

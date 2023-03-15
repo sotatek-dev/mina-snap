@@ -40,9 +40,11 @@ const TransactionHistory = () => {
   };
 
   useEffect(() => {
-    const getListTxHistory = async () => {
-      const txList = await getTxHistory();
-      reduxDispatch(setTransactions(txList));
+    const getListTxHistory = () => {
+      setTimeout(async () => {
+        const txList = await getTxHistory();
+        reduxDispatch(setTransactions(txList));
+      }, 1000);
     };
     getListTxHistory();
   }, []);
@@ -57,7 +59,7 @@ const TransactionHistory = () => {
         <Label>HISTORY</Label>
         <TransactionList>
           {transactions.length > 0 ? (
-            transactions.slice(0,10).map((item, index) => {
+            transactions.slice(0, 10).map((item, index) => {
               return (
                 <TracsactionItem
                   key={index}
