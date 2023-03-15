@@ -148,7 +148,7 @@ const Label = styled.div`
   line-height: 17px;
   text-align: center;
   padding-bottom: 12px;
-  border-bottom: 1.5px solid #000000;
+  border-bottom: 1.5px solid #d9d9d9;
 `;
 
 const TransactionList = styled.div``;

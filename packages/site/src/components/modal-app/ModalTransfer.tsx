@@ -188,7 +188,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             <WTitle>
               <Tittle>Amount</Tittle>
               <Balance>Balance: {formatBalance(balance)}</Balance>
-              <MaxAmount onClick={() => setAmount(balance.toString())}>Max</MaxAmount>
+              <MaxAmount onClick={() => setAmount(formatBalance(balance.toString()))}>Max</MaxAmount>
             </WTitle>
             <Input
               onKeyDown={blockInvalidChar}
