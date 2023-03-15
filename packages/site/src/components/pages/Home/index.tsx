@@ -23,7 +23,7 @@ const HomePage = () => {
 
   useEffect(() => {
     reduxDispatch(setIsLoading(false));
-
+    SwitchNetwork('Mainnet');
     const a = async () => {
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
@@ -48,7 +48,7 @@ const HomePage = () => {
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
           await RequestSnap();
         }
-        await SwitchNetwork('Mainnet');
+
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
 
