@@ -31,7 +31,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
   const placeHolderGasFee = GAS_FEE.default;
-  const placeHolderNonce = `Nonce`+' '+inferredNonce
+  const placeHolderNonce = `Nonce` + ' ' + inferredNonce;
   const [gasFeeValue, setGasFee] = useState(GAS_FEE.default);
   const [nonceValue, setNonceValue] = useState('');
   const [message, setMessage] = useState('');
@@ -44,7 +44,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     memo: '',
     fee: 0,
     nonce: 0,
-    nonceValue:''
+    nonceValue: '',
   });
   const [isShowCotent, setIsShowContent] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -52,59 +52,58 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 
   const gasFee = useMemo(() => {
     if (gasFeeValue != placeHolderGasFee) {
-      return gasFeeValue
+      return gasFeeValue;
     }
-    return GAS_FEE.default
-  }, [gasFeeValue, placeHolderGasFee])
+    return GAS_FEE.default;
+  }, [gasFeeValue, placeHolderGasFee]);
 
   const gasFeeDisplay = useMemo(() => {
     if (gasFee == GAS_FEE.default || gasFee == GAS_FEE.slow || gasFee == GAS_FEE.fast || gasFee == 0) {
-      return ""
+      return '';
     }
-    return gasFee
-  }, [gasFee])
+    return gasFee;
+  }, [gasFee]);
 
   const success = () => {
     setOpenModal();
     handleClickOutSide();
   };
 
-  const handleClick = (nonceValue:string) => {
-    if(
-      addressValid(address) && 
-      Number(amount) >= 0 && 
-      Number(amount) < Number(balance) && 
-      gasFee >= 0 && 
+  const handleClick = (nonceValue: string) => {
+    if (
+      addressValid(address) &&
+      Number(amount) >= 0 &&
+      Number(amount) < Number(balance) &&
+      gasFee >= 0 &&
       Number(nonceValue) >= 0
     ) {
       setShowModal(disabled != true);
-    }
-    else{
-      if(disabled) return
-      if(!addressValid(address)){
+    } else {
+      if (disabled) return;
+      if (!addressValid(address)) {
         setMessage('Please enter valid address');
         setOpenToastMsg(true);
-        return
-      } 
-      if(Number(amount) < 0){
+        return;
+      }
+      if (Number(amount) < 0) {
         setMessage('Please enter a valid transaction amount');
         setOpenToastMsg(true);
-        return
-      } 
-      if(Number(amount) > Number(balance)){
+        return;
+      }
+      if (Number(amount) > Number(balance)) {
         setMessage('Insufficient balance');
         setOpenToastMsg(true);
-        return
+        return;
       }
-      if(gasFee < 0){
+      if (gasFee < 0) {
         setMessage('Please enter a valid transaction fee');
         setOpenToastMsg(true);
-        return
+        return;
       }
-      if(Number(nonceValue) < 0){
+      if (Number(nonceValue) < 0) {
         setMessage('Please enter a valid nonce');
         setOpenToastMsg(true);
-        return
+        return;
       }
     }
 
@@ -113,8 +112,8 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
       amount: Number(balance) == Number(amount) ? Number(amount) - Number(gasFee) : Number(amount),
       memo: memo,
       fee: Number(gasFee),
-      nonce: Number(nonceValue) ===0 ?Number(inferredNonce) : Number(nonceValue) ,
-      nonceValue:nonceValue
+      nonce: Number(nonceValue) === 0 ? Number(inferredNonce) : Number(nonceValue),
+      nonceValue: nonceValue,
     };
     setTxInfo(tx);
   };
@@ -125,10 +124,8 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 
   const handleNonce = (e: any) => {
     // if (e.target.value) {
-      setNonceValue(e.target.value);
+    setNonceValue(e.target.value);
     // } else setNonceValue(inferredNonce);
-  
-    
   };
 
   const handleOnChangeBalance = (event: any) => {
@@ -151,7 +148,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
     setAmount('');
     setGasFee(GAS_FEE.default);
     setMemo('');
-    // setNonceValue(inferredNonce);
+    setNonceValue('');
     setIsShowContent(false);
   }, [open, inferredNonce]);
 
@@ -170,7 +167,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
             <Tittle>To</Tittle>
 
             <Input
-              autoComplete='off'
+              autoComplete="off"
               value={address}
               onChange={(event) => {
                 setAddress(event.target.value);
@@ -289,7 +286,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                     },
                   }}
                 />
-                {gasFee > 10 && <Message >Fees are much higher than average</Message>}
+                {gasFee > 10 && <Message>Fees are much higher than average</Message>}
                 <Tittle>Nonce</Tittle>
                 <Input
                   onKeyDown={blockInvalidInt}
@@ -316,9 +313,13 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
           </AdvancedBox>
         </ContentBox>
         <BoxButton>
-          <ButtonNext disable={disabled} onClick={()=>{
-            handleClick(nonceValue)
-          }} type="submit">
+          <ButtonNext
+            disable={disabled}
+            onClick={() => {
+              handleClick(nonceValue);
+            }}
+            type="submit"
+          >
             Next
           </ButtonNext>
           <ModalConfirm
@@ -481,7 +482,7 @@ const ButtonNext = styled(Button)<Props>`
 const Message = styled(FormHelperText)`
   margin: 0;
   &.css-1wc848c-MuiFormHelperText-root {
-    color: #E4B200;
+    color: #e4b200;
     margin: 0;
   }
 `;
@@ -492,7 +493,7 @@ const ToastMessage = styled(Snackbar)({
     height: '34px',
     background: '#000000',
     borderRadius: '5px',
-    padding: '0 8px'
+    padding: '0 8px',
   },
   '&.MuiSnackbar-anchorOriginBottomCenter': {
     top: '37%',
