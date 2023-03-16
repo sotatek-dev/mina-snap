@@ -48,7 +48,7 @@ const HomePage = () => {
       if (isUnlocked) {
         await reduxDispatch(setIsLoadingGlobal(true));
         await reduxDispatch(setIsLoading(false));
-        await await SwitchNetwork('Mainnet');
+        await SwitchNetwork('Mainnet');
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
           await RequestSnap();
         }

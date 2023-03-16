@@ -13,7 +13,7 @@ type Props = {};
 
 const ConnectWallet: React.FC<Props> = () => {
   const reduxDispatch = useAppDispatch();
-  const { connectToSnap, getSnap, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
+  const { connectToSnap, getSnap, AccountList, getAccountInfors, getTxHistory, SwitchNetwork } = useMinaSnap();
 
   const { isInstalledWallet, isLoading } = useAppSelector((state) => state.wallet);
 
@@ -25,6 +25,7 @@ const ConnectWallet: React.FC<Props> = () => {
       // await WALLET[`MetamaskFlask`].methods.connectToSnap();
 
       const isInstalledSnap = await getSnap();
+      await SwitchNetwork('Mainnet');
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
       const txList = await getTxHistory();
