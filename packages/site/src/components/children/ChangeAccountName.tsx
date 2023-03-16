@@ -67,9 +67,6 @@ const ChangeAccountName = ({ open, onClose, data, onChange }: IChangeAccountName
     if (!nameAccount) {
       return 'disableButton';
     }
-    if (nameAccount.length >= 16) {
-      return 'disableButton';
-    }
     if (isLoading) {
       return 'disableButton';
     }
