@@ -48,31 +48,34 @@ const HomePage = () => {
       if (isUnlocked) {
         await reduxDispatch(setIsLoadingGlobal(true));
         await reduxDispatch(setIsLoading(false));
-        await SwitchNetwork('Mainnet');
-        if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
-          await RequestSnap();
-        }
+        SwitchNetwork('Mainnet').then(() => {
+          setTimeout(async () => {
+            if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
+              await RequestSnap();
+            }
 
-        const accountList = await AccountList();
-        const accountInfor = await getAccountInfors();
+            const accountList = await AccountList();
+            const accountInfor = await getAccountInfors();
 
-        await reduxDispatch(
-          connectWallet({
-            accountList,
-            isInstalledSnap,
-          }),
-        );
+            await reduxDispatch(
+              connectWallet({
+                accountList,
+                isInstalledSnap,
+              }),
+            );
 
-        await reduxDispatch(
-          setActiveAccount({
-            activeAccount: accountInfor.publicKey as string,
-            balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
-            accountName: accountInfor.name as string,
-            inferredNonce: accountInfor.inferredNonce,
-          }),
-        );
+            await reduxDispatch(
+              setActiveAccount({
+                activeAccount: accountInfor.publicKey as string,
+                balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+                accountName: accountInfor.name as string,
+                inferredNonce: accountInfor.inferredNonce,
+              }),
+            );
 
-        reduxDispatch(setIsLoadingGlobal(false));
+            reduxDispatch(setIsLoadingGlobal(false));
+          }, 300);
+        });
       } else {
         reduxDispatch(setIsLoadingGlobal(false));
         reduxDispatch(setWalletConnection(false));
