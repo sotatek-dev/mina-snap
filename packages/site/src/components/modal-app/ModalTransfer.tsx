@@ -32,7 +32,8 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   const [memo, setMemo] = useState('');
   const placeHolderGasFee = GAS_FEE.default;
   const placeHolderNonce = `Nonce` + ' ' + inferredNonce;
-  const [gasFeeValue, setGasFee] = useState(GAS_FEE.default);
+  const [gasFeeTextValue, setGasFeeTextValue] = useState("");
+  const [gasFeeValue, setGasFeeValue] = useState(GAS_FEE.default);
   const [nonceValue, setNonceValue] = useState('');
   const [message, setMessage] = useState('');
   const [openToastMsg, setOpenToastMsg] = useState(false);
@@ -58,11 +59,14 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   }, [gasFeeValue, placeHolderGasFee]);
 
   const gasFeeDisplay = useMemo(() => {
-    if (gasFee == GAS_FEE.default || gasFee == GAS_FEE.slow || gasFee == GAS_FEE.fast || gasFee == 0) {
+    if (gasFee == GAS_FEE.default || gasFee == GAS_FEE.slow || gasFee == GAS_FEE.fast ) {
       return '';
     }
+    if (gasFeeTextValue.length == 0) {
+      return ''
+    }
     return gasFee;
-  }, [gasFee]);
+  }, [gasFee, gasFeeTextValue]);
 
   const success = () => {
     setOpenModal();
@@ -123,9 +127,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   };
 
   const handleNonce = (e: any) => {
-    // if (e.target.value) {
     setNonceValue(e.target.value);
-    // } else setNonceValue(inferredNonce);
   };
 
   const handleOnChangeBalance = (event: any) => {
@@ -134,6 +136,10 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
       return;
     }
   };
+
+  useEffect(() => {
+    setGasFeeValue(Number(gasFeeTextValue))
+  }, [gasFeeTextValue])
 
   useEffect(() => {
     if (address && amount) {
@@ -146,7 +152,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
   useEffect(() => {
     setAddress('');
     setAmount('');
-    setGasFee(GAS_FEE.default);
+    setGasFeeTextValue(GAS_FEE.default.toString());
     setMemo('');
     setNonceValue('');
     setIsShowContent(false);
@@ -233,7 +239,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
               <Option
                 active={gasFee == GAS_FEE.slow}
                 onClick={() => {
-                  setGasFee(GAS_FEE.slow);
+                  setGasFeeTextValue(GAS_FEE.slow.toString());
                 }}
               >
                 Slow
@@ -241,7 +247,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
               <Option
                 active={gasFee == GAS_FEE.default}
                 onClick={() => {
-                  setGasFee(GAS_FEE.default);
+                  setGasFeeTextValue(GAS_FEE.default.toString());
                 }}
               >
                 Default
@@ -249,7 +255,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
               <Option
                 active={gasFee == GAS_FEE.fast}
                 onClick={() => {
-                  setGasFee(GAS_FEE.fast);
+                  setGasFeeTextValue(GAS_FEE.fast.toString());
                 }}
               >
                 Fast
@@ -275,7 +281,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
                   fullWidth
                   size="small"
                   onChange={(event) => {
-                    setGasFee(Number(event.target.value));
+                    setGasFeeTextValue(event.target.value);
                   }}
                   inputProps={{
                     style: {
