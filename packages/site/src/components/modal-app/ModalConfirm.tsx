@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
 import { useMinaSnap } from 'services';
-import { setActiveAccount, setIsLoading, setListAccounts, setTransactions } from 'slices/walletSlice';
+import { setActiveAccount, setListAccounts, setTransactions } from 'slices/walletSlice';
 import styled from 'styled-components';
 import { payloadSendTransaction } from 'types/transaction';
 import { getRealErrorMsg, toPlainString } from 'utils/utils';
@@ -16,6 +16,10 @@ interface ModalProps {
   setOpenModal: () => void;
   txInfoProp: payloadSendTransaction;
   closeSucces: () => void;
+}
+
+interface Props {
+  disable: boolean;
 }
 
 type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
@@ -32,6 +36,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   const dispatch = useAppDispatch();
 
   const handleSend = async () => {
+    if(loadingSend) return;
     // dispatch(setIsLoading(true));
     // console.log('x', await SendTransaction(txInfoProp));
     setLoadingSend(true);
@@ -104,7 +109,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
             <Content>{txInfoProp.memo}</Content>
           </BoxInfo>
         )}
-        <ButtonConfirm onClick={handleSend}>
+        <ButtonConfirm onClick={handleSend} disable={loadingSend}>
           { loadingSend ? <CircleLoading className='circle-loading'/> : `Confirm` }
         </ButtonConfirm>
         <Message
@@ -176,9 +181,12 @@ const Content = styled.div`
   color: #000000;
 `;
 
-const ButtonConfirm = styled(Button)`
+const ButtonConfirm = styled(Button)<Props>`
   line-height: 14px;
   margin-top: 12px;
+  border-color: transparent;
+  background: ${(props) => (props.disable ? '#D9D9D9' : '#594AF1')};
+  cursor: ${(props) => (props.disable ? 'wait' : 'pointer')};
 `;
 
 const CircleLoading = styled.div`
