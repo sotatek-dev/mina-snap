@@ -23,7 +23,8 @@ type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucces }: ModalProps) => {
   const { SendTransaction, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
   const { activeAccount } = useAppSelector((state) => state.wallet);
-
+  const [loadingSend, setLoadingSend] = useState(false);
+  // const loading = true
   const [message, setMessage] = useState('');
   const [openToastMsg, setOpenToastMsg] = useState(false);
 
@@ -31,8 +32,9 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   const dispatch = useAppDispatch();
 
   const handleSend = async () => {
-    dispatch(setIsLoading(true));
+    // dispatch(setIsLoading(true));
     // console.log('x', await SendTransaction(txInfoProp));
+    setLoadingSend(true);
     
     await SendTransaction(txInfoProp)
       .then(async () => {
@@ -55,10 +57,12 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
         const message = getRealErrorMsg(e.message);
         setMessage(message);
         setOpenToastMsg(true);
-        dispatch(setIsLoading(false));
+        // dispatch(setIsLoading(false));
+        setLoadingSend(false);
       })
       .finally(() => {
-        dispatch(setIsLoading(false));
+        setLoadingSend(false);
+        // dispatch(setIsLoading(false));
       });
   };
   return (
@@ -100,7 +104,9 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
             <Content>{txInfoProp.memo}</Content>
           </BoxInfo>
         )}
-        <ButtonConfirm onClick={handleSend}>Confirm</ButtonConfirm>
+        <ButtonConfirm onClick={handleSend}>
+          { loadingSend ? <CircleLoading className='circle-loading'/> : `Confirm` }
+        </ButtonConfirm>
         <Message
           autoHideDuration={5000}
           open={openToastMsg}
@@ -173,6 +179,33 @@ const Content = styled.div`
 const ButtonConfirm = styled(Button)`
   line-height: 14px;
   margin-top: 12px;
+`;
+
+const CircleLoading = styled.div`
+  width: 14px;
+  height: 14px;
+  border-radius: 99rem;
+  position: relative;
+  margin: 0 auto;
+  :before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit; 
+  border: 2px solid transparent;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+  animation: circleLoading 1s forwards infinite linear;
+}
+
+@keyframes circleLoading {
+  to {
+    transform: rotate(360deg);
+  }
+}
 `;
 
 const Message = styled(Snackbar)({
