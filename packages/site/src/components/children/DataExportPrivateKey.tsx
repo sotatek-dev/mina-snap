@@ -122,7 +122,7 @@ const BoxContentTitle = styled(Box)({
   lineHeight: '12px',
   paddingTop: '17px',
   color: '#000000',
-  margin : '0 12px',
+  margin : '0 16px',
 });
 const BoxContentAddress = styled(Box)({
   fontFamily: 'Inter Regular',
@@ -135,7 +135,7 @@ const BoxContentAddress = styled(Box)({
   color: '#000000',
   opacity: '0.4',
   wordWrap: 'break-word',
-  margin : '0 12px',
+  margin : '0 16px',
 });
 
 const ContainerContent = styled(Box)(() => ({
