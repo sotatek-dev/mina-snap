@@ -50,7 +50,7 @@ const TransactionHistory = () => {
   }, []);
 
   const paddingBt = {
-    paddingBottom: '20px',
+    marginBottom: '20px',
   };
 
   return (

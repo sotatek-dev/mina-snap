@@ -114,7 +114,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
 const Container = styled(Box)(() => ({
   width: '276px',
   height: '251px',
-  padding: '12px 12px 0',
+  padding: '12px 16px 0',
 }));
 const BoxTitle = styled(Box)(() => ({
   fontFamily: 'Inter Regular',
