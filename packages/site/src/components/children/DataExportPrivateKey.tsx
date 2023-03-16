@@ -58,11 +58,11 @@ const BoxAccton = styled(Box)({
   textAlign: 'center',
 });
 const ButtonCustomDone = styled(Button)<ButtonProps>({
-  width: '256px',
+  width: '248px',
   textTransform: 'none',
   background: '#594AF1',
   borderRadius: '5px',
-  margin : '0 12px',
+  margin : '0 16px',
 
 });
 const CustomImg = styled(Box)({
@@ -144,7 +144,7 @@ const ContainerContent = styled(Box)(() => ({
   border: '1px solid #D9D9D9',
   padding: '21px 14px',
   borderRadius: '8px',
-  margin: '0 8px',
+  margin: '0 16px',
   height: '56px',
 }));
 

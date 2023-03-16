@@ -134,6 +134,7 @@ const More = styled(ButtonCommon)<Props>`
   background: ${(props) => (props.active ? '#594AF1' : '#F9FAFC')};
   border: solid 1px ${(props) => (props.active ? '#594AF1' : '#F9FAFC')};
   color: ${(props) => (props.active ? '#FFFFFF' : '#000000')};
+  margin-right: -8px;
   :hover {
     background: #0000001a;
   }

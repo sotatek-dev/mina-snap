@@ -91,7 +91,7 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
 const Container = styled(Box)(() => ({
   width: '276px',
   height: '246px',
-  padding: '12px 12px 0',
+  padding: '12px 16px 0',
 }));
 
 const BoxTitle = styled(Box)(() => ({
