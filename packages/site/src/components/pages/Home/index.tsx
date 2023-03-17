@@ -38,16 +38,16 @@ const HomePage = () => {
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
-      const isInstalledSnap = await getSnap();
       localStorage.clear();
 
-      if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
-        setIsUnlocked(false);
-        return;
-      }
       if (isUnlocked) {
         await reduxDispatch(setIsLoadingGlobal(true));
         await reduxDispatch(setIsLoading(false));
+        const isInstalledSnap = await getSnap();
+        if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
+          setIsUnlocked(false);
+          return;
+        }
         SwitchNetwork('Mainnet').then(() => {
           setTimeout(async () => {
             if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
