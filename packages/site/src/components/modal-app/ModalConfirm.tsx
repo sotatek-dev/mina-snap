@@ -37,14 +37,12 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       const txList = await getTxHistory();
       const index = txList.findIndex((e) => e.status === 'PENDING');
       if (index >= 0) {
-        await dispatch(setTransactions([]));
         await dispatch(setTransactions(txList));
-        await setInfor();
       } else {
         await dispatch(setTransactions(txList));
         clearInterval(inteval);
-        await setInfor();
       }
+      await setInfor();
     }, 30000);
   };
 
