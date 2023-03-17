@@ -69,9 +69,9 @@ const HomePage = () => {
                 inferredNonce: accountInfor.inferredNonce,
               }),
             );
+            await reduxDispatch(setIsLoadingGlobal(false));
           }, 300);
         });
-        await reduxDispatch(setIsLoadingGlobal(false));
       } else {
         await reduxDispatch(setIsLoadingGlobal(false));
         await reduxDispatch(setWalletConnection(false));
