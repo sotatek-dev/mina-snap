@@ -28,37 +28,41 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   const { SendTransaction, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
   const { activeAccount } = useAppSelector((state) => state.wallet);
   const [loadingSend, setLoadingSend] = useState(false);
-  // const loading = true
   const [message, setMessage] = useState('');
   const [openToastMsg, setOpenToastMsg] = useState(false);
-
-  
   const dispatch = useAppDispatch();
 
   const handleSend = async () => {
-    if(loadingSend) return;
-    // dispatch(setIsLoading(true));
-    // console.log('x', await SendTransaction(txInfoProp));
+    if (loadingSend) return;
     setLoadingSend(true);
-    
+
     await SendTransaction(txInfoProp)
       .then(async () => {
+        const inteval = setInterval(async () => {
+          const txList = await getTxHistory();
+          const index = txList.findIndex((e) => e.status === 'PENDING');
+          if (index) {
+            dispatch(setTransactions(txList));
+          } else {
+            clearInterval(inteval);
+          }
+        }, 6000);
+
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
-        const txList = await getTxHistory();
-        dispatch(setTransactions(txList));
-        await dispatch(setListAccounts(accountList));
+
+        dispatch(setListAccounts(accountList));
         dispatch(
           setActiveAccount({
             activeAccount: accountInfor.publicKey as string,
             balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
             accountName: accountInfor.name as string,
-            inferredNonce: (Number(accountInfor.inferredNonce) + 1) + "" as string,
+            inferredNonce: (Number(accountInfor.inferredNonce) + 1 + '') as string,
           }),
         );
         closeSucces();
       })
-      .catch((e:any) => {
+      .catch((e: any) => {
         const message = getRealErrorMsg(e.message);
         setMessage(message);
         setOpenToastMsg(true);
@@ -97,7 +101,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
           Fee
           <Content>{toPlainString(txInfoProp?.fee)} MINA</Content>
         </BoxInfo>
-        { !!txInfoProp.nonceValue&& (
+        {!!txInfoProp.nonceValue && (
           <BoxInfo>
             Nonce
             <Content>{txInfoProp.nonce}</Content>
@@ -110,7 +114,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
           </BoxInfo>
         )}
         <ButtonConfirm onClick={handleSend} disable={loadingSend}>
-          { loadingSend ? <CircleLoading className='circle-loading'/> : `Confirm` }
+          {loadingSend ? <CircleLoading className="circle-loading" /> : `Confirm`}
         </ButtonConfirm>
         <Message
           autoHideDuration={5000}
@@ -196,24 +200,24 @@ const CircleLoading = styled.div`
   position: relative;
   margin: 0 auto;
   :before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit; 
-  border: 2px solid transparent;
-  border-right-color: #ffffff;
-  border-bottom-color: #ffffff;
-  animation: circleLoading 1s forwards infinite linear;
-}
-
-@keyframes circleLoading {
-  to {
-    transform: rotate(360deg);
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    border: 2px solid transparent;
+    border-right-color: #ffffff;
+    border-bottom-color: #ffffff;
+    animation: circleLoading 1s forwards infinite linear;
   }
-}
+
+  @keyframes circleLoading {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 const Message = styled(Snackbar)({
