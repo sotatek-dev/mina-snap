@@ -18,7 +18,8 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "type:check": "tsc --pretty --noEmit",
-    "release": "sh ../../scripts/release.sh"
+    "release": "sh ../../scripts/release.sh",
+    "dev": "env-cmd -f .env.development react-scripts build && env-cmd -f .env.development react-scripts start"
   },
   "browserslist": {
     "production": [
