@@ -53,17 +53,14 @@ const HomePage = () => {
             if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
               await RequestSnap();
             }
-
             const accountList = await AccountList();
             const accountInfor = await getAccountInfors();
-
             await reduxDispatch(
               connectWallet({
                 accountList,
                 isInstalledSnap,
               }),
             );
-
             await reduxDispatch(
               setActiveAccount({
                 activeAccount: accountInfor.publicKey as string,
@@ -72,9 +69,8 @@ const HomePage = () => {
                 inferredNonce: accountInfor.inferredNonce,
               }),
             );
-
-            reduxDispatch(setIsLoadingGlobal(false));
           }, 300);
+          reduxDispatch(setIsLoadingGlobal(false));
         });
       } else {
         reduxDispatch(setIsLoadingGlobal(false));

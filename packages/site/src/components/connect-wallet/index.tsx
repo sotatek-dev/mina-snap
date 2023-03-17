@@ -22,22 +22,20 @@ const ConnectWallet: React.FC<Props> = () => {
     try {
       reduxDispatch(setIsLoading(true));
       await connectToSnap();
-      // await WALLET[`MetamaskFlask`].methods.connectToSnap();
-
       const isInstalledSnap = await getSnap();
       await SwitchNetwork('Mainnet');
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
       const txList = await getTxHistory();
-      await reduxDispatch(setTransactions(txList));
-      await reduxDispatch(setIsLoading(false));
-      await reduxDispatch(
+      reduxDispatch(setTransactions(txList));
+      reduxDispatch(setIsLoading(false));
+      reduxDispatch(
         connectWallet({
           accountList,
           isInstalledSnap,
         }),
       );
-      await reduxDispatch(
+      reduxDispatch(
         setActiveAccount({
           activeAccount: accountInfor.publicKey as string,
           balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
@@ -45,10 +43,11 @@ const ConnectWallet: React.FC<Props> = () => {
           inferredNonce: accountInfor.inferredNonce as string,
         }),
       );
-      await reduxDispatch(setIsLoadingGlobal(false));
+      reduxDispatch(setIsLoadingGlobal(false));
     } catch (e) {
-      console.log(e);
+      reduxDispatch(setIsLoadingGlobal(false));
     } finally {
+      reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
     }
   };
