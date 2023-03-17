@@ -86,6 +86,15 @@ const ConnectWallet: React.FC<Props> = () => {
             )}
           </Button>
         </BoxCenter>
+        <BoxCenter>
+          <BoxRedirect>
+          {`If you don't have it installed, `}
+            <a target="_blank" href="https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk" rel="noreferrer">
+              click here
+            </a>{' '}
+            to install it
+          </BoxRedirect>
+        </BoxCenter>
       </BoxContent>
     </>
   );
@@ -132,6 +141,17 @@ const BoxInsideMetamask = styled(Box)(() => ({
   lineHeight: '22px',
   paddingTop: '25px',
   paddingBottom: '25px',
+  color: '#000000',
+}));
+
+const BoxRedirect = styled(Box)(() => ({
+  fontFamily: 'Inter Regular',
+  fontStyle: 'italic',
+  fontWeight: '400',
+  fontSize: '14px',
+  lineHeight: '18px',
+  paddingTop: '20px',
+  paddingBottom: '20px',
   color: '#000000',
 }));
 
