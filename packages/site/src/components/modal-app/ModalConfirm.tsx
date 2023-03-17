@@ -32,34 +32,45 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   const [openToastMsg, setOpenToastMsg] = useState(false);
   const dispatch = useAppDispatch();
 
+  const interval = () => {
+    const inteval = setInterval(async () => {
+      const txList = await getTxHistory();
+      const index = txList.findIndex((e) => e.status === 'PENDING');
+      if (index >= 0) {
+        dispatch(setTransactions(txList));
+        await setInfor();
+      } else {
+        clearInterval(inteval);
+        await setInfor();
+      }
+    }, 30000);
+  };
+
+  const setInfor = async () => {
+    const accountList = await AccountList();
+    const accountInfor = await getAccountInfors();
+    dispatch(setListAccounts(accountList));
+    dispatch(
+      setActiveAccount({
+        activeAccount: accountInfor.publicKey as string,
+        balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+        accountName: accountInfor.name as string,
+        inferredNonce: (Number(accountInfor.inferredNonce) + 1 + '') as string,
+      }),
+    );
+  };
+
   const handleSend = async () => {
     if (loadingSend) return;
     setLoadingSend(true);
 
     await SendTransaction(txInfoProp)
       .then(async () => {
-        const inteval = setInterval(async () => {
-          const txList = await getTxHistory();
-          const index = txList.findIndex((e) => e.status === 'PENDING');
-          if (index) {
-            dispatch(setTransactions(txList));
-          } else {
-            clearInterval(inteval);
-          }
-        }, 6000);
+        const txList = await getTxHistory();
+        dispatch(setTransactions(txList));
+        await setInfor();
+        interval;
 
-        const accountList = await AccountList();
-        const accountInfor = await getAccountInfors();
-
-        dispatch(setListAccounts(accountList));
-        dispatch(
-          setActiveAccount({
-            activeAccount: accountInfor.publicKey as string,
-            balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
-            accountName: accountInfor.name as string,
-            inferredNonce: (Number(accountInfor.inferredNonce) + 1 + '') as string,
-          }),
-        );
         closeSucces();
       })
       .catch((e: any) => {
@@ -71,7 +82,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       })
       .finally(() => {
         setLoadingSend(false);
-        // dispatch(setIsLoading(false));
+        interval();
       });
   };
   return (

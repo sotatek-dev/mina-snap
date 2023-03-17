@@ -48,8 +48,8 @@ const HomePage = () => {
           setIsUnlocked(false);
           return;
         }
-        SwitchNetwork('Mainnet').then(() => {
-          setTimeout(async () => {
+        await SwitchNetwork('Mainnet').then(async () => {
+          await setTimeout(async () => {
             if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
               await RequestSnap();
             }
@@ -70,11 +70,11 @@ const HomePage = () => {
               }),
             );
           }, 300);
-          reduxDispatch(setIsLoadingGlobal(false));
         });
+        await reduxDispatch(setIsLoadingGlobal(false));
       } else {
-        reduxDispatch(setIsLoadingGlobal(false));
-        reduxDispatch(setWalletConnection(false));
+        await reduxDispatch(setIsLoadingGlobal(false));
+        await reduxDispatch(setWalletConnection(false));
       }
     };
     a();
