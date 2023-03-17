@@ -86,15 +86,21 @@ const ConnectWallet: React.FC<Props> = () => {
             )}
           </Button>
         </BoxCenter>
-        <BoxCenter>
-          <BoxRedirect>
-          {`If you don't have it installed, `}
-            <a target="_blank" href="https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk" rel="noreferrer">
-              click here
-            </a>{' '}
-            to install it
-          </BoxRedirect>
-        </BoxCenter>
+        {!isInstalledWallet && (
+          <BoxCenter>
+            <BoxRedirect>
+              {`If you don't have it installed, `}
+              <a
+                target="_blank"
+                href="https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
+                rel="noreferrer"
+              >
+                click here
+              </a>{' '}
+              to install it
+            </BoxRedirect>
+          </BoxCenter>
+        )}
       </BoxContent>
     </>
   );
