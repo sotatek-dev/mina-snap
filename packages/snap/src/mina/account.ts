@@ -120,7 +120,6 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
     const account = importedAccounts[index];
     if (account) {
       snapConfig.networks[currentNetwork].selectedImportedAccount = index;
-      console.log(`115:`, snapConfig);
       await updateSnapConfig(snapConfig);
       return {
         name: account.name,
@@ -143,7 +142,7 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
   }
 };
 
-export const createAccount = async (name: string, index?: number) => {
+export const createAccount = async (name: string, index?: number): Promise<any> => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
   let newAccountIndex;
@@ -158,9 +157,13 @@ export const createAccount = async (name: string, index?: number) => {
       newAccountIndex = 0;
     }
   }
+  const { publicKey } = await generateKeyPair(networks[currentNetwork], newAccountIndex);
+  const duplicateAddress = checkDuplicateAddress(networks[currentNetwork], publicKey);
+  if (duplicateAddress) {
+    return createAccount(name, newAccountIndex + 1)
+  }
   snapConfig.networks[currentNetwork].currentAccIndex = newAccountIndex;
   snapConfig.networks[currentNetwork].selectedImportedAccount = null;
-  const { publicKey } = await generateKeyPair(networks[currentNetwork], newAccountIndex);
   snapConfig.networks[currentNetwork].generatedAccounts[newAccountIndex] = { name, address: publicKey };
   await updateSnapConfig(snapConfig);
   return { name, address: publicKey };
@@ -171,10 +174,6 @@ export const importAccount = async (name: string, privateKey: string) => {
   const { networks, currentNetwork } = snapConfig;
   const { importedAccounts, generatedAccounts } = networks[currentNetwork];
   const client = getMinaClient(snapConfig.networks[snapConfig.currentNetwork]);
-  const existingAddresses = [
-    ...Object.values(generatedAccounts).map((account) => account.address),
-    ...Object.values(importedAccounts).map((account) => account.address),
-  ];
 
   // Validate for incorrect private key
   let publicKey: string;
@@ -186,7 +185,7 @@ export const importAccount = async (name: string, privateKey: string) => {
   }
 
   // Check for duplicate account
-  const duplicateAddress = existingAddresses.find((address) => address === publicKey);
+  const duplicateAddress = checkDuplicateAddress(networks[currentNetwork], publicKey);
   if (duplicateAddress) {
     console.error('packages/snap/src/mina/account.ts:205', 'Duplicate address');
     throw new Error('Do not import repeatedly');
@@ -267,4 +266,14 @@ export const editAccountName = async (index: number, name: string, isImported?: 
 export const verifyMessage = (networkConfig: NetworkConfig, signedData: Signed<Message>) => {
   const client = getMinaClient(networkConfig);
   return client.verifyMessage(signedData);
+}
+
+const checkDuplicateAddress = (networkConfig: NetworkConfig, publicKey: string) => {
+  const { generatedAccounts, importedAccounts } = networkConfig;
+  const existingAddresses = [
+    ...Object.values(generatedAccounts).map((account) => account.address),
+    ...Object.values(importedAccounts).map((account) => account.address),
+  ];
+  const duplicateAddress = existingAddresses.find((address) => address === publicKey);
+  return duplicateAddress;
 }
