@@ -1,5 +1,5 @@
 import Button from 'components/common/button';
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, ButtonProps, styled } from '@mui/material';
@@ -64,12 +64,19 @@ const ConnectWallet: React.FC<Props> = () => {
 
         <BoxCenter sx={{ paddingBottom: '25px' }}>
           {!isInstalledWallet && (
-            <ButtonCustomRequiredMetamask>
-              <BoxImg>
-                <img src={wainning} />
-              </BoxImg>
-              Metamask Flask is required to run snap!
-            </ButtonCustomRequiredMetamask>
+            <a
+              style={{ textDecoration: 'inherit' }}
+              target="_blank"
+              href="https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
+              rel="noreferrer"
+            >
+              <ButtonCustomRequiredMetamask>
+                <BoxImg>
+                  <img src={wainning} />
+                </BoxImg>
+                Metamask Flask is required to run snap!
+              </ButtonCustomRequiredMetamask>
+            </a>
           )}
         </BoxCenter>
         <BoxCenter>
@@ -86,21 +93,6 @@ const ConnectWallet: React.FC<Props> = () => {
             )}
           </Button>
         </BoxCenter>
-        {!isInstalledWallet && (
-          <BoxCenter>
-            <BoxRedirect>
-              {`If you don't have it installed, `}
-              <a
-                target="_blank"
-                href="https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
-                rel="noreferrer"
-              >
-                click here
-              </a>{' '}
-              to install it
-            </BoxRedirect>
-          </BoxCenter>
-        )}
       </BoxContent>
     </>
   );
@@ -120,9 +112,6 @@ const ButtonCustomRequiredMetamask = styled(Button)<ButtonProps>(() => ({
   display: 'flex',
   justifyContent: 'center',
   width: '330px',
-  ':hover': {
-    cursor: 'default',
-  },
 }));
 
 const BoxCenter = styled(Box)(() => ({
@@ -147,17 +136,6 @@ const BoxInsideMetamask = styled(Box)(() => ({
   lineHeight: '22px',
   paddingTop: '25px',
   paddingBottom: '25px',
-  color: '#000000',
-}));
-
-const BoxRedirect = styled(Box)(() => ({
-  fontFamily: 'Inter Regular',
-  fontStyle: 'italic',
-  fontWeight: '400',
-  fontSize: '14px',
-  lineHeight: '18px',
-  paddingTop: '20px',
-  paddingBottom: '20px',
   color: '#000000',
 }));
 
