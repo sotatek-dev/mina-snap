@@ -113,7 +113,7 @@ const ModalTransfer = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 
     const tx = {
       to: address,
-      amount: Number(formatBalance(balance)) == Number(formatBalance(amount)) ? Number(amount) - Number(gasFee) : Number(amount),
+      amount: formatBalance(balance) == amount ? Number(amount) - Number(gasFee) : Number(amount),
       memo: memo,
       fee: Number(gasFee),
       nonce: Number(nonceValue) === 0 ? Number(inferredNonce) : Number(nonceValue),
