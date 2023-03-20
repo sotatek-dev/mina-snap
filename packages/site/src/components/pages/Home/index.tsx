@@ -36,7 +36,7 @@ const HomePage = () => {
         }),
       );
 
-      const getIsUnlocked = async () => await (window as any).ethereum._metamask?.isUnlocked();
+      const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
       localStorage.clear();
