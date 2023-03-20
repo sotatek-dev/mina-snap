@@ -2,25 +2,53 @@ import styled from 'styled-components';
 import IMinaCircle from 'assets/logo/logo-mina-circle.png';
 import ISend from 'assets/icons/icon-send.png';
 import ISign from 'assets/icons/icon-sign.png';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 import ModalTransfer from 'components/modal-app/ModalTransfer';
-import { useAppSelector } from 'hooks/redux';
+import { useAppSelector, useAppDispatch } from 'hooks/redux';
+import { setActiveAccount } from 'slices/walletSlice';
+import { useMinaSnap } from 'services/useMinaSnap';
 
 import ModalSign from 'components/common/modal-sign';
 import SignMessage from 'components/modal-app/SignMessage';
 import { formatBalance } from 'helpers/formatAccountAddress';
 
 const Balance = () => {
+  const reduxDispatch = useAppDispatch();
   const [showModalSendToken, setShowModalSendToken] = useState(false);
+  const { getAccountInfors } = useMinaSnap();
   const { balance } = useAppSelector((state) => state.wallet);
   const [openModal, setOpenModalSign] = React.useState(false);
 
   const handleClick = () => {
     setShowModalSendToken(true);
   };
+
   const handleClickOutSide = () => {
     setShowModalSendToken(false);
   };
+
+  const getBalance = async () => {
+    const accountInfor = await getAccountInfors();
+    reduxDispatch(
+      setActiveAccount({
+        activeAccount: accountInfor.publicKey as string,
+        balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+        accountName: accountInfor.name as string,
+        inferredNonce: accountInfor.inferredNonce as string,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    const intervalID = (window as any).setInterval(function () {
+      getBalance();
+    }, 30000);
+    return () => {
+      (window as any).clearInterval(intervalID);
+    };
+  }, []);
+
   return (
     <Wrapper>
       <Logo src={IMinaCircle} />
