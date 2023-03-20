@@ -2,6 +2,7 @@ import { Box, Snackbar } from '@mui/material';
 import Button from 'components/common/button';
 import ModalCommon from 'components/common/modal';
 import { ethers } from 'ethers';
+import { formatBalance } from 'helpers/formatAccountAddress';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
 import { useMinaSnap } from 'services';
@@ -99,7 +100,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       <WTransactionConfirm>
         <BoxAmount>
           <TitleAmount>Amount</TitleAmount>
-          <Amount>{txInfoProp?.amount} MINA</Amount>
+          <Amount>{formatBalance(txInfoProp?.amount.toString())} MINA</Amount>
         </BoxAmount>
         <BoxInfo>
           To
