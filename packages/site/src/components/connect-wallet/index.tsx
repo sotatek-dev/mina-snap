@@ -1,5 +1,5 @@
 import Button from 'components/common/button';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, ButtonProps, styled } from '@mui/material';
@@ -64,19 +64,12 @@ const ConnectWallet: React.FC<Props> = () => {
 
         <BoxCenter sx={{ paddingBottom: '25px' }}>
           {!isInstalledWallet && (
-            <a
-              style={{ textDecoration: 'inherit' }}
-              target="_blank"
-              href="https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk"
-              rel="noreferrer"
-            >
-              <ButtonCustomRequiredMetamask>
-                <BoxImg>
-                  <img src={wainning} />
-                </BoxImg>
-                Metamask Flask is required to run snap!
-              </ButtonCustomRequiredMetamask>
-            </a>
+            <ButtonCustomRequiredMetamask>
+              <BoxImg>
+                <img src={wainning} />
+              </BoxImg>
+              Metamask Flask is required to run snap!
+            </ButtonCustomRequiredMetamask>
           )}
         </BoxCenter>
         <BoxCenter>
@@ -112,6 +105,9 @@ const ButtonCustomRequiredMetamask = styled(Button)<ButtonProps>(() => ({
   display: 'flex',
   justifyContent: 'center',
   width: '330px',
+  ':hover': {
+    cursor: 'default',
+  },
 }));
 
 const BoxCenter = styled(Box)(() => ({
