@@ -7,7 +7,12 @@ export const formatAccountAddress = (address: string) => {
 };
 export const formatBalance = (balance: string, dec: number = 4): string => {
 
-  if (Number(balance) > 0) {
+  const balanceNumb = Number(balance);
+
+  if(Number.isInteger(balanceNumb)) 
+  return balance
+
+  if (balanceNumb > 0) {
     const [whole, decimal] = balance.split('.');
     const last = decimal.slice(0, dec)
     if (Number(last) === 0) {
