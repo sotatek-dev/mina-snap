@@ -6,11 +6,12 @@ export enum ENetworkName {
   BERKELEY = 'Berkeley',
 }
 
-const networks ={
+export const networksConstant ={
   [ENetworkName.MAINNET]: {
     name: ENetworkName.MAINNET,
     gqlUrl: 'https://proxy.minaexplorer.com/',
     gqlTxUrl: 'https://graphql.minaexplorer.com/',
+    explorerUrl: 'https://minaexplorer.com/',
     token: {
       name: 'MINA',
       coinType: 12586,
@@ -26,6 +27,7 @@ const networks ={
     name: ENetworkName.DEVNET,
     gqlUrl: 'https://proxy.devnet.minaexplorer.com/',
     gqlTxUrl: 'https://devnet.graphql.minaexplorer.com/',
+    explorerUrl: 'https://devnet.minaexplorer.com/',
     token: {
       name: 'MINA',
       coinType: 1,
@@ -41,6 +43,7 @@ const networks ={
     name: ENetworkName.BERKELEY,
     gqlUrl: 'https://proxy.berkeley.minaexplorer.com',
     gqlTxUrl: 'https://berkeley.graphql.minaexplorer.com/',
+    explorerUrl: 'https://berkeley.minaexplorer.com/',
     token: {
       name: 'MINA',
       coinType: 1,
@@ -56,5 +59,5 @@ const networks ={
 
 export const defaultSnapConfig: SnapConfig = {
   currentNetwork: ENetworkName.MAINNET,
-  networks,
+  networks: networksConstant,
 };

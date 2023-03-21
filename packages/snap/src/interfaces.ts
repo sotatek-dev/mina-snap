@@ -19,6 +19,7 @@ export type NetworkConfig = {
   name: string;
   gqlUrl: string;
   gqlTxUrl: string;
+  explorerUrl: string;
   token: {
     name: string;
     coinType: number;
