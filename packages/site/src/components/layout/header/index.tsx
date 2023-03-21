@@ -119,7 +119,7 @@ const Header = () => {
       dispatch(setListAccounts(accountList));
     }
     getListAccout();
-  })
+  }, [accounts])
 
   return (
     <>

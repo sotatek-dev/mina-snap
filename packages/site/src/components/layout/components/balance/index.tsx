@@ -29,8 +29,6 @@ const Balance = () => {
   };
 
   const getBalance = async () => {
-    const txList = await getTxHistory();
-    reduxDispatch(setTransactions(txList));
     const accountInfor = await getAccountInfors();
     reduxDispatch(
       setActiveAccount({
