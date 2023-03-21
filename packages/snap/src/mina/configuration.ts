@@ -24,7 +24,7 @@ export const getSnapConfiguration = async (): Promise<SnapConfig> => {
 export const getNetworkConfig = async (): Promise<NetworkConfig> => {
   const snapConfig = await getSnapConfiguration();
   const networkConfig = snapConfig.networks[snapConfig.currentNetwork];
-  return networkConfig as NetworkConfig;
+  return networkConfig;
 }
 
 export const changeNetwork = async (networkName: ENetworkName): Promise<NetworkConfig> => {
