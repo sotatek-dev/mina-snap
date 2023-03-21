@@ -1,6 +1,6 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
-import { sendPayment, changeNetwork, resetSnapConfiguration, getSnapConfiguration, sendStakeDelegation } from './mina';
+import { sendPayment, changeNetwork, resetSnapConfiguration, getSnapConfiguration, sendStakeDelegation, getNetworkConfig } from './mina';
 import { HistoryOptions, StakeTxInput, TxInput, VerifyMessageInput } from './interfaces';
 import { popupDialog } from './util/popup.util';
 import {
@@ -32,10 +32,9 @@ import { getTxHistory, getTxDetail, getTxStatus } from './mina/transaction';
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   const snapConfig = await getSnapConfiguration();
-  const { networks, currentNetwork } = snapConfig;
-  const networkConfig = networks[currentNetwork];
+  const networkConfig = await getNetworkConfig(snapConfig);
   console.log(`-networkConfig:`, networkConfig);
-  if (Object.keys(networks[currentNetwork].generatedAccounts).length === 0) {
+  if (Object.keys(networkConfig.generatedAccounts).length === 0) {
     await createAccount('Account 1');
   }
   switch (request.method) {
