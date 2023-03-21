@@ -33,7 +33,7 @@ const CreateNameAccount = ({ onCloseModal, type, index }: Props) => {
       case 'create':
         try {
           dispatch(setTransactions([]));
-          dispatch(setListAccounts([]));
+          // dispatch(setListAccounts([]));
           dispatch(setIsLoading(true));
           const account = await CreateAccount(nameAccount || nameDefault);
           const accountList = await AccountList();

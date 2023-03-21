@@ -119,8 +119,8 @@ const BoxNoTrans = styled(Box)(() => ({
   color: '#000000',
   opacity: '0.5',
   justifyContent: 'center',
-  display: 'flex',
-  paddingTop: '20px',
+  display: 'inline-flex',
+  marginTop: '20px',
 }));
 
 const CheckmoreTx = styled.div`
@@ -151,7 +151,9 @@ const Label = styled.div`
   border-bottom: 1.5px solid #d9d9d9;
 `;
 
-const TransactionList = styled.div``;
+const TransactionList = styled.div`
+  text-align: center;
+`;
 
 const TracsactionItem = styled.div`
   border-bottom: 1.6px solid #d9d9d9;

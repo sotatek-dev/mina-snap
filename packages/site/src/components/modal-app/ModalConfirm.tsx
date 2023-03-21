@@ -26,11 +26,40 @@ type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 
 const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucces }: ModalProps) => {
   const { SendTransaction, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
-  const { activeAccount } = useAppSelector((state) => state.wallet);
+  const { activeAccount, inferredNonce } = useAppSelector((state) => state.wallet);
   const [loadingSend, setLoadingSend] = useState(false);
   const [message, setMessage] = useState('');
   const [openToastMsg, setOpenToastMsg] = useState(false);
   const dispatch = useAppDispatch();
+
+  const interval = () => {
+    const inteval = setInterval(async () => {
+      const txList = await getTxHistory();
+      const index = txList.findIndex((e) => e.status === 'PENDING');
+      if (index >= 0) {
+        await dispatch(setTransactions(txList));
+      } else {
+        await dispatch(setTransactions(txList));
+        clearInterval(inteval);
+      }
+      await setInfor();
+    }, 30000);
+  };
+
+  const setInfor = async () => {
+    const accountList = await AccountList();
+    const accountInfor = await getAccountInfors();
+    const updatedInferredNonce = (accountInfor.inferredNonce == inferredNonce) ? (Number(accountInfor.inferredNonce) + 1).toString() : accountInfor.inferredNonce;
+    dispatch(setListAccounts(accountList));
+    dispatch(
+      setActiveAccount({
+        activeAccount: accountInfor.publicKey as string,
+        balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+        accountName: accountInfor.name as string,
+        inferredNonce: updatedInferredNonce as string,
+      }),
+    );
+  };
 
   const handleSend = async () => {
     if (loadingSend) return;
@@ -38,28 +67,11 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
 
     await SendTransaction(txInfoProp)
       .then(async () => {
-        const inteval = setInterval(async () => {
-          const txList = await getTxHistory();
-          const index = txList.findIndex((e) => e.status === 'PENDING');
-          if (index) {
-            dispatch(setTransactions(txList));
-          } else {
-            clearInterval(inteval);
-          }
-        }, 6000);
+        const txList = await getTxHistory();
+        dispatch(setTransactions(txList));
+        await setInfor();
+        interval;
 
-        const accountList = await AccountList();
-        const accountInfor = await getAccountInfors();
-
-        dispatch(setListAccounts(accountList));
-        dispatch(
-          setActiveAccount({
-            activeAccount: accountInfor.publicKey as string,
-            balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
-            accountName: accountInfor.name as string,
-            inferredNonce: (Number(accountInfor.inferredNonce) + 1 + '') as string,
-          }),
-        );
         closeSucces();
       })
       .catch((e: any) => {
@@ -71,7 +83,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       })
       .finally(() => {
         setLoadingSend(false);
-        // dispatch(setIsLoading(false));
+        interval();
       });
   };
   return (
@@ -87,7 +99,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       <WTransactionConfirm>
         <BoxAmount>
           <TitleAmount>Amount</TitleAmount>
-          <Amount>{txInfoProp?.amount} MINA</Amount>
+          <Amount>{(txInfoProp?.amount)} MINA</Amount>
         </BoxAmount>
         <BoxInfo>
           To

@@ -21,20 +21,23 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
   const [message, setMessage] = useState('');
 
   const sendRequest = async () => {
-    dispatch(setTransactions([]));
-    dispatch(setListAccounts([]));
     try {
       dispatch(setIsLoading(true));
       const payload = {
         name: AccountName,
         privateKey: privateKey,
       };
-      const account = await ImportAccount(payload);
-      const accountInfor = await getAccountInfors();
-      onCloseModal({
-        ...account,
-        balance: formatBalance(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei')) as string,
+      await ImportAccount(payload).then(async (res) => {
+        dispatch(setTransactions([]));
+        dispatch(setListAccounts([]));
+        const accountInfor = await getAccountInfors();
+
+        onCloseModal({
+          ...res,
+          balance: formatBalance(ethers.utils.formatUnits(accountInfor.balance.total, 'gwei')) as string,
+        });
       });
+
       const accountList = await AccountList();
       const txList = await getTxHistory();
       dispatch(setTransactions(txList));
@@ -90,7 +93,7 @@ const ImportPrivateKey = ({ AccountName, onCloseModal }: Props) => {
 
 const Container = styled(Box)(() => ({
   width: '276px',
-  height: '246px',
+  height: '250px',
   padding: '12px 16px 0',
 }));
 

@@ -10,6 +10,7 @@ import {
 import { Erc20Token, Erc20TokenBalance } from 'types';
 import { constants } from 'starknet';
 import { formatBalance } from 'helpers/formatAccountAddress';
+import axios from 'axios';
 
 export const shortenAddress = (address: string, num = 3) => {
   if (!address) return '';
@@ -155,7 +156,17 @@ export const getRealErrorMsg =(error:any) => {
       }
   } catch (error) {
     console.log(error);
-    
+
   }
   return errorMessage
+}
+
+export const getLatestSnapVersion =async () => {
+  const version = await axios.get(`https://registry.npmjs.org/test-mina-snap/latest`)
+  .then( res => {
+    const data = res.data;
+    return data.version
+  })
+  .catch((error:any) => console.log(error))
+  return version;
 }

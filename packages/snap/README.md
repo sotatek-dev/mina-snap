@@ -2,6 +2,10 @@
 
 This snap helps you interact with Mina protocol using Metamask Flask
 
+**Important**
+
+This snap only works with Metamask Flask. If you have normal Metamask enabled, please disable it and install Metamask Flask before using this snap.
+
 ## Setup
 ```shell
 yarn install
@@ -36,7 +40,7 @@ Connect to the snap by calling `wallet_requestSnaps` method with `npm:test-mina-
 - This snap uses a patched version of mina-signer. It may need to update if there's a new version of mina-signer. We are using this repo as the dependency http://www.github.com/sotatek-dev/mina-signer-for-snap
 
 ## Methods
-| Method                        | Description                                   |
+| Method                         | Description                                   |
 | ------------------------------ | --------------------------------------------- |
 | mina_accountInfo               | Get current account info                      |
 | mina_accountList               | Return account list                           |
@@ -55,3 +59,4 @@ Connect to the snap by calling `wallet_requestSnaps` method with `npm:test-mina-
 | mina_getTxStatus               | Return transaciton status by transaction id   |
 | mina_sendStakeDelegation       | Send stake delegation                         |
 | mina_verifyMessage             | Verify signed message                         |
+| mina_requestNetwork            | Request network                               |

@@ -14,6 +14,7 @@ import {
 } from 'types/account';
 import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature, TypeResponseTxHistory } from 'types/transaction';
 import { ResponseNetworkConfig } from 'types/snap';
+import { getLatestSnapVersion } from 'utils/utils';
 
 export const useMinaSnap = () => {
   const { ethereum } = window as any;
@@ -22,7 +23,11 @@ export const useMinaSnap = () => {
 
 
   const connectToSnap = async () => {
-    await ethereum.request({ method: 'wallet_requestSnaps', params: { [snapId]: { snapVersion } } })
+      const latestSnapVersion = await getLatestSnapVersion();
+      const version = (snapVersion != latestSnapVersion) ? latestSnapVersion : snapVersion;
+      return await ethereum.request({ 
+        method: 'wallet_requestSnaps', 
+        params: { [snapId]: { version: `^${version}` } } })
   };
 
   const getSnap = async () => {

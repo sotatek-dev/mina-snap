@@ -14,14 +14,15 @@ import {
   setIsLoadingGlobal,
 } from 'slices/walletSlice';
 import { ethers } from 'ethers';
+import { getLatestSnapVersion } from 'utils/utils';
 
 const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
-  const { getSnap, AccountList, getAccountInfors, RequestSnap, SwitchNetwork } = useMinaSnap();
+  const { getSnap, connectToSnap, AccountList, getAccountInfors, RequestSnap, SwitchNetwork } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState(false);
   const { connected } = useAppSelector((state) => state.wallet);
-
+  
   useEffect(() => {
     const a = async () => {
       await reduxDispatch(setTransactions([]));
@@ -39,17 +40,33 @@ const HomePage = () => {
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
       localStorage.clear();
-
+      
       if (isUnlocked) {
         await reduxDispatch(setIsLoadingGlobal(true));
         await reduxDispatch(setIsLoading(false));
         const isInstalledSnap = await getSnap();
+        const version = await getLatestSnapVersion();
+
+        if(isInstalledSnap[process.env.REACT_APP_SNAP_ID as string] && isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]?.version !== version){
+            setIsUnlocked(false)
+            try {
+              await connectToSnap();
+              await reduxDispatch(setWalletConnection(true));
+            } catch (error) {
+              setIsUnlocked(true);
+              await reduxDispatch(setIsLoadingGlobal(false));
+              await reduxDispatch(setWalletConnection(true));
+            }
+          }else {
+          setIsUnlocked(true)
+        }
+        
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
           setIsUnlocked(false);
           return;
         }
-        SwitchNetwork('Mainnet').then(() => {
-          setTimeout(async () => {
+        await SwitchNetwork('Mainnet').then(async () => {
+          await setTimeout(async () => {
             if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
               await RequestSnap();
             }
@@ -69,12 +86,12 @@ const HomePage = () => {
                 inferredNonce: accountInfor.inferredNonce,
               }),
             );
+            await reduxDispatch(setIsLoadingGlobal(false));
           }, 300);
-          reduxDispatch(setIsLoadingGlobal(false));
         });
       } else {
-        reduxDispatch(setIsLoadingGlobal(false));
-        reduxDispatch(setWalletConnection(false));
+        await reduxDispatch(setIsLoadingGlobal(false));
+        await reduxDispatch(setWalletConnection(false));
       }
     };
     a();
