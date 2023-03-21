@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import ModalTransfer from 'components/modal-app/ModalTransfer';
 import { useAppSelector, useAppDispatch } from 'hooks/redux';
-import { setActiveAccount } from 'slices/walletSlice';
+import { setActiveAccount, setTransactions } from 'slices/walletSlice';
 import { useMinaSnap } from 'services/useMinaSnap';
 
 import ModalSign from 'components/common/modal-sign';
@@ -16,7 +16,7 @@ import { formatBalance } from 'helpers/formatAccountAddress';
 const Balance = () => {
   const reduxDispatch = useAppDispatch();
   const [showModalSendToken, setShowModalSendToken] = useState(false);
-  const { getAccountInfors } = useMinaSnap();
+  const { getAccountInfors, getTxHistory } = useMinaSnap();
   const { balance } = useAppSelector((state) => state.wallet);
   const [openModal, setOpenModalSign] = React.useState(false);
 
@@ -29,6 +29,8 @@ const Balance = () => {
   };
 
   const getBalance = async () => {
+    const txList = await getTxHistory();
+    reduxDispatch(setTransactions(txList));
     const accountInfor = await getAccountInfors();
     reduxDispatch(
       setActiveAccount({

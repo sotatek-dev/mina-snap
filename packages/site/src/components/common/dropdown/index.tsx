@@ -3,7 +3,7 @@ import 'react-dropdown/style.css';
 import { Group, Option, ReactDropdownProps } from 'react-dropdown';
 import { useDispatch } from 'react-redux';
 import { useMinaSnap } from 'services';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { setActiveAccount, setIsLoadingGlobal, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 
@@ -31,7 +31,6 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
         inferredNonce: '',
       }),
     );
-    dispatch(setTransactions([]));
 
     await SwitchNetwork(e.value)
       .then(async () => {
@@ -54,6 +53,14 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
         dispatch(setIsLoadingGlobal(false));
       });
   };
+
+  useEffect(() => {
+    async function getNetwork() {
+      const network = await GetNetworkConfigSnap();
+      setValue(network.name);
+    }
+    getNetwork()
+  })
 
   return (
     <Wrapper>
