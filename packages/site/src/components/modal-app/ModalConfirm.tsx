@@ -3,7 +3,7 @@ import Button from 'components/common/button';
 import ModalCommon from 'components/common/modal';
 import { ethers } from 'ethers';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMinaSnap } from 'services';
 import { setActiveAccount, setListAccounts, setTransactions } from 'slices/walletSlice';
 import styled from 'styled-components';
@@ -32,6 +32,13 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   const [openToastMsg, setOpenToastMsg] = useState(false);
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    if (!open) {
+      setMessage('');
+      setOpenToastMsg(false);
+    }
+  }, [open]);
+
   const interval = () => {
     const inteval = setInterval(async () => {
       const txList = await getTxHistory();
@@ -49,7 +56,10 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
   const setInfor = async () => {
     const accountList = await AccountList();
     const accountInfor = await getAccountInfors();
-    const updatedInferredNonce = (accountInfor.inferredNonce == inferredNonce) ? (Number(accountInfor.inferredNonce) + 1).toString() : accountInfor.inferredNonce;
+    const updatedInferredNonce =
+      accountInfor.inferredNonce == inferredNonce
+        ? (Number(accountInfor.inferredNonce) + 1).toString()
+        : accountInfor.inferredNonce;
     dispatch(setListAccounts(accountList));
     dispatch(
       setActiveAccount({
@@ -99,7 +109,7 @@ const ModalConfirm = ({ open, clickOutSide, setOpenModal, txInfoProp, closeSucce
       <WTransactionConfirm>
         <BoxAmount>
           <TitleAmount>Amount</TitleAmount>
-          <Amount>{(txInfoProp?.amount)} MINA</Amount>
+          <Amount>{txInfoProp?.amount} MINA</Amount>
         </BoxAmount>
         <BoxInfo>
           To
