@@ -24,6 +24,7 @@ const TransactionHistory = () => {
   const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
   const { getTxHistory } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
+  const [history, setHistory] = useState<ResultTransactionList[]>([])
 
   const handleClick = (item: ResultTransactionList) => {
     setDetailTx(item);
@@ -39,6 +40,29 @@ const TransactionHistory = () => {
     setShowTxDetail(false);
   };
 
+  const loadMoreTx = () => {
+    if(history.length == 10){
+      const moreTx = transactions.slice(10, 20);
+      const listTx = history.concat(moreTx);
+      setHistory(listTx);
+    }
+    if(history.length == 20){
+      const moreTx = transactions.slice(20, 30);
+      const listTx = history.concat(moreTx);
+      setHistory(listTx);
+    }
+    if(history.length == 30){
+      const moreTx = transactions.slice(30, 40);
+      const listTx = history.concat(moreTx);
+      setHistory(listTx);
+    }
+    if(history.length == 40){
+      const moreTx = transactions.slice(40, 50);
+      const listTx = history.concat(moreTx);
+      setHistory(listTx);
+    }
+  } 
+
   useEffect(() => {
     const getListTxHistory = () => {
       setTimeout(async () => {
@@ -49,6 +73,10 @@ const TransactionHistory = () => {
     getListTxHistory();
   }, []);
 
+  useEffect(() => {
+    setHistory(transactions.slice(0,10));
+  }, [transactions])
+
   const paddingBt = {
     marginBottom: '20px',
   };
@@ -58,8 +86,8 @@ const TransactionHistory = () => {
       <Wrapper>
         <Label>HISTORY</Label>
         <TransactionList>
-          {transactions.length > 0 ? (
-            transactions.slice(0, 10).map((item, index) => {
+          {history.length > 0 ? (
+            history.map((item, index) => {
               return (
                 <TracsactionItem
                   key={index}
@@ -101,13 +129,14 @@ const TransactionHistory = () => {
           />
         </TransactionList>
       </Wrapper>
-      {transactions.length > 10 ? (
+      {history.length >= 10 &&  history.length < 50 && (
+        <CheckmoreTx onClick={() => loadMoreTx()}>Load more</CheckmoreTx>
+      )}
+      {history.length >= 50 && (
         <CheckmoreTx onClick={() => hanldeViewAccount()}>
           Check more transaction history
           <IconLink src={ILink} />
         </CheckmoreTx>
-      ) : (
-        ''
       )}
     </>
   );

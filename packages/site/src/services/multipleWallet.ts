@@ -189,7 +189,7 @@ export const WALLET = {
                         request: {
                             method: 'mina_getTxHistory',
                             params: {
-                                limit: 15,
+                                limit: 50,
                                 sortBy: "DATETIME_DESC",
                                 canonical: true
                             }
