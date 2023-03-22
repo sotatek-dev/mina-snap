@@ -130,10 +130,10 @@ const TransactionHistory = () => {
         </TransactionList>
       </Wrapper>
       <BoxLoadmoreTx>
-        {transactions.length > 10 && history.length < 50 && (
+        {transactions.length > 10 && history.length < transactions.length  && (
           <CheckmoreTx onClick={() => loadMoreTx()}>Load more</CheckmoreTx>
         )}
-        {transactions.length > 50 && history.length == 50  && (
+        {transactions.length > 50 && (
           <CheckmoreTx onClick={() => hanldeViewAccount()}>
             Check more transaction history
             <IconLink src={ILink} />
