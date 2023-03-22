@@ -47,6 +47,7 @@ const ConnectWallet: React.FC<Props> = () => {
     } catch (e) {
       reduxDispatch(setIsLoadingGlobal(false));
     } finally {
+      location.reload()
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
     }
