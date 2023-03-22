@@ -108,7 +108,6 @@ export async function getAccountInfo(publicKey: string, networkConfig: NetworkCo
       publicKey,
     };
   }
-  console.log(`-account data:`, data);
   return data;
 }
 

@@ -33,7 +33,7 @@ import { getTxHistory, getTxDetail, getTxStatus } from './mina/transaction';
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   const snapConfig = await getSnapConfiguration();
   const networkConfig = await getNetworkConfig(snapConfig);
-  console.log(`-networkConfig:`, networkConfig);
+  console.log(`-networkConfig:`, networkConfig.name);
   if (Object.keys(networkConfig.generatedAccounts).length === 0) {
     await createAccount('Account 1');
   }
@@ -97,9 +97,9 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.NETWORK_CONFIG: {
-      const { name, gqlUrl, gqlTxUrl, token } = networkConfig;
+      const { name, gqlUrl, gqlTxUrl, explorerUrl, token } = networkConfig;
       return {
-        name, gqlUrl, gqlTxUrl, token
+        name, gqlUrl, gqlTxUrl, explorerUrl, token
       };
     }
 
