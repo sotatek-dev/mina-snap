@@ -129,15 +129,17 @@ const TransactionHistory = () => {
           />
         </TransactionList>
       </Wrapper>
-      {history.length >= 10 &&  history.length < 50 && (
-        <CheckmoreTx onClick={() => loadMoreTx()}>Load more</CheckmoreTx>
-      )}
-      {history.length >= 50 && (
-        <CheckmoreTx onClick={() => hanldeViewAccount()}>
-          Check more transaction history
-          <IconLink src={ILink} />
-        </CheckmoreTx>
-      )}
+      <BoxLoadmoreTx>
+        {transactions.length > 10 && history.length < 50 && (
+          <CheckmoreTx onClick={() => loadMoreTx()}>Load more</CheckmoreTx>
+        )}
+        {transactions.length > 50 && history.length == 50  && (
+          <CheckmoreTx onClick={() => hanldeViewAccount()}>
+            Check more transaction history
+            <IconLink src={ILink} />
+          </CheckmoreTx>
+        )}
+      </BoxLoadmoreTx>
     </>
   );
 };
@@ -152,7 +154,13 @@ const BoxNoTrans = styled(Box)(() => ({
   marginTop: '20px',
 }));
 
+const BoxLoadmoreTx = styled.div`
+  width: 100%;
+  text-align: center;
+`;
+
 const CheckmoreTx = styled.div`
+  display: inline-block;
   cursor: pointer;
   padding: 25px 0;
   text-align: center;
