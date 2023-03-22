@@ -23,10 +23,11 @@ const Address = () => {
   const [openTooltip, setOpenTooltip] = useState(false);
   const dispatch = useAppDispatch();
   const { isShowKebabMenu } = useAppSelector((state) => state.modals);
+  const { items } = useAppSelector((state) => state.networks);
 
   const hanldeViewAccount = () => {
     const type = 'wallet';
-    window.open(MINA_BERKELEY_EXPLORER + type + '/' + activeAccount, '_blank')?.focus();
+    window.open(items.explorerUrl + type + '/' + activeAccount, '_blank')?.focus();
   };
 
   const handleOpenModal = () => {

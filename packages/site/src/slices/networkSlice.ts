@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Network } from 'types';
+import { ResponseNetworkConfig } from 'types/snap';
 
 export interface NetworkState {
-  items: Network[];
-  activeNetwork: number;
+  items: ResponseNetworkConfig;
+  activeNetwork: string;
 }
 
 const initialState: NetworkState = {
-  items: [],
-  activeNetwork: 0,
+  items: {} as ResponseNetworkConfig,
+  activeNetwork: '',
 };
 
 export const networkSlice = createSlice({

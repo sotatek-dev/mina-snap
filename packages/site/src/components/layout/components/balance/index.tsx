@@ -30,6 +30,8 @@ const Balance = () => {
 
   const getBalance = async () => {
     const accountInfor = await getAccountInfors();
+    const listTx = await getTxHistory();
+    reduxDispatch(setTransactions(listTx));
     reduxDispatch(
       setActiveAccount({
         activeAccount: accountInfor.publicKey as string,

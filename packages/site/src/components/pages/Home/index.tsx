@@ -15,11 +15,12 @@ import {
 } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import { getLatestSnapVersion } from 'utils/utils';
+import { setNetworks } from 'slices/networkSlice';
 
 const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
-  const { getSnap, connectToSnap, AccountList, getAccountInfors, RequestSnap, SwitchNetwork } = useMinaSnap();
+  const { getSnap, connectToSnap, AccountList, getAccountInfors, RequestSnap, SwitchNetwork, GetNetworkConfigSnap } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState(false);
   const { connected } = useAppSelector((state) => state.wallet);
 
@@ -73,8 +74,10 @@ const HomePage = () => {
             if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
               await RequestSnap();
             }
+            const network = await GetNetworkConfigSnap();
             const accountList = await AccountList();
             const accountInfor = await getAccountInfors();
+            reduxDispatch(setNetworks(network));
             await reduxDispatch(
               connectWallet({
                 accountList,
