@@ -6,6 +6,7 @@ import { useMinaSnap } from 'services';
 import { useEffect, useState } from 'react';
 import { setActiveAccount, setIsLoadingGlobal, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
+import { setNetworks } from 'slices/networkSlice';
 
 interface Props extends ReactDropdownProps {
   error?: boolean;
@@ -37,6 +38,8 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
         const txList = await getTxHistory();
+        const network = await GetNetworkConfigSnap();
+        dispatch(setNetworks(network));
         await dispatch(setTransactions(txList));
         await dispatch(setListAccounts(accountList));
         await dispatch(

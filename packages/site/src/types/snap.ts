@@ -12,6 +12,7 @@ export type ResponseNetworkConfig = {
     name: string
     gqlUrl: string
     gqlTxUrl: string
+    explorerUrl: string
     token: {
         name: string
         coinType: number
