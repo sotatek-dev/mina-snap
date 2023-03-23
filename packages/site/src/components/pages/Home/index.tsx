@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ConnectWallet from 'components/connect-wallet/index';
 import { useHasMetamaskFlask } from 'hooks/useHasMetamaskFlask';
 import Home from 'components/layout/index';
@@ -20,9 +20,10 @@ import { setNetworks } from 'slices/networkSlice';
 const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
-  const { getSnap, connectToSnap, AccountList, getAccountInfors, RequestSnap, SwitchNetwork, GetNetworkConfigSnap } = useMinaSnap();
+  const { getSnap, connectToSnap, AccountList, getAccountInfors, RequestSnap, SwitchNetwork, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState(false);
-  const { connected } = useAppSelector((state) => state.wallet);
+  const { connected, activeAccount } = useAppSelector((state) => state.wallet);
+  const {items} = useAppSelector((state)=> (state.networks))
 
   useEffect(() => {
     const a = async () => {
@@ -74,10 +75,12 @@ const HomePage = () => {
             if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
               await RequestSnap();
             }
-            const network = await GetNetworkConfigSnap();
             const accountList = await AccountList();
             const accountInfor = await getAccountInfors();
-            reduxDispatch(setNetworks(network));
+            const txList = await getTxHistory();
+            const network = await GetNetworkConfigSnap();
+            await reduxDispatch(setNetworks(network));
+            reduxDispatch(setTransactions(txList));
             await reduxDispatch(
               connectWallet({
                 accountList,
@@ -105,10 +108,51 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
+    const WindowFocusHandler = () => {
+      console.log('items', items);
+      console.log('activeAccount', activeAccount);
+      
+      window.addEventListener("focus", onFocus);
+      window.addEventListener("blur", onBlur);
+      // Calls onFocus when the window first loads
+      onBlur();
+      // Specify how to clean up after this effect:
+      return () => {
+      window.removeEventListener("blur", onBlur);
+      window.removeEventListener("focus", onFocus);
+      };
+    }
+    WindowFocusHandler();
+  }, [])
+
+  useEffect(() => {
     if (connected) {
       setIsUnlocked(true);
     }
   }, [connected]);
+
+  const onFocus = async () => {
+    console.log('22222');
+    const network = await GetNetworkConfigSnap();
+    const txList = await getTxHistory();
+    const accountList = await AccountList();
+    const accountInfor = await getAccountInfors();
+    reduxDispatch(setNetworks(network));
+    reduxDispatch(setTransactions(txList));
+    reduxDispatch(setListAccounts(accountList));
+    reduxDispatch(
+      setActiveAccount({
+        activeAccount: accountInfor.publicKey as string,
+        balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+        accountName: accountInfor.name as string,
+        inferredNonce: accountInfor.inferredNonce,
+      }),
+    );
+  };
+  const onBlur = async () => {
+    console.log('111', 11);
+
+  };
 
   return <div>{isUnlocked ? <Home /> : <ConnectWallet />}</div>;
 };

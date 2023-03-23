@@ -3,10 +3,10 @@ import 'react-dropdown/style.css';
 import { Group, Option, ReactDropdownProps } from 'react-dropdown';
 import { useDispatch } from 'react-redux';
 import { useMinaSnap } from 'services';
-import { useEffect, useState } from 'react';
 import { setActiveAccount, setIsLoadingGlobal, setListAccounts, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import { setNetworks } from 'slices/networkSlice';
+import { useAppSelector } from 'hooks/redux';
 
 interface Props extends ReactDropdownProps {
   error?: boolean;
@@ -17,11 +17,10 @@ interface Props extends ReactDropdownProps {
 const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
   const dispatch = useDispatch();
   const { SwitchNetwork, AccountList, getAccountInfors, getTxHistory, GetNetworkConfigSnap } = useMinaSnap();
-  const [value, setValue] = useState('Mainnet');
+  const {items} = useAppSelector((state)=> (state.networks))
 
   const changeNetwork = async (e: Option) => {
     dispatch(setIsLoadingGlobal(true));
-    setValue(e.value);
     dispatch(setTransactions([]));
     dispatch(setListAccounts([]));
     dispatch(
@@ -57,24 +56,18 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
       });
   };
 
-  useEffect(() => {
-    async function getNetwork() {
-      const network = await GetNetworkConfigSnap();
-      setValue(network.name);
-    }
-    getNetwork()
-  })
-
   return (
     <Wrapper>
       <DropdownStyled
+        
         onChange={(e) => {
           changeNetwork(e);
         }}
         error={error}
         disabled={disabled}
         options={options}
-        value={value}
+        value={items.name}
+        placeholder='Mainnet'
         {...otherProps}
       />
     </Wrapper>

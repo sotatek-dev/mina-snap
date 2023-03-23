@@ -24,7 +24,8 @@ const TransactionHistory = () => {
   const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
   const { getTxHistory } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
-  const [history, setHistory] = useState<ResultTransactionList[]>([])
+  const [history, setHistory] = useState<ResultTransactionList[]>([]);
+
 
   const handleClick = (item: ResultTransactionList) => {
     setDetailTx(item);
@@ -130,10 +131,10 @@ const TransactionHistory = () => {
         </TransactionList>
       </Wrapper>
       <BoxLoadmoreTx>
-        {transactions.length > 10 && history.length < transactions.length  && (
+        {transactions.length > 10 && history.length < transactions.length && history.length <= 40  && (
           <CheckmoreTx onClick={() => loadMoreTx()}>Load more</CheckmoreTx>
         )}
-        {transactions.length > 50 && history.length == 50 && (
+        {transactions.length > 50 && history.length == 50 &&(
           <CheckmoreTx onClick={() => hanldeViewAccount()}>
             Check more transaction history
             <IconLink src={ILink} />
@@ -195,7 +196,7 @@ const TransactionList = styled.div`
 const TracsactionItem = styled.div`
   border-bottom: 1.6px solid #d9d9d9;
   display: flex;
-  padding: 20px 20px;
+  padding: 10px 10px;
   :hover {
     background: #f1f1f1;
     cursor: pointer;

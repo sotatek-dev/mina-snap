@@ -10,11 +10,11 @@ import iconImport from 'assets/icons/icon-import.svg';
 import CardAccount from 'components/modules/CardAccount';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Box } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useMinaSnap } from 'services';
 import ModalCommon from 'components/common/modal';
 import CreatNameAccount from 'components/children/CreatNameAccount';
-import { setActiveAccount, setIsLoading, setIsLoadingGlobal, setListAccounts, setTransactions } from 'slices/walletSlice';
+import { setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions } from 'slices/walletSlice';
 import LinearProgress from '@mui/material/LinearProgress';
 import { ResultCreateAccount } from 'types/account';
 import DetailsAccoust from 'components/children/DetailsAccoust';
@@ -22,7 +22,7 @@ import { ethers } from 'ethers';
 import { setIsShowKebabMenu, setIsShowListAccount } from 'slices/modalSlice';
 
 const Header = () => {
-  const { ChangeAccount, getAccountInfors, getTxHistory, AccountList } = useMinaSnap();
+  const { ChangeAccount, getAccountInfors, getTxHistory } = useMinaSnap();
   const { isShowListAccount } = useAppSelector((state) => state.modals);
   const { accounts, activeAccount, isLoading } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
@@ -112,14 +112,6 @@ const Header = () => {
     dispatch(setIsShowListAccount(false));
     dispatch(setIsShowKebabMenu(false));
   };
-
-  useEffect(() => {
-    async function getListAccout() {
-      const accountList = await AccountList();
-      dispatch(setListAccounts(accountList));
-    }
-    getListAccout();
-  }, [accounts])
 
   return (
     <>
