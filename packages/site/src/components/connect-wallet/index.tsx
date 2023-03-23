@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { connectWallet, setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import wainning from 'assets/icons/wainning.svg';
-import { WALLET } from 'services/multipleWallet';
 
 type Props = {};
 

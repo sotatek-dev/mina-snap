@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Account, ResultAccountList, payloadActiveAccount } from 'types/account';
+import { ResultAccountList, payloadActiveAccount } from 'types/account';
 import { Erc20TokenBalance, } from 'types';
 import { ethers } from 'ethers';
 import { ResultTransactionList, TypeResponseTxHistory } from 'types/transaction';

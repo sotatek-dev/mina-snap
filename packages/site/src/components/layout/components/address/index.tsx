@@ -8,7 +8,6 @@ import { Box } from '@mui/material';
 import { PopperTooltipView } from 'components/common/tooltip';
 import ILink from 'assets/icons/icon-link.svg';
 import IAccount from 'assets/icons/icon-account.svg';
-import { MINA_BERKELEY_EXPLORER } from 'utils/constants';
 import DetailsAccout from 'components/children/DetailsAccoust';
 import { useState } from 'react';
 import ModalCommon from 'components/common/modal';
