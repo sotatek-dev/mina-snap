@@ -57,7 +57,7 @@ const Wrapper = styled.div<Props>`
   background: ${(props) => (props.active ? '#594AF1' : '#F9FAFC')};
   border: 1px solid ${(props) => (props.active ? '#594AF1' : '#D9D9D9')};
   border-radius: 8px;
-  margin-bottom: 15px;
+  margin-top: 16px;
   padding: 12px;
   display: flex;
   flex-direction: column;

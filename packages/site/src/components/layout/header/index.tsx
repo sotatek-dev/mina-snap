@@ -268,13 +268,13 @@ const Label = styled.div`
   font-size: 17px;
   color: #000;
   font-weight: 600;
-  padding: 16px 0;
+  padding-top: 16px;
 `;
 
 const WAccount = styled.div`
   max-height: 330px;
   overflow-y: auto;
-  padding: 16px;
+  padding: 0px 8px 0px 16px;
   .disable {
     background-color: palegreen !important;
   }
