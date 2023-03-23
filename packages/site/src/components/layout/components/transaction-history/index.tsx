@@ -163,7 +163,7 @@ const BoxLoadmoreTx = styled.div`
 const CheckmoreTx = styled.div`
   display: inline-block;
   cursor: pointer;
-  padding: 25px 0;
+  margin: 10px 0;
   text-align: center;
   font-weight: 500;
   font-size: 16px;
