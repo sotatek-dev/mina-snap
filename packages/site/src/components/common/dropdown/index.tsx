@@ -19,6 +19,7 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
   const dispatch = useDispatch();
   const { SwitchNetwork, AccountList, getAccountInfors, getTxHistory, GetNetworkConfigSnap } = useMinaSnap();
   const {items} = useAppSelector((state)=> (state.networks));
+  const {activeAccount} = useAppSelector((state)=> (state.wallet));
   const [network, setNetwork] = useState('');
 
   const changeNetwork = async (e: Option) => {
@@ -63,7 +64,7 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
       dispatch(setNetworks(network));
     }
     getNetwork()
-  },[])
+  },[activeAccount])
 
   return (
     <Wrapper>
@@ -74,7 +75,7 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
         error={error}
         disabled={disabled}
         options={options}
-        value={network}
+        value={items.name}
         placeholder={network}
         {...otherProps}
       />
