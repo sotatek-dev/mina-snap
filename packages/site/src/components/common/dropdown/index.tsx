@@ -7,6 +7,7 @@ import { setActiveAccount, setIsLoadingGlobal, setListAccounts, setTransactions 
 import { ethers } from 'ethers';
 import { setNetworks } from 'slices/networkSlice';
 import { useAppSelector } from 'hooks/redux';
+import { useEffect, useState } from 'react';
 
 interface Props extends ReactDropdownProps {
   error?: boolean;
@@ -17,7 +18,8 @@ interface Props extends ReactDropdownProps {
 const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
   const dispatch = useDispatch();
   const { SwitchNetwork, AccountList, getAccountInfors, getTxHistory, GetNetworkConfigSnap } = useMinaSnap();
-  const {items} = useAppSelector((state)=> (state.networks))
+  const {items} = useAppSelector((state)=> (state.networks));
+  const [network, setNetwork] = useState('');
 
   const changeNetwork = async (e: Option) => {
     dispatch(setIsLoadingGlobal(true));
@@ -37,8 +39,6 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
         const accountList = await AccountList();
         const accountInfor = await getAccountInfors();
         const txList = await getTxHistory();
-        const network = await GetNetworkConfigSnap();
-        dispatch(setNetworks(network));
         await dispatch(setTransactions(txList));
         await dispatch(setListAccounts(accountList));
         await dispatch(
@@ -56,18 +56,26 @@ const DropDown = ({ disabled, error, options, ...otherProps }: Props) => {
       });
   };
 
+  useEffect(()=> {
+    const getNetwork = async () => {
+      const network = await GetNetworkConfigSnap();
+      setNetwork(network.name);
+      dispatch(setNetworks(network));
+    }
+    getNetwork()
+  },[])
+
   return (
     <Wrapper>
       <DropdownStyled
-        
         onChange={(e) => {
           changeNetwork(e);
         }}
         error={error}
         disabled={disabled}
         options={options}
-        value={items.name}
-        placeholder='Mainnet'
+        value={network}
+        placeholder={network}
         {...otherProps}
       />
     </Wrapper>

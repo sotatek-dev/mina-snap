@@ -22,7 +22,7 @@ const ConnectWallet: React.FC<Props> = () => {
       reduxDispatch(setIsLoading(true));
       await connectToSnap();
       const isInstalledSnap = await getSnap();
-      await SwitchNetwork('Mainnet');
+      // await SwitchNetwork('Mainnet');
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
       const txList = await getTxHistory();
