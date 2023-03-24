@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ConnectWallet from 'components/connect-wallet/index';
 import { useHasMetamaskFlask } from 'hooks/useHasMetamaskFlask';
 import Home from 'components/layout/index';
@@ -22,8 +22,7 @@ const HomePage = () => {
   const reduxDispatch = useAppDispatch();
   const { getSnap, connectToSnap, AccountList, getAccountInfors, RequestSnap, SwitchNetwork, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState(false);
-  const { connected, activeAccount } = useAppSelector((state) => state.wallet);
-  const {items} = useAppSelector((state)=> (state.networks))
+  const { connected } = useAppSelector((state) => state.wallet);
 
   useEffect(() => {
     const a = async () => {
@@ -109,9 +108,6 @@ const HomePage = () => {
 
   useEffect(() => {
     const WindowFocusHandler = () => {
-      console.log('items', items);
-      console.log('activeAccount', activeAccount);
-      
       window.addEventListener("focus", onFocus);
       window.addEventListener("blur", onBlur);
       // Calls onFocus when the window first loads
@@ -132,7 +128,6 @@ const HomePage = () => {
   }, [connected]);
 
   const onFocus = async () => {
-    console.log('22222');
     const network = await GetNetworkConfigSnap();
     const txList = await getTxHistory();
     const accountList = await AccountList();
@@ -150,7 +145,6 @@ const HomePage = () => {
     );
   };
   const onBlur = async () => {
-    console.log('111', 11);
 
   };
 
