@@ -1,6 +1,7 @@
 import { Modal } from '@mui/material';
 import { Box } from '@mui/system';
 import { useAppSelector } from 'hooks/redux';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Address from './components/address';
 import Balance from './components/balance';
@@ -8,11 +9,22 @@ import TransactionHistory from './components/transaction-history';
 import Header from './header';
 
 const Home = () => {
-  const { isLoadingGlobal } = useAppSelector((state) => state.wallet);
+  const { isLoadingGlobal, activeAccount } = useAppSelector((state) => state.wallet);
+  const divRef = useRef(null as any);
+  const scrollToTop = () => {
+    divRef.current.scroll({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+  useEffect(()=> {
+    scrollToTop()
+  }, [activeAccount])
   return (
     <Wrapper>
       <Header />
-      <ColMiddle>
+      <ColMiddle ref={divRef}>
         <Content>
           <Address />
           <Balance />
