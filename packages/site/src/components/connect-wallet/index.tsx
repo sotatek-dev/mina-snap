@@ -7,6 +7,8 @@ import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { connectWallet, setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import wainning from 'assets/icons/wainning.svg';
+import metamask from 'assets/logo/logo-metamask.png';
+import metamaskFlask from 'assets/logo/logo-metamask-flask.png';
 
 type Props = {};
 
@@ -68,12 +70,29 @@ const ConnectWallet: React.FC<Props> = () => {
 
         <BoxCenter sx={{ paddingBottom: '25px' }}>
           {!isInstalledWallet && (
-            <ButtonCustomRequiredMetamask onClick={()=> openLinkInstallFlask()}>
-              <BoxImg>
-                <img src={wainning} />
-              </BoxImg>
-              Metamask Flask is required to run snap!
-            </ButtonCustomRequiredMetamask>
+            <WrapperWarning>
+              <WarningMessage>
+                <BoxImg>
+                  <img src={wainning} />
+                </BoxImg>
+                Please remember to disable 
+                <BoxIcon>
+                  <img src={metamask} />
+                </BoxIcon>
+                Metamask and enable 
+                <BoxIcon>
+                  <img src={metamaskFlask} />
+                </BoxIcon>
+                Metamask Flask only.             
+              </WarningMessage>
+              
+              <ButtonCustomRequiredMetamask onClick={()=> openLinkInstallFlask()}>
+                <BoxImg>
+                  <img src={wainning} />
+                </BoxImg>
+                Metamask Flask is required to run snap!
+              </ButtonCustomRequiredMetamask>
+            </WrapperWarning>
           )}
         </BoxCenter>
         <BoxCenter>
@@ -103,12 +122,39 @@ const BoxImg = styled(Box)(() => ({
   marginRight: '7px',
 }));
 
+const BoxIcon = styled(Box)(() => ({
+  margin: '0px 4px',
+  img : {
+    width:'20px',
+    height: '20px',
+  }
+}));
+
+const WrapperWarning = styled(Box)(() =>({
+}) );
+
+const WarningMessage = styled(Box)(() => ({
+  background: '#FC6643',
+  border: '1px solid #000000',
+  display: 'flex',
+  justifyContent: 'center',
+  width: '592px',
+  marginBottom: '25px',
+  color: '#FFFFFF',
+  height: '44px',
+  borderRadius: '5px',
+  alignItems: 'center',
+}));
+
+
+
 const ButtonCustomRequiredMetamask = styled(Button)<ButtonProps>(() => ({
   background: '#FC6643',
   border: '1px solid #000000',
   display: 'flex',
   justifyContent: 'center',
   width: '330px',
+  margin: 'auto',
   ':hover': {
     cursor: 'hover',
   },
