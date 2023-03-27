@@ -20,7 +20,7 @@ const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
   const { getSnap, connectToSnap, AccountList, getAccountInfors, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
-  const [isUnlocked, setIsUnlocked] = React.useState(false);
+  const [isUnlocked, setIsUnlocked] = React.useState(true);
   const { connected } = useAppSelector((state) => state.wallet);
   
 
@@ -86,25 +86,31 @@ const HomePage = () => {
   useEffect(() => {
     if (connected) {
       setIsUnlocked(true);
+    } else{
+      setIsUnlocked(false);
     }
   }, [connected]);
 
   const onFocus = async () => {
-    const network = await GetNetworkConfigSnap();
-    const txList = await getTxHistory();
-    const accountList = await AccountList();
-    const accountInfor = await getAccountInfors();
-    reduxDispatch(setNetworks(network));
-    reduxDispatch(setTransactions(txList));
-    reduxDispatch(setListAccounts(accountList));
-    reduxDispatch(
-      setActiveAccount({
-        activeAccount: accountInfor.publicKey as string,
-        balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
-        accountName: accountInfor.name as string,
-        inferredNonce: accountInfor.inferredNonce,
-      }),
-    );
+    const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
+    const unlock = (await getIsUnlocked()) as boolean;
+    if (unlock){
+      const network = await GetNetworkConfigSnap();
+      const txList = await getTxHistory();
+      const accountList = await AccountList();
+      const accountInfor = await getAccountInfors();
+      reduxDispatch(setNetworks(network));
+      reduxDispatch(setTransactions(txList));
+      reduxDispatch(setListAccounts(accountList));
+      reduxDispatch(
+        setActiveAccount({
+          activeAccount: accountInfor.publicKey as string,
+          balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+          accountName: accountInfor.name as string,
+          inferredNonce: accountInfor.inferredNonce,
+        }),
+      );
+    }
   };
   const onBlur = async () => {
 
