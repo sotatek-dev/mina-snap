@@ -11,10 +11,12 @@ import {
   setTransactions,
   setListAccounts,
   setIsLoadingGlobal,
+  setWalletInstalled,
 } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import { getLatestSnapVersion } from 'utils/utils';
 import { setNetworks } from 'slices/networkSlice';
+import detectEthereumProvider from '@metamask/detect-provider';
 
 const HomePage = () => {
   useHasMetamaskFlask();
@@ -30,6 +32,19 @@ const HomePage = () => {
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
       localStorage.clear();
+      let i =0;
+      while (i<3) {
+        const provider = (await detectEthereumProvider({
+          mustBeMetaMask: false,
+          silent: true,
+        })) as any | undefined;
+        const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
+        if(!isFlask){
+          setIsUnlocked(false);
+          reduxDispatch(setWalletInstalled(false));
+        }
+        i++
+      }
 
       if (isUnlocked) {
         await reduxDispatch(setIsLoadingGlobal(true));
@@ -73,7 +88,7 @@ const HomePage = () => {
       window.addEventListener("focus", onFocus);
       window.addEventListener("blur", onBlur);
       // Calls onFocus when the window first loads
-      onBlur();
+      onFocus();
       // Specify how to clean up after this effect:
       return () => {
       window.removeEventListener("blur", onBlur);
@@ -86,8 +101,6 @@ const HomePage = () => {
   useEffect(() => {
     if (connected) {
       setIsUnlocked(true);
-    } else{
-      setIsUnlocked(false);
     }
   }, [connected]);
 
