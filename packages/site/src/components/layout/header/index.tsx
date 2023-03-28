@@ -272,7 +272,7 @@ const Label = styled.div`
 `;
 
 const WAccount = styled.div`
-  max-height: 380px;
+  max-height: 370px;
   overflow-y: auto;
   padding: 0px 8px 0px 16px;
   .disable {
