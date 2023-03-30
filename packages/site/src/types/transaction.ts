@@ -32,15 +32,8 @@ export type ResultTransactionList = {
 export type TypeResponseTxHistory = Array<ResultTransactionList>
 
 export type TypeResponseSignature = {
-    data: {
-        message: string
-        publicKey: string
-    }
-    signature: {
-        field: string
-        scalar: string
-        signer: string
-    }
+    field: string
+    scalar: string
 }
 
 export type TypeResponseSwtichNetwork = {
