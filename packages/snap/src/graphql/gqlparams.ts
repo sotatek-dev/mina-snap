@@ -10,17 +10,7 @@ mutation sendPayment(
 		signature: { ${isRawSignature ? 'rawSignature: $rawSignature' : 'field: $field, scalar: $scalar'} }
 	) {
 		payment {
-			amount
-			fee
-			feeToken
-			from
 			hash
-			id
-			isDelegation
-			memo
-			nonce
-			kind
-			to
 		}
 	}
 }
