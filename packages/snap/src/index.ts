@@ -115,9 +115,9 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       const keyPair = await getKeyPair();
       const { message } = request.params as { message: string };
       const signature = await signMessage(message, keyPair, networkConfig);
-      console.log('-signature:', signature);
 
-      return signature;
+	  console.log('--signature', signature);
+	  return signature;
     }
 
     case EMinaMethod.RESET_CONFIG: {

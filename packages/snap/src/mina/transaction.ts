@@ -75,6 +75,7 @@ export async function submitPayment(signedPayment: Signed<Payment>, networkConfi
   const data = await gql(networkConfig.gqlUrl, query, variables);
 
   await popupNotify(`Payment ${data.sendPayment.payment.hash.substring(0, 10)}... has been submitted`);
+  data.sendPayment.payment.memo = decodeMemo(data.sendPayment.payment.memo);
 
   return data.sendPayment.payment;
 }
