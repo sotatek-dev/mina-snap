@@ -1,6 +1,6 @@
 {
   "name": "test-mina-snap",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "description": "This snap helps you interact with Mina protocol using Metamask Flask",
   "repository": {
     "type": "git",
