@@ -11,12 +11,13 @@ type Props = {
   onCloseModal: () => void;
 };
 
-function renderItem( signature : TypeResponseSignature) {
+function renderItem({ signature }: TypeResponseSignature) {
   return (
     <BoxSignature>
       <Box>Signature: </Box>
       <Box>field: {signature.field}</Box>
       <Box>scalar: {signature.scalar}</Box>
+      <Box>signer: {signature.signer}</Box>
     </BoxSignature>
   );
 }
