@@ -12,6 +12,7 @@ import { useMinaSnap } from 'services/useMinaSnap';
 import ModalSign from 'components/common/modal-sign';
 import SignMessage from 'components/modal-app/SignMessage';
 import { formatBalance } from 'helpers/formatAccountAddress';
+import ZkTransaction from '../send-zk-transaction';
 
 const Balance = () => {
   const reduxDispatch = useAppDispatch();
@@ -70,6 +71,7 @@ const Balance = () => {
           <IconSign src={ISign} />
           Sign
         </Sign>
+        <ZkTransaction/>
       </Action>
       <ModalSign
         open={openModal}
@@ -123,7 +125,7 @@ const TokenName = styled.div`
 
 const Action = styled.div`
   display: flex;
-  min-width: 80px;
+  min-width: 120px;
   justify-content: space-between;
   margin-top: 16px;
 `;
