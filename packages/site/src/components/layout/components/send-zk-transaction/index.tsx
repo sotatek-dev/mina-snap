@@ -41,6 +41,7 @@ const ButtonSend = styled.div`
   line-height: 12px;
   color: #594af1;
   cursor: pointer;
+  padding-left: 20px;
 `;
 
 const IconSend = styled.img`

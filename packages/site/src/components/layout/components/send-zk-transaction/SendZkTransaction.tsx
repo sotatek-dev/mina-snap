@@ -25,7 +25,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   const submitZkTransaction = async () => { 
     console.log('-start');
     await isReady;
-      const { Add } = await import('smart-contract');
+      const { Add } = await import('smart-contract'); 
 
       // Update this to use the address (public key) for your zkApp account
       // To try it out, you can try this address for an example "Add" smart contract that we've deployed to 

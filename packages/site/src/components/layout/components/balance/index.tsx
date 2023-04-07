@@ -19,6 +19,7 @@ const Balance = () => {
   const [showModalSendToken, setShowModalSendToken] = useState(false);
   const { getAccountInfors } = useMinaSnap();
   const { balance } = useAppSelector((state) => state.wallet);
+  const { items } = useAppSelector((state) => state.networks)
   const [openModal, setOpenModalSign] = React.useState(false);
 
   const handleClick = () => {
@@ -71,7 +72,7 @@ const Balance = () => {
           <IconSign src={ISign} />
           Sign
         </Sign>
-        <ZkTransaction/>
+        {items?.name == 'Berkeley' && <ZkTransaction/>}
       </Action>
       <ModalSign
         open={openModal}
@@ -125,7 +126,7 @@ const TokenName = styled.div`
 
 const Action = styled.div`
   display: flex;
-  min-width: 120px;
+  max-width: 120px;
   justify-content: space-between;
   margin-top: 16px;
 `;
@@ -139,6 +140,7 @@ const Send = styled.div`
   line-height: 12px;
   color: #594af1;
   cursor: pointer;
+  padding-right: 20px;
 `;
 
 const IconSend = styled.img`
