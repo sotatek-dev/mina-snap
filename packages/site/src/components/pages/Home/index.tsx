@@ -22,15 +22,19 @@ const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
   const { getSnap, connectToSnap, AccountList, getAccountInfors, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
-  const [isUnlocked, setIsUnlocked] = React.useState(true);
+  const [isUnlocked, setIsUnlocked] = React.useState(false);
   const { connected } = useAppSelector((state) => state.wallet);
   
 
   useEffect(() => {
     const a = async () => {
-      const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
-      const isUnlocked = (await getIsUnlocked()) as boolean;
-      setIsUnlocked(isUnlocked);
+      try {
+        const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
+        const isUnlocked = (await getIsUnlocked()) as boolean;
+        setIsUnlocked(isUnlocked);
+      } catch (error) {
+        reduxDispatch(setWalletInstalled(false));
+      }
       localStorage.clear();
       let i =0;
       while (i<3) {
