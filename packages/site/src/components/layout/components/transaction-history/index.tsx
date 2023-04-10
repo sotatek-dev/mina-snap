@@ -80,14 +80,14 @@ const TransactionHistory = () => {
                     handleClick(item);
                   }}
                 >
-                  <Icon src={item.from == activeAccount ? ISendTx : IReceivedTx} />
+                  <Icon src={item.source.publicKey == activeAccount ? ISendTx : IReceivedTx} />
                   <TransactionDetail>
                     <TxInfo>
                       <Address>
-                        {item.from == activeAccount ? formatAccountAddress(item.to) : formatAccountAddress(item.from)}
+                        {item.source.publicKey == activeAccount ? formatAccountAddress(item.receiver.publicKey) : formatAccountAddress(item.source.publicKey)}
                       </Address>
                       <Amount>
-                        {(item.from == activeAccount ? `- ` : `+ `) +
+                        {(item.source.publicKey == activeAccount ? `- ` : `+ `) +
                           formatBalance(ethers.utils.formatUnits(item.amount, 'gwei'))}
                       </Amount>
                     </TxInfo>

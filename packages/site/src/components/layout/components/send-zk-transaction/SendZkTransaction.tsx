@@ -8,8 +8,13 @@ import {
   isReady,
   PublicKey,
   PrivateKey,
-  fetchAccount
+  fetchAccount,
+  Field
 } from 'snarkyjs';
+import { useAppSelector } from 'hooks/redux';
+import { useMinaSnap } from 'services';
+import { useEffect, useState } from 'react';
+
 // import type { Add } from '../../../../../public/smart-contract/Add'
 
 interface ModalProps {
@@ -22,35 +27,47 @@ type ContainerProps = React.PropsWithChildren<Omit<ModalProps, 'closeSucces'>>;
 
 const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => {
 
+  const {activeAccount} = useAppSelector((state)=> (state.wallet));
+  const { ExportPrivateKey } = useMinaSnap();
+  const [currentState, setCurrentState] = useState('');
+  const [newState, setNewState] = useState('');
+  
+
   const submitZkTransaction = async () => { 
+    const { Quiz } = await import('smart-contract'); 
+    console.log('activeAccount', activeAccount);
+    
     console.log('-start');
     await isReady;
-      const { Add } = await import('smart-contract'); 
 
       // Update this to use the address (public key) for your zkApp account
       // To try it out, you can try this address for an example "Add" smart contract that we've deployed to 
       // Berkeley Testnet B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
-      const senderPrivateKey = 'EKEEPTX3EKjQBscJiNZoZEMgiTk87VNF7W9Ey5XFwtC9GEhj9yfQ';
-      const senderAddress = 'B62qiwy4VoVLzBDdSC7dwN6agu6fe4QKqdzbFvWZ2dEmsiddX32A1tC';
+      
+      const senderPrivateKey = 'EKEZvpJoapJyR8DH9zG1PTsrsdF56jdFS5yKLeoJUzagapGtX42t';
+      const senderAddress = 'B62qqQXYTh8zAoSNS9Nf5mBkA2MxdC7WpbzMd6S1cwtNPzzwD582eDr';
 
       const zkAppPrivateKey = 'EKEfFXajzqebC4yEQzxaqaov9JgMMyeeAdNuuF84UVWVbzJrMjMh';
       // This should be removed once the zkAppAddress is updated.
-      const zkAppAddress = 'B62qokxHiP7MGhmqztYdEbfXU7kqLztrKaDwftZ8ZiLM86mjYr2LNuT';
+      const zkAppAddress = 'B62qm3p1ZGw3xiWu4x6bfrF2FS4kj2bp1qrHkdM9rr9WscP3g6qNcb6';
 
       if (!zkAppAddress) {
         console.error(
           'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
         );
       }
-      const zkApp = new Add(PublicKey.fromBase58(zkAppAddress));
+      const zkApp = new Quiz(PublicKey.fromBase58(zkAppAddress));
       console.log('zkApp', zkApp);
       
       Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
-      await Add.compile();
+      await Quiz.compile();
       const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, 'https://proxy.berkeley.minaexplorer.com/graphql');
       console.log(`-account:`, account);
+      const zkState = zkApp.num.get().toString();
+      console.log('zkState', zkState);
+      console.log(Field(newState));
       let tx = await Mina.transaction({ sender: PublicKey.fromBase58(senderAddress), fee: 0.1e9 }, () => {
-        zkApp.update();
+        zkApp.update(Field(newState));
       });
       console.log(`tx:`, tx);
       const provedTx = await tx.prove();
@@ -71,6 +88,31 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
     console.log('-end');
 
   }
+
+  // useEffect(() => {
+  //   const getCurrentState = async () => {
+  //     const { Quiz } = await import('smart-contract'); 
+  //     await isReady;
+  //     const zkAppAddress = 'B62qrNT39BFhsqy85CCr4uemcfcgSxQVYf9hJHEYEzJ8Kf4U3bcgaGc';
+
+  //     if (!zkAppAddress) {
+  //       console.error(
+  //         'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
+  //       );
+  //     }
+  //     const zkApp = new Quiz(PublicKey.fromBase58(zkAppAddress));
+  //     console.log('zkApp', zkApp);
+      
+  //     Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
+  //     await Quiz.compile();
+  //     // const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, 'https://proxy.berkeley.minaexplorer.com/graphql');
+  //     // console.log(`-account:`, account);
+  //     const zkState = zkApp.num.get().toString();
+  //     console.log('zkState', zkState);
+  //       setCurrentState(zkState);
+  //   }
+  //   getCurrentState()
+  // }, [])
   return (
     <Modal
       open={open}
@@ -85,6 +127,9 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
                 autoComplete="off"
                 variant="outlined"
                 placeholder="Param"
+                onChange={(event) => {
+                  setNewState(event.target.value);
+                }}
                 fullWidth
                 size="small"
                 inputProps={{
@@ -97,6 +142,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
                 }}
               />
             </Content>
+            {currentState}
             <Button onClick={() => submitZkTransaction()}>Send</Button>
         </Wrapper>
     </Modal>
