@@ -81,13 +81,13 @@ export async function submitPayment(signedPayment: Signed<Payment>, networkConfi
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
-  const { pooledUserCommands: pendingTxs } = await gql(networkConfig.gqlUrl, TxPendingQuery, { address });
+  const { pooledUserCommands: pendingTxs } = await gql(networkConfig.gqlUrl, TxPendingQuery(), { address });
   pendingTxs.forEach((tx: any) => {
     tx.memo = decodeMemo(tx.memo);
     tx.status = 'PENDING';
   });
 
-  const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery, { ...options, address });
+  const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address });
   transactions.forEach((tx: any) => {
     tx.memo = decodeMemo(tx.memo);
     tx.status = tx.failureReason ? 'FAILED' : 'APPLIED';
@@ -97,7 +97,7 @@ export async function getTxHistory(networkConfig: NetworkConfig, options: Histor
 }
 
 export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
-  const query = getTxDetailQuery;
+  const query = getTxDetailQuery();
   const variables = { hash };
 
   const data = await gql(networkConfig.gqlTxUrl, query, variables);
@@ -106,7 +106,7 @@ export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
 }
 
 export async function getTxStatus(networkConfig: NetworkConfig, paymentId: string) {
-  const query = getTxStatusQuery;
+  const query = getTxStatusQuery();
   const variables = { paymentId };
 
   const data = await gql(networkConfig.gqlUrl, query, variables);
