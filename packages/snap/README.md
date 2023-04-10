@@ -39,6 +39,16 @@ Connect to the snap by calling `wallet_requestSnaps` method with `npm:test-mina-
   ```
 - This snap uses a patched version of mina-signer. It may need to update if there's a new version of mina-signer. We are using this repo as the dependency http://www.github.com/sotatek-dev/mina-signer-for-snap
 
+## Publish snap to NPM
+- Update the `version` in `package.json` then run:
+```
+yarn build
+```
+- Run the below command to publish to NPM:
+```
+npm publish
+```
+
 ## Methods
 | Method                         | Description                                   |
 | ------------------------------ | --------------------------------------------- |

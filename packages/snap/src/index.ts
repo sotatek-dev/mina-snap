@@ -16,7 +16,7 @@ import {
 } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
-import { getTxHistory, getTxDetail, getTxStatus } from './mina/transaction';
+import { getTxHistory, getTxDetail, getTxStatus, submitZkAppTx } from './mina/transaction';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -46,6 +46,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       const { publicKey, name } = await getKeyPair();
       const { account } = await getAccountInfo(publicKey, networkConfig);
       account.name = name;
+      console.log(`-account:`, account);
       return account;
     }
 
@@ -172,6 +173,13 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
 
     case EMinaMethod.REQUEST_NETWORK_NAME: {
       return networkConfig.name;
+    }
+
+    case EMinaMethod.SEND_TX: {
+      const { params } = request;
+      const submitZkAppResult = await submitZkAppTx(params as { transaction: any; feePayer: any }, networkConfig);
+      console.log(`-submitZkAppResult:`, submitZkAppResult);
+      return submitZkAppResult;
     }
 
     default:

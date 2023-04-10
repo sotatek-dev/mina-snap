@@ -16,7 +16,7 @@ mutation sendPayment(
 }
 `;
 
-export const getAccountInfoQuery = `
+export const getAccountInfoQuery = (isBerkeley?: boolean) => `
 query accountInfo($publicKey: PublicKey!) {
   account(publicKey: $publicKey) {
     balance {
@@ -24,19 +24,22 @@ query accountInfo($publicKey: PublicKey!) {
     },
     nonce
     inferredNonce
-    delegate
+    delegateAccount {
+      publicKey
+    }
     publicKey
+    ${ isBerkeley ? 'zkappState' : '' }
   }
 }
 `;
 
-export const getTxStatusQuery = `
+export const getTxStatusQuery = () => `
 query txStatus($paymentId:ID!) {
   	transactionStatus(payment: $paymentId)
 }
 `;
 
-export const getTxHistoryQuery = `
+export const getTxHistoryQuery = () => `
 query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolean!, $address: String!) {
 	transactions(limit: $limit, sortBy: $sortBy, query: {canonical: $canonical, OR: [{from: $address}, {to: $address}]}) {
 		fee
@@ -56,7 +59,7 @@ query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolea
 }
 `;
 
-export const TxPendingQuery = `
+export const TxPendingQuery = () => `
 query pendingTx($address: PublicKey!) {
     pooledUserCommands(publicKey: $address) {
 		fee
@@ -75,7 +78,7 @@ query pendingTx($address: PublicKey!) {
   }
 `;
 
-export const getTxDetailQuery = `
+export const getTxDetailQuery = () => `
 query transaction($hash: String!) {
 	transaction(query: {hash: $hash}) {
 	  amount
@@ -119,3 +122,20 @@ mutation stakeTx($fee:UInt64!,
     }
   }
 `;
+
+export const getPartyBody = () =>
+   `
+  mutation sendZkapp($zkappCommandInput:ZkappCommandInput!){
+    sendZkapp(input: {
+      zkappCommand: $zkappCommandInput
+    }) {
+      zkapp {
+        hash
+        id
+        zkappCommand {
+          memo
+        }
+      }
+    }
+  }
+  `

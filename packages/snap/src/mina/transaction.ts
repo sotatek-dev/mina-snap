@@ -8,12 +8,14 @@ import {
   getTxStatusQuery,
   TxPendingQuery,
   sendStakeDelegationGql,
+  getPartyBody,
 } from '../graphql/gqlparams';
 import { HistoryOptions, NetworkConfig, StakeTxInput, TxInput } from '../interfaces';
 import { decodeMemo } from '../util/helper';
 import { getMinaClient } from '../util/mina-client.util';
 import { popupNotify } from '../util/popup.util';
-import { getAccountInfo } from './account';
+import { getAccountInfo, getKeyPair } from './account';
+import { ENetworkName } from '../constants/config.constant';
 
 /**
  * Sign user payment.
@@ -81,13 +83,13 @@ export async function submitPayment(signedPayment: Signed<Payment>, networkConfi
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
-  const { pooledUserCommands: pendingTxs } = await gql(networkConfig.gqlUrl, TxPendingQuery, { address });
+  const { pooledUserCommands: pendingTxs } = await gql(networkConfig.gqlUrl, TxPendingQuery(), { address });
   pendingTxs.forEach((tx: any) => {
     tx.memo = decodeMemo(tx.memo);
     tx.status = 'PENDING';
   });
 
-  const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery, { ...options, address });
+  const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address });
   transactions.forEach((tx: any) => {
     tx.memo = decodeMemo(tx.memo);
     tx.status = tx.failureReason ? 'FAILED' : 'APPLIED';
@@ -97,7 +99,7 @@ export async function getTxHistory(networkConfig: NetworkConfig, options: Histor
 }
 
 export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
-  const query = getTxDetailQuery;
+  const query = getTxDetailQuery();
   const variables = { hash };
 
   const data = await gql(networkConfig.gqlTxUrl, query, variables);
@@ -106,7 +108,7 @@ export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
 }
 
 export async function getTxStatus(networkConfig: NetworkConfig, paymentId: string) {
-  const query = getTxStatusQuery;
+  const query = getTxStatusQuery();
   const variables = { paymentId };
 
   const data = await gql(networkConfig.gqlUrl, query, variables);
@@ -149,4 +151,37 @@ export const submitStakeDelegation = async (signedStakeTx: Signed<StakeDelegatio
   await popupNotify(`Stake delegation ${data.sendDelegation.delegation.hash.substring(0, 10)}... has been submitted`);
 
   return data.sendDelegation.delegation;
+};
+
+export const submitZkAppTx = async (params: { transaction: any; feePayer: any }, networkConfig: NetworkConfig) => {
+  if (networkConfig.name !== ENetworkName.BERKELEY) {
+    throw new Error('ZkApp transaction only available on Berkeley');
+  }
+  try {
+    const client = getMinaClient(networkConfig);
+    const { publicKey, privateKey } = await getKeyPair();
+    const { account } = await getAccountInfo(publicKey, networkConfig);
+    let decimal = new BigNumber(10).pow(networkConfig.token.decimals);
+    let sendFee = new BigNumber(params.feePayer.fee).multipliedBy(decimal).toNumber();
+
+    const payload: any = {
+      zkappCommand: JSON.parse(params.transaction),
+      feePayer: {
+        feePayer: publicKey,
+        fee: sendFee,
+        nonce: account.inferredNonce,
+        memo: params.feePayer.memo || '',
+      },
+    };
+    const signedTx = client.signTransaction(payload, privateKey);
+    const txGql = getPartyBody();
+    const variables = {
+      zkappCommandInput: signedTx.data.zkappCommand,
+    };
+    const sendPartyRes = await gql(networkConfig.gqlUrl, txGql, variables);
+    return sendPartyRes;
+  } catch (error) {
+    console.error('Failed to submitZkAppTx:', error.message);
+    throw error;
+  }
 };
