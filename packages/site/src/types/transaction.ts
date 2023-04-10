@@ -15,16 +15,23 @@ export type TypeResponseSendTransaction = {
 }
 
 export type ResultTransactionList = {
-    fee: number
-    from: string
-    to: string
-    nonce: number
     amount: number
-    memo: string
-    hash: string
-    kind: string
     dateTime: string
     failureReason: string
+    fee: number
+    feeToken: string
+    hash: string
+    id: string
+    isDelegation: boolean
+    kind: string
+    memo: string
+    nonce: number
+    receiver : {
+        publicKey: string
+    }
+    source: {
+        publicKey: string
+    }
     status: string
 }
 

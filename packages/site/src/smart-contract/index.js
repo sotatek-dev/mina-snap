@@ -1,7 +1,7 @@
+/* eslint-disable */
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    /* eslint-disable */
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
@@ -18,7 +18,7 @@ import { Field, SmartContract, state, State, method } from 'snarkyjs';
  *
  * This file is safe to delete and replace with your own contract.
  */
-export class Add extends SmartContract {
+export class Quiz extends SmartContract {
     constructor() {
         super(...arguments);
         this.num = State();
@@ -27,21 +27,22 @@ export class Add extends SmartContract {
         super.init();
         this.num.set(Field(1));
     }
-    update() {
+    update(answer) {
+        const currentDayNumber = new Date().getUTCDay();
         const currentState = this.num.get();
         this.num.assertEquals(currentState); // precondition that links this.num.get() to the actual on-chain state
-        const newState = currentState.add(2);
-        this.num.set(newState);
+        answer.assertEquals(currentState.add(currentDayNumber));
+        this.num.set(answer);
     }
 }
 __decorate([
     state(Field),
     __metadata("design:type", Object)
-], Add.prototype, "num", void 0);
+], Quiz.prototype, "num", void 0);
 __decorate([
     method,
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Field]),
     __metadata("design:returntype", void 0)
-], Add.prototype, "update", null);
-//# sourceMappingURL=Add.js.map
+], Quiz.prototype, "update", null);
+//# sourceMappingURL=Quiz.js.map

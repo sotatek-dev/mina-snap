@@ -64,7 +64,7 @@
     "redux-persist": "^6.0.0",
     "sass": "^1.58.1",
     "semver": "^7.3.7",
-    "snarkyjs": "0.*",
+    "snarkyjs": "^0.9.6",
     "starknet": "^4.17.1",
     "styled-components": "5.3.3",
     "toastr2": "^3.0.0-alpha.18",

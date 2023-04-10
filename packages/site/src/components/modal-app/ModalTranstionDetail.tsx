@@ -45,11 +45,11 @@ const ModalTransactionDetail = ({ open, clickOutSide, setOpenModal, transaction 
         </BoxInfo>
         <BoxInfo>
           To
-          <Content>{transaction?.to}</Content>
+          <Content>{transaction?.receiver.publicKey}</Content>
         </BoxInfo>
         <BoxInfo>
           From
-          <Content>{transaction?.from}</Content>
+          <Content>{transaction?.source.publicKey}</Content>
         </BoxInfo>
         {transaction?.memo && <BoxInfo>
           Memo
