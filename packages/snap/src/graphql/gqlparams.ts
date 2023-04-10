@@ -10,89 +10,128 @@ mutation sendPayment(
 		signature: { ${isRawSignature ? 'rawSignature: $rawSignature' : 'field: $field, scalar: $scalar'} }
 	) {
 		payment {
+		  id
 			hash
+			kind
+			nonce
+			source {
+			  publicKey
+			}
+			receiver {
+			  publicKey
+			}
+			amount
+			fee
+			memo
+			failureReason
 		}
 	}
 }
 `;
 
-export const getAccountInfoQuery = `
+export const getAccountInfoQuery = () => `
 query accountInfo($publicKey: PublicKey!) {
   account(publicKey: $publicKey) {
+    publicKey
     balance {
       total
     },
     nonce
     inferredNonce
-    delegate
-    publicKey
+    delegateAccount {
+      publicKey
+    }
   }
 }
 `;
 
-export const getTxStatusQuery = `
+export const getTxStatusQuery = () => `
 query txStatus($paymentId:ID!) {
   	transactionStatus(payment: $paymentId)
 }
 `;
 
-export const getTxHistoryQuery = `
+export const getTxHistoryQuery = () => `
 query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolean!, $address: String!) {
 	transactions(limit: $limit, sortBy: $sortBy, query: {canonical: $canonical, OR: [{from: $address}, {to: $address}]}) {
-		fee
-		from
-		to
-		nonce
 		amount
-		memo
-		hash
-		kind
-		isDelegation
-		feeToken
 		dateTime
 		failureReason
+		fee
+		feeToken
+		hash
 		id
+		isDelegation
+		kind
+		memo
+		nonce
+		from
+		to
+		receiver {
+      publicKey
+		}
+		source {
+		  publicKey
+		}
 	}
 }
 `;
 
-export const TxPendingQuery = `
+export const TxPendingQuery = () => `
 query pendingTx($address: PublicKey!) {
-    pooledUserCommands(publicKey: $address) {
-		fee
-		from
-		to
-		nonce
-		amount
-		memo
+  pooledUserCommands(publicKey: $address) {
+		id
 		hash
 		kind
-		isDelegation
-		feeToken
+		nonce
+		source {
+		  publicKey
+		}
+		receiver {
+		  publicKey
+		}
+		amount
+		fee
+		memo
 		failureReason
-		id
-    }
+		feeToken
   }
+}
 `;
 
-export const getTxDetailQuery = `
+export const getTxDetailQuery = () => `
 query transaction($hash: String!) {
 	transaction(query: {hash: $hash}) {
 	  amount
-	  to
-	  from
-	  fee
-	  nonce
 	  dateTime
+	  failureReason
+	  fee
 	  hash
+	  kind
+	  memo
+	  nonce
+	  receiver {
+	    publicKey
+	  }
+	  source {
+	    publicKey
+	  }
+	  from
+	  to
 	}
 }
 `;
 
 export const sendStakeDelegationGql = (isRawSignature: boolean) => `
-mutation stakeTx($fee:UInt64!,
-  $to: PublicKey!, $from: PublicKey!, $nonce:UInt32, $memo: String,
-  $validUntil: UInt32,${isRawSignature ? '$rawSignature: String' : '$scalar: String, $field: String'}) {
+mutation stakeTx(
+  $fee:UInt64!,
+  $to: PublicKey!, 
+  $from: PublicKey!, 
+  $nonce:UInt32, 
+  $memo: String,
+  $validUntil: UInt32,
+  ${isRawSignature ? '$rawSignature: String' : '$scalar: String, $field: String'}
+) {
     sendDelegation(
       input: {
         fee: $fee,
@@ -102,19 +141,26 @@ mutation stakeTx($fee:UInt64!,
         nonce: $nonce,
         validUntil: $validUntil
       },
-      signature: { ${isRawSignature ? 'rawSignature: $rawSignature' : 'field: $field, scalar: $scalar'}}) {
+      signature: { 
+        ${isRawSignature ? 'rawSignature: $rawSignature' : 'field: $field, scalar: $scalar'}
+      }
+    ) {
       delegation {
-        amount
-        fee
-        feeToken
-        from
-        hash
         id
-        isDelegation
-        memo
-        nonce
+        hash
         kind
-        to
+        nonce
+        source {
+          publicKey
+        }
+        receiver {
+          publicKey
+        }
+        amount
+        feeToken
+        fee
+        memo
+        failureReason
       }
     }
   }
