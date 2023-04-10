@@ -162,7 +162,7 @@ export const createAccount = async (name: string, index?: number): Promise<any> 
   const { publicKey } = await generateKeyPair(networks[currentNetwork], newAccountIndex);
   const duplicateAddress = checkDuplicateAddress(networks[currentNetwork], publicKey);
   if (duplicateAddress) {
-    return createAccount(name, newAccountIndex + 1)
+    return createAccount(name, newAccountIndex + 1);
   }
   snapConfig.networks[currentNetwork].currentAccIndex = newAccountIndex;
   snapConfig.networks[currentNetwork].selectedImportedAccount = null;
@@ -217,24 +217,24 @@ export const getAccounts = async () => {
   const generatedAccountsArr =
     Object.keys(generatedAccounts).length > 0
       ? Object.entries(generatedAccounts).map(([index, account]) => {
-          return {
-            ...account,
-            index,
-            isImported: false,
-          } as any;
-        })
+        return {
+          ...account,
+          index,
+          isImported: false,
+        } as any;
+      })
       : [];
   const importedAccountsArr =
     Object.keys(importedAccounts).length > 0
       ? Object.entries(importedAccounts).map(([index, account]) => {
-          const { name, address } = account;
-          return {
-            name,
-            address,
-            index,
-            isImported: true,
-          } as any;
-        })
+        const { name, address } = account;
+        return {
+          name,
+          address,
+          index,
+          isImported: true,
+        } as any;
+      })
       : [];
   const allAccounts = [...generatedAccountsArr, ...importedAccountsArr];
   await Promise.all(
@@ -268,7 +268,7 @@ export const editAccountName = async (index: number, name: string, isImported?: 
 export const verifyMessage = (networkConfig: NetworkConfig, signedData: Signed<Message>) => {
   const client = getMinaClient(networkConfig);
   return client.verifyMessage(signedData);
-}
+};
 
 const checkDuplicateAddress = (networkConfig: NetworkConfig, publicKey: string) => {
   const { generatedAccounts, importedAccounts } = networkConfig;
@@ -278,4 +278,4 @@ const checkDuplicateAddress = (networkConfig: NetworkConfig, publicKey: string) 
   ];
   const duplicateAddress = existingAddresses.find((address) => address === publicKey);
   return duplicateAddress;
-}
+};

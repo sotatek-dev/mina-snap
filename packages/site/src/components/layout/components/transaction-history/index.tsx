@@ -22,6 +22,7 @@ const TransactionHistory = () => {
   const [showTxDetail, setShowTxDetail] = useState(false);
   const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
   const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
+  const  { items } = useAppSelector((state) => state.networks)
   const { getTxHistory } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
 
@@ -35,7 +36,7 @@ const TransactionHistory = () => {
 
   const hanldeViewAccount = () => {
     const type = 'wallet';
-    window.open(MINA_BERKELEY_EXPLORER + type + '/' + activeAccount, '_blank')?.focus();
+    window.open(items.explorerUrl + type + '/' + activeAccount, '_blank')?.focus();
   };
 
   const handleClickOutSideTxDetail = () => {
