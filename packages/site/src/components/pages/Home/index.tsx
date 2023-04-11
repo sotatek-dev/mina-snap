@@ -28,6 +28,16 @@ const HomePage = () => {
 
   useEffect(() => {
     const a = async () => {
+      reduxDispatch(setTransactions([]));
+      reduxDispatch(setListAccounts([]));
+      reduxDispatch(
+        setActiveAccount({
+          activeAccount: '',
+          balance: '',
+          accountName: '',
+          inferredNonce: '',
+        }),
+      );
       const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
       const isUnlocked = (await getIsUnlocked()) as boolean;
       setIsUnlocked(isUnlocked);
