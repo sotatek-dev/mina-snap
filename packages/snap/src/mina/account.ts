@@ -1,5 +1,5 @@
 import { SLIP10Node } from '@metamask/key-tree';
-import { Keypair, Message, Signed } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
+import { Keypair, Signed, SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import bs58check from 'bs58check';
 import { Buffer } from 'safe-buffer';
 import { ESnapDialogType, ESnapMethod } from '../constants/snap-method.constant';
@@ -78,7 +78,7 @@ export const signMessage = async (message: string, keypair: Keypair, networkConf
   const confirmSignMsg = await popupDialog(ESnapDialogType.CONFIRMATION, 'Sign this message?', message);
   if (confirmSignMsg) {
     const client = getMinaClient(networkConfig);
-    const signed = client.signMessage(message, keypair);
+    const signed = client.signMessage(message, keypair.privateKey);
     return signed;
   }
   return null;
@@ -265,9 +265,9 @@ export const editAccountName = async (index: number, name: string, isImported?: 
   };
 };
 
-export const verifyMessage = (networkConfig: NetworkConfig, signedData: Signed<Message>) => {
+export const verifyMessage = (networkConfig: NetworkConfig, signedData: SignedLegacy<any>) => {
   const client = getMinaClient(networkConfig);
-  return client.verifyMessage(signedData);
+  return client.verifyMessage(signedData as any);
 };
 
 const checkDuplicateAddress = (networkConfig: NetworkConfig, publicKey: string) => {

@@ -63,7 +63,6 @@ query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolea
 		feeToken
 		hash
 		id
-		isDelegation
 		kind
 		memo
 		nonce
@@ -184,3 +183,67 @@ export const getPartyBody = () =>
     }
   }
   `
+
+  export const getZkAppTransactionListBody = () => {
+    return `
+    query zkApps($address: String,$limit:Int) {
+      zkapps(limit: $limit, query: {
+        zkappCommand: {feePayer:
+        {body: {publicKey: $address}}}}, sortBy: DATETIME_DESC) {
+          hash
+      dateTime
+      failureReason {
+        failures
+      }
+      zkappCommand {
+        feePayer {
+          authorization
+          body {
+            nonce
+            publicKey
+            fee
+          }
+        }
+        memo
+        accountUpdates {
+          body {
+            publicKey
+
+          }
+        }
+      }
+      }
+    }
+    `
+  }
+
+  export function getPendingZkAppTxBody() {
+    return `
+    query pendingZkTx($address: PublicKey){
+      pooledZkappCommands(publicKey: $address) {
+      hash
+      failureReason{
+        index
+        failures
+      }
+      zkappCommand{
+        feePayer{
+          body{
+            publicKey
+            fee
+            validUntil
+            nonce
+          }
+          authorization
+        }
+        accountUpdates{
+          body{
+            publicKey
+          }
+        }
+        memo
+      }
+    }
+  }
+    `
+  }

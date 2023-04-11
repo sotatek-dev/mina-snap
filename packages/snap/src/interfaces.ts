@@ -1,19 +1,19 @@
-import { ENetworkName } from "./constants/config.constant";
+import { ENetworkName } from './constants/config.constant';
 
 export type NormalAccountOptions = {
-  [index: number] : {
+  [index: number]: {
     name: string;
     address: string;
-  }
-}
+  };
+};
 
 export type ImportedAccountOptions = {
-  [index: number] : {
+  [index: number]: {
     name: string;
     address: string;
     privateKey: string;
-  }
-}
+  };
+};
 
 export type NetworkConfig = {
   name: string;
@@ -46,7 +46,7 @@ export type TxInput = {
 
 export type SnapConfig = {
   currentNetwork: ENetworkName;
-  networks: { [key: string] : NetworkConfig };
+  networks: { [key: string]: NetworkConfig };
 };
 
 export type HistoryOptions = {
@@ -87,16 +87,21 @@ export type HistoryOptions = {
 
 export type VerifyMessageInput = {
   publicKey: string;
-  payload: string;
+  data: string;
   signature: {
     field: string;
     scalar: string;
-  }
-}
+  };
+};
 
 export type StakeTxInput = {
   to: string;
   fee: number;
   memo?: string;
   nonce?: number;
+};
+
+export type ZkAppTxInput = {
+  transaction: any;
+  feePayer: any;
 };

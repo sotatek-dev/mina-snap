@@ -1,7 +1,15 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
 import { EMinaMethod } from './constants/mina-method.constant';
-import { sendPayment, changeNetwork, resetSnapConfiguration, getSnapConfiguration, sendStakeDelegation, getNetworkConfig } from './mina';
-import { HistoryOptions, StakeTxInput, TxInput, VerifyMessageInput } from './interfaces';
+import {
+  sendPayment,
+  changeNetwork,
+  resetSnapConfiguration,
+  getSnapConfiguration,
+  sendStakeDelegation,
+  getNetworkConfig,
+  sendZkAppTx,
+} from './mina';
+import { HistoryOptions, StakeTxInput, TxInput, VerifyMessageInput, ZkAppTxInput } from './interfaces';
 import { popupDialog } from './util/popup.util';
 import {
   changeAccount,
@@ -16,7 +24,8 @@ import {
 } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
-import { getTxHistory, getTxDetail, getTxStatus, submitZkAppTx } from './mina/transaction';
+import { getTxHistory, getTxDetail, getTxStatus, } from './mina/transaction';
+import { Signed, SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -100,7 +109,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.NETWORK_CONFIG: {
       const { name, gqlUrl, gqlTxUrl, explorerUrl, token } = networkConfig;
       return {
-        name, gqlUrl, gqlTxUrl, explorerUrl, token
+        name,
+        gqlUrl,
+        gqlTxUrl,
+        explorerUrl,
+        token,
       };
     }
 
@@ -117,7 +130,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       const { message } = request.params as { message: string };
       const signature = await signMessage(message, keyPair, networkConfig);
 
-      console.log('--signature', signature);
+      console.log('-signature', signature);
       return signature;
     }
 
@@ -150,14 +163,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.VERIFY_MESSAGE: {
-      const { publicKey, payload, signature } = request.params as VerifyMessageInput;
-      const signedData = {
-        data: {
-          publicKey,
-          message: payload,
-        },
-        signature: { ...signature, signer: publicKey },
-      };
+      const signedData = request.params as SignedLegacy<any>;
       const verifyResult = verifyMessage(networkConfig, signedData);
       console.log(`-verifyResult:`, verifyResult);
       return verifyResult;
@@ -176,8 +182,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     }
 
     case EMinaMethod.SEND_TX: {
-      const { params } = request;
-      const submitZkAppResult = await submitZkAppTx(params as { transaction: any; feePayer: any }, networkConfig);
+      const args = request.params as ZkAppTxInput;
+      const submitZkAppResult = await sendZkAppTx(args, networkConfig);
       console.log(`-submitZkAppResult:`, submitZkAppResult);
       return submitZkAppResult;
     }
