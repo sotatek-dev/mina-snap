@@ -79,24 +79,24 @@ const TransactionHistory = () => {
                     handleClick(item);
                   }}
                 >
-                  <Icon src={item.source.publicKey == activeAccount ? ISendTx : IReceivedTx} />
+                  <Icon src={item?.source.publicKey == activeAccount ? ISendTx : IReceivedTx} />
                   <TransactionDetail>
                     <TxInfo>
                       <Address>
-                        {item.source.publicKey == activeAccount ? formatAccountAddress(item.receiver.publicKey) : formatAccountAddress(item.source.publicKey)}
+                        {item?.source.publicKey == activeAccount ? formatAccountAddress(item?.receiver.publicKey) : formatAccountAddress(item?.source.publicKey)}
                       </Address>
                       <Amount>
-                        {(item.source.publicKey == activeAccount ? `- ` : `+ `) +
-                          formatBalance(ethers.utils.formatUnits(item.amount, 'gwei'))}
+                        {(item?.source.publicKey == activeAccount ? `- ` : `+ `) +
+                          formatBalance(ethers.utils.formatUnits(item?.amount, 'gwei'))}
                       </Amount>
                     </TxInfo>
                     <Status>
-                      {item.status == 'PENDING' ? (
-                        <Detail>Nonce {item.nonce}</Detail>
+                      {item?.status == 'PENDING' ? (
+                        <Detail>Nonce {item?.nonce}</Detail>
                       ) : (
-                        <Detail>{formatDateTime(item.dateTime)}</Detail>
+                        <Detail>{formatDateTime(item?.dateTime)}</Detail>
                       )}
-                      <TxStatus status={item.status}>{item.status}</TxStatus>
+                      <TxStatus status={item?.status}>{item?.status}</TxStatus>
                     </Status>
                   </TransactionDetail>
                 </TracsactionItem>
