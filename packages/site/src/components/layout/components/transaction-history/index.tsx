@@ -24,6 +24,26 @@ const TransactionHistory = () => {
   const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
   const { getTxHistory } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
+  const [listTx, setListTx] = useState<ResultTransactionList[]>([{
+    amount: 0,
+    dateTime: '',
+    failureReason: '',
+    fee: 0,
+    feeToken: '',
+    hash: '',
+    id: '',
+    isDelegation: false,
+    kind: '',
+    memo: '',
+    nonce: 0,
+    receiver : {
+        publicKey: ''
+    },
+    source: {
+        publicKey: ''
+    },
+    status: ''
+  }])
 
   const [maximumDisplay, setMaximumDisplay] = useState(10);
 
@@ -54,6 +74,7 @@ const TransactionHistory = () => {
       }, 1000);
     };
     getListTxHistory();
+    setListTx(transactions)
   }, []);
 
   useEffect(() => {
@@ -70,8 +91,8 @@ const TransactionHistory = () => {
       <Wrapper>
         <Label>HISTORY</Label>
         <TransactionList>
-          {transactions.length > 0 ? (
-            transactions.slice(0, maximumDisplay).map((item, index) => {
+          {listTx.length > 0 ? (
+            listTx.slice(0, maximumDisplay).map((item, index) => {
               return (
                 <TracsactionItem
                   key={index}
