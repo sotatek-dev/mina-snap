@@ -17,7 +17,6 @@ function renderItem({ signature }: TypeResponseSignature) {
       <Box>Signature: </Box>
       <Box>field: {signature.field}</Box>
       <Box>scalar: {signature.scalar}</Box>
-      <Box>signer: {signature.signer}</Box>
     </BoxSignature>
   );
 }

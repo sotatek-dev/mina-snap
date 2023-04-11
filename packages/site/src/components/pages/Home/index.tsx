@@ -23,7 +23,7 @@ const HomePage = () => {
   const reduxDispatch = useAppDispatch();
   const { getSnap, connectToSnap, AccountList, getAccountInfors, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState(false);
-  const { connected } = useAppSelector((state) => state.wallet);
+  const { connected, isUnlock } = useAppSelector((state) => state.wallet);
   
 
   useEffect(() => {
@@ -65,9 +65,9 @@ const HomePage = () => {
             await connectToSnap();
             await reduxDispatch(setWalletConnection(true));
           } catch (error) {
-            setIsUnlocked(true);
+            setIsUnlocked(false);
             await reduxDispatch(setIsLoadingGlobal(false));
-            await reduxDispatch(setWalletConnection(true));
+            await reduxDispatch(setWalletConnection(false));
           }
         } else {
           setIsUnlocked(true);
@@ -89,7 +89,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const WindowFocusHandler = () => {
-      window.addEventListener("focus", onFocus);
+      window.addEventListener("focus", onFocus); 
       window.addEventListener("blur", onBlur);
       // Calls onFocus when the window first loads
       onFocus();
@@ -100,6 +100,7 @@ const HomePage = () => {
       };
     }
     WindowFocusHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -111,7 +112,8 @@ const HomePage = () => {
   const onFocus = async () => {
     const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
     const unlock = (await getIsUnlocked()) as boolean;
-    if (unlock){
+    const isInstalledSnap = await getSnap();
+    if (unlock && isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]?.enabled){
       const network = await GetNetworkConfigSnap();
       const txList = await getTxHistory();
       const accountList = await AccountList();
@@ -127,13 +129,15 @@ const HomePage = () => {
           inferredNonce: accountInfor.inferredNonce,
         }),
       );
+    }else {
+      setIsUnlocked(false)
     }
   };
   const onBlur = async () => {
 
   };
 
-  return <div>{isUnlocked ? <Home /> : <ConnectWallet />}</div>;
+  return <div>{(isUnlocked && isUnlock) ? <Home /> : <ConnectWallet />}</div>;
 };
 
 export default HomePage;

@@ -4,7 +4,7 @@ import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, ButtonProps, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { connectWallet, setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions } from 'slices/walletSlice';
+import { connectWallet, setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions, setUnlockWallet } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import wainning from 'assets/icons/wainning.svg';
 import metamask from 'assets/logo/logo-metamask.png';
@@ -14,7 +14,7 @@ type Props = {};
 
 const ConnectWallet: React.FC<Props> = () => {
   const reduxDispatch = useAppDispatch();
-  const { connectToSnap, getSnap, AccountList, getAccountInfors, getTxHistory, SwitchNetwork } = useMinaSnap();
+  const { connectToSnap, getSnap, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
 
   const { isInstalledWallet, isLoading } = useAppSelector((state) => state.wallet);
 
@@ -28,6 +28,7 @@ const ConnectWallet: React.FC<Props> = () => {
       const accountList = await AccountList();
       const accountInfor = await getAccountInfors();
       const txList = await getTxHistory();
+      reduxDispatch(setUnlockWallet(true));
       reduxDispatch(setTransactions(txList));
       reduxDispatch(setIsLoading(false));
       reduxDispatch(
@@ -46,6 +47,7 @@ const ConnectWallet: React.FC<Props> = () => {
       );
       reduxDispatch(setIsLoadingGlobal(false));
     } catch (e) {
+      reduxDispatch(setUnlockWallet(false));
       reduxDispatch(setIsLoadingGlobal(false));
     } finally {
       location.reload()

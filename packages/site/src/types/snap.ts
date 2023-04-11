@@ -20,3 +20,8 @@ export type ResponseNetworkConfig = {
         decimals: number
     }
 }
+
+export type ResponeseZkTransaction = {
+    id: string,
+    hash: string
+}
