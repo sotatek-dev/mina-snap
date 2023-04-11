@@ -13154,13 +13154,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mina-signer@git+ssh://git@github.com/sotatek-dev/mina-signer-for-snap#master":
-  version: 1.7.0
-  resolution: "mina-signer@git+ssh://git@github.com/sotatek-dev/mina-signer-for-snap#commit=6f3191cb97cdc48513acf5bc6ecac1371e0632a6"
+"mina-signer@git+ssh://git@github.com/sotatek-dev/mina-signer-for-snap#v2.0.3":
+  version: 2.0.3
+  resolution: "mina-signer@git+ssh://git@github.com/sotatek-dev/mina-signer-for-snap#commit=cabb940b986cdbd4acf7af068933e19193c34156"
   dependencies:
     blakejs: ^1.2.1
     js-sha256: ^0.9.0
-  checksum: 7a5c7936423352ac04955409e5c3c4a89f60b83fda2641471d058f56b7fe55a4821277bec340f242f09f47a88b1e6656d27fb4ff34623ba88f7cb29d03b347e6
+  checksum: eacb30b373ec438a602c214f5ceca406c333e7540cc4da361ec812107de6f3d16f2b0e0cbc2d034e8ab077d95d528a61f0d08a79f35339a9692c096497ed2293
   languageName: node
   linkType: hard
 
@@ -18061,7 +18061,7 @@ __metadata:
     eslint-plugin-jsdoc: ^39.2.9
     eslint-plugin-node: ^11.1.0
     eslint-plugin-prettier: ^4.2.1
-    mina-signer: "git+ssh://git@github.com/sotatek-dev/mina-signer-for-snap#master"
+    mina-signer: "git+ssh://git@github.com/sotatek-dev/mina-signer-for-snap#v2.0.3"
     prettier: ^2.2.1
     prettier-plugin-packagejson: ^2.2.11
     rimraf: ^3.0.2

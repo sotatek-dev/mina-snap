@@ -34,3 +34,27 @@ export const decodeMemo = (encode: string) => {
     return encode;
   }
 };
+
+export const formatZkAppTxList = (zkApptxs: any[]) => {
+  return zkApptxs.map((tx) => {
+    return {
+      amount: 0,
+      dateTime: tx.dateTime || '',
+      failureReason: tx.failureReason,
+      fee: tx.zkappCommand.feePayer.body.fee,
+      id: '',
+      hash: tx.hash,
+      kind: 'ZKAPP',
+      from: tx.zkappCommand.feePayer.body.publicKey,
+      nonce: tx.zkappCommand.feePayer.body.nonce,
+      receiver: {
+        publicKey: tx.zkappCommand.accountUpdates[0]?.body?.publicKey || ''
+      },
+      source: {
+        publicKey: tx.zkappCommand.feePayer.body.publicKey
+      },
+      memo: tx.zkappCommand.memo,
+      to: tx.zkappCommand.accountUpdates[0]?.body?.publicKey || ''
+    };
+  });
+}

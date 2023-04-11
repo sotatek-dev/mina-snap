@@ -1,8 +1,8 @@
 import { ESnapDialogType } from '../constants/snap-method.constant';
-import { NetworkConfig, StakeTxInput, TxInput } from '../interfaces';
+import { NetworkConfig, StakeTxInput, TxInput, ZkAppTxInput } from '../interfaces';
 import { popupDialog, popupNotify } from '../util/popup.util';
 import { getKeyPair } from './account';
-import { submitPayment, submitStakeDelegation, signPayment, signStakeDelegation } from './transaction';
+import { submitPayment, submitStakeDelegation, signPayment, signStakeDelegation, signZkAppTx, submitZkAppTx } from './transaction';
 
 export { getSnapConfiguration, changeNetwork, getNetworkConfig, resetSnapConfiguration } from './configuration';
 
@@ -60,4 +60,32 @@ export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: Net
   }
 
   return stakeTx;
+}
+
+export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConfig) => {
+  const { publicKey, privateKey } = await getKeyPair();
+
+  const confirmation = await popupDialog(
+    ESnapDialogType.CONFIRMATION,
+    'Confirm transaction',
+    `Submit ZkApp transaction \nFrom: ${publicKey}\nFee: ${args.feePayer.fee} MINA`,
+  );
+  if (!confirmation) {
+    await popupNotify('Transaction rejected');
+    return null;
+  }
+
+  const signedZkAppTx = await signZkAppTx(args, publicKey, privateKey, networkConfig);
+  if (!signedZkAppTx) {
+    await popupNotify('Sign ZkApp transaction error');
+    return null;
+  }
+
+  const submitZkAppTxResult = await submitZkAppTx(signedZkAppTx, networkConfig);
+  if (!submitZkAppTxResult) {
+    await popupNotify('Submit ZkApp tx error');
+    return null;
+  }
+
+  return submitZkAppTxResult;
 }

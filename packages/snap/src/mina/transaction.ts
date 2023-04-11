@@ -1,5 +1,11 @@
 import BigNumber from 'bignumber.js';
-import { Payment, Signed, StakeDelegation } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
+import {
+  Payment,
+  Signed,
+  SignedLegacy,
+  StakeDelegation,
+  ZkappCommand,
+} from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import { gql } from '../graphql';
 import {
   getTxHistoryQuery,
@@ -8,12 +14,16 @@ import {
   getTxStatusQuery,
   TxPendingQuery,
   sendStakeDelegationGql,
+  getPartyBody,
+  getPendingZkAppTxBody,
+  getZkAppTransactionListBody,
 } from '../graphql/gqlparams';
-import { HistoryOptions, NetworkConfig, StakeTxInput, TxInput } from '../interfaces';
-import { decodeMemo } from '../util/helper';
+import { HistoryOptions, NetworkConfig, StakeTxInput, TxInput, ZkAppTxInput } from '../interfaces';
+import { decodeMemo, formatZkAppTxList } from '../util/helper';
 import { getMinaClient } from '../util/mina-client.util';
 import { popupNotify } from '../util/popup.util';
-import { getAccountInfo } from './account';
+import { getAccountInfo, getKeyPair } from './account';
+import { ENetworkName } from '../constants/config.constant';
 
 /**
  * Sign user payment.
@@ -68,7 +78,7 @@ export const signPayment = async (
  * @param networkConfig - Selected network config.
  * @returns `null` if error.
  */
-export async function submitPayment(signedPayment: Signed<Payment>, networkConfig: NetworkConfig) {
+export async function submitPayment(signedPayment: SignedLegacy<Payment>, networkConfig: NetworkConfig) {
   const query = sendPaymentQuery(false);
   const variables = { ...signedPayment.data, ...signedPayment.signature };
 
@@ -81,19 +91,40 @@ export async function submitPayment(signedPayment: Signed<Payment>, networkConfi
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
-  const { pooledUserCommands: pendingTxs } = await gql(networkConfig.gqlUrl, TxPendingQuery(), { address });
-  pendingTxs.forEach((tx: any) => {
+  let getPendingTxList = gql(networkConfig.gqlUrl, TxPendingQuery(), { address });
+  let getTxList = gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address });
+  let getZkAppTxList: any = new Promise(() => {
+    return { zkapps: [] };
+  });
+  let getZkAppPending: any = new Promise(() => {
+    return { pooledZkappCommands: [] };
+  });
+  if (networkConfig.name === ENetworkName.BERKELEY) {
+    getZkAppTxList = gql(networkConfig.gqlTxUrl, getZkAppTransactionListBody(), { ...options, address });
+    getZkAppPending = gql(networkConfig.gqlUrl, getPendingZkAppTxBody(), { ...options, address });
+  }
+  const [{ pooledUserCommands }, { transactions }, { zkapps }, { pooledZkappCommands }] = await Promise.all([
+    getPendingTxList,
+    getTxList,
+    getZkAppTxList,
+    getZkAppPending,
+  ]);
+  const pendingZkAppTxs = formatZkAppTxList(pooledZkappCommands);
+  const pendingList = [...pooledUserCommands, ...pendingZkAppTxs].sort((a, b) => b.nonce - a.nonce);
+  const includedZkAppTxs = formatZkAppTxList(zkapps);
+  const includedList = [...transactions, ...includedZkAppTxs].sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime());
+
+  pendingList.forEach((tx: any) => {
     tx.memo = decodeMemo(tx.memo);
     tx.status = 'PENDING';
   });
 
-  const { transactions } = await gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address });
-  transactions.forEach((tx: any) => {
+  includedList.forEach((tx: any) => {
     tx.memo = decodeMemo(tx.memo);
     tx.status = tx.failureReason ? 'FAILED' : 'APPLIED';
   });
 
-  return [...pendingTxs.reverse(), ...transactions];
+  return [...pendingList, ...includedList];
 }
 
 export async function getTxDetail(networkConfig: NetworkConfig, hash: string) {
@@ -140,7 +171,10 @@ export const signStakeDelegation = async (
   }
 };
 
-export const submitStakeDelegation = async (signedStakeTx: Signed<StakeDelegation>, networkConfig: NetworkConfig) => {
+export const submitStakeDelegation = async (
+  signedStakeTx: SignedLegacy<StakeDelegation>,
+  networkConfig: NetworkConfig,
+) => {
   const txGql = sendStakeDelegationGql(false);
   const variables = { ...signedStakeTx.data, ...signedStakeTx.signature };
 
@@ -149,4 +183,53 @@ export const submitStakeDelegation = async (signedStakeTx: Signed<StakeDelegatio
   await popupNotify(`Stake delegation ${data.sendDelegation.delegation.hash.substring(0, 10)}... has been submitted`);
 
   return data.sendDelegation.delegation;
+};
+
+export const signZkAppTx = async (
+  args: ZkAppTxInput,
+  publicKey: string,
+  privateKey: string,
+  networkConfig: NetworkConfig,
+): Promise<Signed<ZkappCommand>> => {
+  if (networkConfig.name !== ENetworkName.BERKELEY) {
+    throw new Error('ZkApp transaction only available on Berkeley');
+  }
+  try {
+    const client = getMinaClient(networkConfig);
+    const { account } = await getAccountInfo(publicKey, networkConfig);
+    let decimal = new BigNumber(10).pow(networkConfig.token.decimals);
+    let sendFee = new BigNumber(args.feePayer.fee).multipliedBy(decimal).toNumber();
+
+    const payload: any = {
+      zkappCommand: JSON.parse(args.transaction),
+      feePayer: {
+        feePayer: publicKey,
+        fee: sendFee,
+        nonce: account.inferredNonce,
+        memo: args.feePayer.memo || '',
+      },
+    };
+    const signedTx = client.signTransaction(payload, privateKey) as Signed<ZkappCommand>;
+    return signedTx;
+  } catch (error) {
+    console.error('Failed to sign ZkAppTx:', error.message);
+    throw error;
+  }
+};
+
+export const submitZkAppTx = async (signedZkAppTx: Signed<ZkappCommand>, networkConfig: NetworkConfig) => {
+  if (networkConfig.name !== ENetworkName.BERKELEY) {
+    throw new Error('ZkApp transaction only available on Berkeley');
+  }
+  try {
+    const txGql = getPartyBody();
+    const variables = {
+      zkappCommandInput: signedZkAppTx.data.zkappCommand,
+    };
+    const sendPartyRes = await gql(networkConfig.gqlUrl, txGql, variables);
+    return sendPartyRes.sendZkapp.zkapp;
+  } catch (error) {
+    console.error('Failed to submitZkAppTx:', error.message);
+    throw error;
+  }
 };

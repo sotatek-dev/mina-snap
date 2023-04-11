@@ -29,7 +29,7 @@ mutation sendPayment(
 }
 `;
 
-export const getAccountInfoQuery = () => `
+export const getAccountInfoQuery = (isBerkeley?: boolean) => `
 query accountInfo($publicKey: PublicKey!) {
   account(publicKey: $publicKey) {
     publicKey
@@ -41,6 +41,8 @@ query accountInfo($publicKey: PublicKey!) {
     delegateAccount {
       publicKey
     }
+    publicKey
+    ${ isBerkeley ? 'zkappState' : '' }
   }
 }
 `;
@@ -61,7 +63,6 @@ query history($limit: Int!, $sortBy: TransactionSortByInput!, $canonical: Boolea
 		feeToken
 		hash
 		id
-		isDelegation
 		kind
 		memo
 		nonce
@@ -125,9 +126,9 @@ query transaction($hash: String!) {
 export const sendStakeDelegationGql = (isRawSignature: boolean) => `
 mutation stakeTx(
   $fee:UInt64!,
-  $to: PublicKey!, 
-  $from: PublicKey!, 
-  $nonce:UInt32, 
+  $to: PublicKey!,
+  $from: PublicKey!,
+  $nonce:UInt32,
   $memo: String,
   $validUntil: UInt32,
   ${isRawSignature ? '$rawSignature: String' : '$scalar: String, $field: String'}
@@ -141,7 +142,7 @@ mutation stakeTx(
         nonce: $nonce,
         validUntil: $validUntil
       },
-      signature: { 
+      signature: {
         ${isRawSignature ? 'rawSignature: $rawSignature' : 'field: $field, scalar: $scalar'}
       }
     ) {
@@ -165,3 +166,84 @@ mutation stakeTx(
     }
   }
 `;
+
+export const getPartyBody = () =>
+   `
+  mutation sendZkapp($zkappCommandInput:ZkappCommandInput!){
+    sendZkapp(input: {
+      zkappCommand: $zkappCommandInput
+    }) {
+      zkapp {
+        hash
+        id
+        zkappCommand {
+          memo
+        }
+      }
+    }
+  }
+  `
+
+  export const getZkAppTransactionListBody = () => {
+    return `
+    query zkApps($address: String,$limit:Int) {
+      zkapps(limit: $limit, query: {
+        zkappCommand: {feePayer:
+        {body: {publicKey: $address}}}}, sortBy: DATETIME_DESC) {
+          hash
+      dateTime
+      failureReason {
+        failures
+      }
+      zkappCommand {
+        feePayer {
+          authorization
+          body {
+            nonce
+            publicKey
+            fee
+          }
+        }
+        memo
+        accountUpdates {
+          body {
+            publicKey
+
+          }
+        }
+      }
+      }
+    }
+    `
+  }
+
+  export function getPendingZkAppTxBody() {
+    return `
+    query pendingZkTx($address: PublicKey){
+      pooledZkappCommands(publicKey: $address) {
+      hash
+      failureReason{
+        index
+        failures
+      }
+      zkappCommand{
+        feePayer{
+          body{
+            publicKey
+            fee
+            validUntil
+            nonce
+          }
+          authorization
+        }
+        accountUpdates{
+          body{
+            publicKey
+          }
+        }
+        memo
+      }
+    }
+  }
+    `
+  }

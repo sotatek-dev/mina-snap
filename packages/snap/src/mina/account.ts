@@ -1,5 +1,5 @@
 import { SLIP10Node } from '@metamask/key-tree';
-import { Keypair, Message, Signed } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
+import { Keypair, Signed, SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import bs58check from 'bs58check';
 import { Buffer } from 'safe-buffer';
 import { ESnapDialogType, ESnapMethod } from '../constants/snap-method.constant';
@@ -10,6 +10,7 @@ import { gql } from '../graphql';
 import { NetworkConfig } from '../interfaces';
 import { getSnapConfiguration, updateSnapConfig } from './configuration';
 import { popupDialog } from '../util/popup.util';
+import { ENetworkName } from '../constants/config.constant';
 
 export const getKeyPair = async (index?: number, isImported?: boolean) => {
   const snapConfig = await getSnapConfiguration();
@@ -77,7 +78,7 @@ export const signMessage = async (message: string, keypair: Keypair, networkConf
   const confirmSignMsg = await popupDialog(ESnapDialogType.CONFIRMATION, 'Sign this message?', message);
   if (confirmSignMsg) {
     const client = getMinaClient(networkConfig);
-    const signed = client.signMessage(message, keypair);
+    const signed = client.signMessage(message, keypair.privateKey);
     return signed;
   }
   return null;
@@ -91,7 +92,7 @@ export const signMessage = async (message: string, keypair: Keypair, networkConf
  * @returns `null` if get account info fail.
  */
 export async function getAccountInfo(publicKey: string, networkConfig: NetworkConfig) {
-  const query = getAccountInfoQuery();
+  const query = getAccountInfoQuery(networkConfig.name === ENetworkName.BERKELEY);
   const variables = { publicKey };
 
   const data = await gql(networkConfig.gqlUrl, query, variables);
@@ -104,7 +105,9 @@ export async function getAccountInfo(publicKey: string, networkConfig: NetworkCo
       },
       nonce: '0',
       inferredNonce: '0',
-      delegate: publicKey,
+      delegateAccount: {
+        publicKey
+      },
       publicKey,
     };
   }
@@ -262,9 +265,9 @@ export const editAccountName = async (index: number, name: string, isImported?: 
   };
 };
 
-export const verifyMessage = (networkConfig: NetworkConfig, signedData: Signed<Message>) => {
+export const verifyMessage = (networkConfig: NetworkConfig, signedData: SignedLegacy<any>) => {
   const client = getMinaClient(networkConfig);
-  return client.verifyMessage(signedData);
+  return client.verifyMessage(signedData as any);
 };
 
 const checkDuplicateAddress = (networkConfig: NetworkConfig, publicKey: string) => {
