@@ -1,4 +1,4 @@
-import { TypeResponseSwtichNetwork } from './../types/transaction';
+import { payloadSendZkTransaction, TypeResponseSwtichNetwork } from './../types/transaction';
 
 
 
@@ -13,7 +13,7 @@ import {
 
 } from 'types/account';
 import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature, TypeResponseTxHistory } from 'types/transaction';
-import { ResponseNetworkConfig } from 'types/snap';
+import { ResponeseZkTransaction, ResponseNetworkConfig } from 'types/snap';
 import { getLatestSnapVersion } from 'utils/utils';
 
 export const useMinaSnap = () => {
@@ -232,6 +232,26 @@ export const useMinaSnap = () => {
     });
   };
 
+  const sendZkTransaction = async (payload: payloadSendZkTransaction): Promise<ResponeseZkTransaction> => {
+
+    return await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: snapId,
+        request: {
+          method: 'mina_sendTransaction',
+          params: {
+            transaction: payload.transaction,
+            feePayer: {
+              fee: payload.feePayer.fee,
+              memo: payload.feePayer.memo,
+            }
+          }
+        },
+      },
+    });
+  };
+
 
   return {
     GetNetworkConfigSnap,
@@ -248,6 +268,7 @@ export const useMinaSnap = () => {
     connectToSnap,
     getSnap,
     SendTransaction,
-    getTxHistory
+    getTxHistory,
+    sendZkTransaction
   };
 };

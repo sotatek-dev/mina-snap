@@ -12,7 +12,6 @@ import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
 import { Box } from '@mui/system';
 import ILink from 'assets/icons/icon-link.svg';
-import { MINA_BERKELEY_EXPLORER } from 'utils/constants';
 
 interface Props {
   status: string;
@@ -22,7 +21,7 @@ const TransactionHistory = () => {
   const [showTxDetail, setShowTxDetail] = useState(false);
   const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
   const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
-  const  { items } = useAppSelector((state) => state.networks)
+  const  { items } = useAppSelector((state) => state.networks);
   const { getTxHistory } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
 
@@ -55,6 +54,7 @@ const TransactionHistory = () => {
       }, 1000);
     };
     getListTxHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

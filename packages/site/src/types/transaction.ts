@@ -7,6 +7,14 @@ export type payloadSendTransaction = {
     nonceValue:string
 }
 
+export type payloadSendZkTransaction = {
+    transaction: string
+    feePayer: {
+      fee: string
+      memo?: string
+    }
+}
+
 export type TypeResponseSendTransaction = {
     id: string
     hash: string
@@ -39,14 +47,11 @@ export type ResultTransactionList = {
 export type TypeResponseTxHistory = Array<ResultTransactionList>
 
 export type TypeResponseSignature = {
-    data: {
-        message: string
-        publicKey: string
-    }
+    data: any,
+    publickey: string,
     signature: {
         field: string
         scalar: string
-        signer: string
     }
 }
 
