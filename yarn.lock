@@ -17038,7 +17038,7 @@ __metadata:
     rimraf: ^3.0.2
     sass: ^1.58.1
     semver: ^7.3.7
-    snarkyjs: 0.*
+    snarkyjs: ^0.9.6
     starknet: ^4.17.1
     styled-components: 5.3.3
     toastr2: ^3.0.0-alpha.18
@@ -17070,9 +17070,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"snarkyjs@npm:0.*":
-  version: 0.9.5
-  resolution: "snarkyjs@npm:0.9.5"
+"snarkyjs@npm:^0.9.6":
+  version: 0.9.6
+  resolution: "snarkyjs@npm:0.9.6"
   dependencies:
     blakejs: 1.2.1
     detect-gpu: ^5.0.5
@@ -17083,7 +17083,7 @@ __metadata:
     tslib: ^2.3.0
   bin:
     snarky-run: src/build/run.js
-  checksum: 62805fc28e92cb663a23e1daab8e775c917e8ace1d31e1fec2bf8bb423a7e337e283885846177f477b0920ccb9493961aaa1de3fce1921150a4057664dc2c576
+  checksum: 060f10e586d28c353b28345ea1a820044eacc08a0f59415e7852631b2cd32636860c748cd222c3f37920595a45561cf2972c6388cf21a774167bf2cfa0f5b999
   languageName: node
   linkType: hard
 

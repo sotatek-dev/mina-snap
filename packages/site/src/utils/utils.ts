@@ -162,7 +162,9 @@ export const getRealErrorMsg =(error:any) => {
 }
 
 export const getLatestSnapVersion =async () => {
-  const version = await axios.get(`https://registry.npmjs.org/test-mina-snap/latest`)
+  const snapId = process.env.REACT_APP_SNAP_ID?.slice(4);
+  const url = `https://registry.npmjs.org/${snapId}/latest`;
+  const version = await axios.get(url)
   .then( res => {
     const data = res.data;
     return data.version

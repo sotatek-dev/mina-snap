@@ -21,7 +21,7 @@ export interface WalletState {
   transactions: Array<ResultTransactionList>;
   detailTransaction?: ResultTransactionList;
   isLoadingGlobal: boolean;
-
+  isUnlock: boolean;
 }
 
 const initialState: WalletState = {
@@ -41,6 +41,7 @@ const initialState: WalletState = {
   transactions: [],
   detailsAccount: undefined,
   detailTransaction: undefined,
+  isUnlock: false,
 };
 
 type ConnectWalletParams = {
@@ -87,6 +88,10 @@ export const walletSlice = createSlice({
       state.isInstalledSnap = true
       state.accounts = payload.accountList
       return state;
+    },
+
+    setUnlockWallet: (state, { payload }: PayloadAction<boolean>) => {
+      state.isUnlock = payload;
     },
 
     setListAccounts: (state, { payload }: PayloadAction<Array<ResultAccountList>>) => {
@@ -165,7 +170,8 @@ export const {
   upsertErc20TokenBalance,
   setTransactions,
   resetWallet,
-  setIsLoadingGlobal
+  setIsLoadingGlobal,
+  setUnlockWallet
 } = walletSlice.actions;
 
 export default walletSlice.reducer;

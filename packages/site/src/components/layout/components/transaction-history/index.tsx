@@ -12,7 +12,6 @@ import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
 import { Box } from '@mui/system';
 import ILink from 'assets/icons/icon-link.svg';
-import { MINA_BERKELEY_EXPLORER } from 'utils/constants';
 
 interface Props {
   status: string;
@@ -22,7 +21,7 @@ const TransactionHistory = () => {
   const [showTxDetail, setShowTxDetail] = useState(false);
   const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
   const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
-  const  { items } = useAppSelector((state) => state.networks)
+  const  { items } = useAppSelector((state) => state.networks);
   const { getTxHistory } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
 
@@ -55,6 +54,7 @@ const TransactionHistory = () => {
       }, 1000);
     };
     getListTxHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -80,14 +80,14 @@ const TransactionHistory = () => {
                     handleClick(item);
                   }}
                 >
-                  <Icon src={item.from == activeAccount ? ISendTx : IReceivedTx} />
+                  <Icon src={item.source.publicKey == activeAccount ? ISendTx : IReceivedTx} />
                   <TransactionDetail>
                     <TxInfo>
                       <Address>
-                        {item.from == activeAccount ? formatAccountAddress(item.to) : formatAccountAddress(item.from)}
+                        {item.source.publicKey == activeAccount ? formatAccountAddress(item.receiver.publicKey) : formatAccountAddress(item.source.publicKey)}
                       </Address>
                       <Amount>
-                        {(item.from == activeAccount ? `- ` : `+ `) +
+                        {(item.source.publicKey == activeAccount ? `- ` : `+ `) +
                           formatBalance(ethers.utils.formatUnits(item.amount, 'gwei'))}
                       </Amount>
                     </TxInfo>

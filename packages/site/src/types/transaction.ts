@@ -7,6 +7,14 @@ export type payloadSendTransaction = {
     nonceValue:string
 }
 
+export type payloadSendZkTransaction = {
+    transaction: string
+    feePayer: {
+      fee: string
+      memo?: string
+    }
+}
+
 export type TypeResponseSendTransaction = {
     id: string
     hash: string
@@ -15,16 +23,23 @@ export type TypeResponseSendTransaction = {
 }
 
 export type ResultTransactionList = {
-    fee: number
-    from: string
-    to: string
-    nonce: number
     amount: number
-    memo: string
-    hash: string
-    kind: string
     dateTime: string
     failureReason: string
+    fee: number
+    feeToken: string
+    hash: string
+    id: string
+    isDelegation: boolean
+    kind: string
+    memo: string
+    nonce: number
+    receiver : {
+        publicKey: string
+    }
+    source: {
+        publicKey: string
+    }
     status: string
 }
 
@@ -32,14 +47,11 @@ export type ResultTransactionList = {
 export type TypeResponseTxHistory = Array<ResultTransactionList>
 
 export type TypeResponseSignature = {
-    data: {
-        message: string
-        publicKey: string
-    }
+    data: any,
+    publickey: string,
     signature: {
         field: string
         scalar: string
-        signer: string
     }
 }
 
