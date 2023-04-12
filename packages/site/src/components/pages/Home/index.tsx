@@ -12,6 +12,7 @@ import {
   setListAccounts,
   setIsLoadingGlobal,
   setWalletInstalled,
+  setUnlockWallet,
 } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import { getLatestSnapVersion } from 'utils/utils';
@@ -22,11 +23,12 @@ const HomePage = () => {
   useHasMetamaskFlask();
   const reduxDispatch = useAppDispatch();
   const { getSnap, connectToSnap, AccountList, getAccountInfors, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
-  const [isUnlocked, setIsUnlocked] = React.useState(false);
+  const [isUnlocked, setIsUnlocked] = React.useState<any>(null);
   const { connected, isUnlock } = useAppSelector((state) => state.wallet);
   
 
   useEffect(() => {
+    reduxDispatch(setUnlockWallet(true));
     const a = async () => {
       try {
         const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
@@ -136,6 +138,9 @@ const HomePage = () => {
   const onBlur = async () => {
 
   };
+
+  if(isUnlocked == null) return (<>
+    </>)
 
   return <div>{(isUnlocked && isUnlock) ? <Home /> : <ConnectWallet />}</div>;
 };
