@@ -71,6 +71,8 @@ const HomePage = () => {
             await reduxDispatch(setIsLoadingGlobal(false));
             await reduxDispatch(setWalletConnection(false));
           }
+        } else {
+          setIsUnlocked(true);
         }
 
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
