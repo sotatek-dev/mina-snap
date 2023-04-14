@@ -1,7 +1,7 @@
 import { TextField, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
 import Button from 'components/common/button';
 import ModalCommon from 'components/common/modal';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import {
   Mina,
@@ -42,6 +42,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   const [loadingSend, setLoadingSend] = useState(false);
   const [loadingState, setLoadingState] = useState(false);
   const [message, setMessage] = useState("");
+  const [disableSend, setDisableSend] = useState(false);
   const zkAppAddress = 'B62qrKb58paJEFKWckFZg97aRjk7Bn4cGhzYd5XNjVF7DZGw6eSCWUn';
 
   const submitZkTransaction = async () => { 
@@ -159,6 +160,20 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
     )
   }
 
+  const onChangeValue = (event:any) => {
+    
+    setNewState(event.target.value)
+  }
+
+  useMemo(() => {
+    if(newState == '') {
+      setDisableSend(true);
+    }
+    else {
+      setDisableSend(false);
+    }
+  }, [newState]);
+
   useEffect(() => {
     setCurrentState("");
     setNewState("");
@@ -169,7 +184,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   return (
     <Modal
       open={open}
-      title="Send Zk Transaction"
+      title="Send zkApp Transaction"
       clickOutSide={clickOutSide}
       setOpenModal={setOpenModal}
       // isClose={true}
@@ -193,9 +208,9 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
               <Input
                 autoComplete="off"
                 variant="outlined"
-                placeholder="Param"
+                placeholder="Parameter"
                 onChange={(event) => {
-                  setNewState(event.target.value);
+                  onChangeValue(event);
                 }}
                 fullWidth
                 size="small"
@@ -210,7 +225,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
               />
             </Content>
             <BoxButton>
-              <CustomButton disable ={loadingSend} onClick={handleSendZKTransaction}>{loadingSend ?<Loader/> : `Send`}</CustomButton>
+              <CustomButton disable ={loadingSend || disableSend} onClick={handleSendZKTransaction}>{loadingSend ?<Loader/> : `Send`}</CustomButton>
               <CustomButton  disable ={loadingState} onClick={() => handleCheckCurrentState()}>{loadingState ?<Loader/> : `Check Current State`}</CustomButton>
               <ModalCurrentState
                 title='Current State'
@@ -239,13 +254,14 @@ const ModalCurrentState = styled(ModalCommon)`
 `;
 
 const Content = styled.div`
-  min-height: 150px;
+  min-height: 100px;
   margin-top: 16px;
 `;
 
 const Title = styled.div`
   padding-bottom: 20px;
   display: flex;
+  align-items: center;
 `
 const Text = styled.div`
   margin-right: 8px;
@@ -253,7 +269,7 @@ const Text = styled.div`
 
 const Wrapper = styled.div`
     width: 657px;
-    min-height: 300px;
+    min-height: 260px;
     padding: 0 16px;
 `;
 
@@ -274,7 +290,7 @@ const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
 });
 
 const IconInfo = styled.img`
-  height: 18px;
+  height: 14px;
 `;
 
 const CustomButton = styled(Button)<Props>`
@@ -285,6 +301,7 @@ const CustomButton = styled(Button)<Props>`
     border-color: transparent;
     background: ${(props) => (props.disable ? '#D9D9D9' : '#594AF1')};
     cursor: ${(props) => (props.disable ? 'wait' : 'pointer')};
+    pointer-events: ${(props) => (props.disable ? 'none' : '')};
 `
 
 const BoxButton = styled.div`
@@ -303,13 +320,14 @@ const BoxContent = styled.div`
 
 const BoxResult = styled.div`
   width: 619px;
-  min-height: 65px;
+  min-height: 24px;
   background: #E2E3E5;
   border: 1px solid #D9D9D9;
   border-radius: 5px;
   margin-top: 20px;
   line-height: 20px;
   padding: 18px;
+  overflow-y: scroll;
 `
 
 const CustomLoader = styled.div`
