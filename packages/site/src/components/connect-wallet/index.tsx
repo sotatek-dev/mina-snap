@@ -21,22 +21,20 @@ const ConnectWallet: React.FC<Props> = () => {
   const handleConnectClick = async () => {
     if (isLoading) return;
     try {
+      reduxDispatch(setIsLoadingGlobal(true));
+
       reduxDispatch(setIsLoading(true));
       await connectToSnap();
       const isInstalledSnap = await getSnap();
       // await SwitchNetwork('Mainnet');
       const accountList = await AccountList();
-      const accountInfor = await getAccountInfors();
-      const txList = await getTxHistory();
-      reduxDispatch(setUnlockWallet(true));
-      reduxDispatch(setTransactions(txList));
-      reduxDispatch(setIsLoading(false));
       reduxDispatch(
         connectWallet({
           accountList,
           isInstalledSnap,
         }),
       );
+      const accountInfor = await getAccountInfors();
       reduxDispatch(
         setActiveAccount({
           activeAccount: accountInfor.publicKey as string,
@@ -45,12 +43,18 @@ const ConnectWallet: React.FC<Props> = () => {
           inferredNonce: accountInfor.inferredNonce as string,
         }),
       );
+      const txList = await getTxHistory();
+      reduxDispatch(setTransactions(txList));
+      reduxDispatch(setUnlockWallet(true));
+      reduxDispatch(setIsLoading(false));
       reduxDispatch(setIsLoadingGlobal(false));
+      location.reload()
     } catch (e) {
+      console.log('-lock wallet');
+      
       reduxDispatch(setUnlockWallet(false));
       reduxDispatch(setIsLoadingGlobal(false));
     } finally {
-      location.reload()
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
     }

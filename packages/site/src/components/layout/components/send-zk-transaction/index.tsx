@@ -20,7 +20,7 @@ const ZkTransaction = () => {
         >
             <IconSend src={ISend} />
             <Lable>
-                Send ZK
+                zkApp
             </Lable>
         </ButtonSend>
         <SendZkTransaction
