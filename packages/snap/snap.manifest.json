@@ -1,5 +1,5 @@
 {
-  "version": "0.1.31",
+  "version": "0.1.33",
   "description": "An example Snap written in TypeScript.",
   "proposedName": "Mina Example Snap",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/sotatek-dev/mina-snap-fe"
   },
   "source": {
-    "shasum": "vH9RH3R6HTTDU92ZWTt6BpySgvboXEGI02U8j/cncvM=",
+    "shasum": "TK3x5IFqwdIrE4J//BWDv5NiYsPw5B/epaimRfuTFYU=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -19,6 +19,7 @@
   },
   "initialPermissions": {
     "endowment:network-access": {},
+    "endowment:webassembly": {},
     "endowment:rpc": {
       "dapps": true,
       "snaps": true
