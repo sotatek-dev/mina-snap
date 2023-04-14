@@ -22,7 +22,7 @@ import { HistoryOptions, NetworkConfig, StakeTxInput, TxInput, ZkAppTxInput } fr
 import { decodeMemo, formatZkAppTxList } from '../util/helper';
 import { getMinaClient } from '../util/mina-client.util';
 import { popupNotify } from '../util/popup.util';
-import { getAccountInfo, getKeyPair } from './account';
+import { getAccountInfo } from './account';
 import { ENetworkName } from '../constants/config.constant';
 
 /**
@@ -93,12 +93,8 @@ export async function submitPayment(signedPayment: SignedLegacy<Payment>, networ
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
   let getPendingTxList = gql(networkConfig.gqlUrl, TxPendingQuery(), { address });
   let getTxList = gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address });
-  let getZkAppTxList: any = new Promise(() => {
-    return { zkapps: [] };
-  });
-  let getZkAppPending: any = new Promise(() => {
-    return { pooledZkappCommands: [] };
-  });
+  let getZkAppTxList: any = { zkapps: [] };
+  let getZkAppPending: any = { pooledZkappCommands: [] };
   if (networkConfig.name === ENetworkName.BERKELEY) {
     getZkAppTxList = gql(networkConfig.gqlTxUrl, getZkAppTransactionListBody(), { ...options, address });
     getZkAppPending = gql(networkConfig.gqlUrl, getPendingZkAppTxBody(), { ...options, address });
