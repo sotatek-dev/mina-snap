@@ -226,7 +226,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
             </Content>
             <BoxButton>
               <CustomButton disable ={loadingSend || disableSend} onClick={handleSendZKTransaction}>{loadingSend ?<Loader/> : `Send`}</CustomButton>
-              <CustomButton  disable ={loadingState} onClick={() => handleCheckCurrentState()}>{loadingState ?<Loader/> : `Check Current State`}</CustomButton>
+              <CustomButton  disable ={loadingState} onClick={() => handleCheckCurrentState()}>{loadingState ?<Loader/> : `Check current state`}</CustomButton>
               <ModalCurrentState
                 title='Current State'
                 open={showModal}
@@ -299,7 +299,7 @@ const CustomButton = styled(Button)<Props>`
     align-items: center;
     justify-content: center;
     border-color: transparent;
-    background: ${(props) => (props.disable ? '#D9D9D9' : '#594AF1')};
+    opacity: ${(props) => (props.disable ? '50%' : '100%')};
     cursor: ${(props) => (props.disable ? 'wait' : 'pointer')};
     pointer-events: ${(props) => (props.disable ? 'none' : '')};
 `
