@@ -6,7 +6,7 @@ export enum ESnapMethod {
 }
 
 export enum ESnapDialogType {
-  ALERT = 'Alert',
-  CONFIRMATION = 'Confirmation',
-  PROMPT = 'Prompt'
+  ALERT = 'alert',
+  CONFIRMATION = 'confirmation',
+  PROMPT = 'prompt'
 }
