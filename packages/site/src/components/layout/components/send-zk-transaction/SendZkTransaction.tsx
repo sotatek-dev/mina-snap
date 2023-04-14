@@ -1,4 +1,4 @@
-import { TextField, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import { TextField, TextFieldProps, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
 import Button from 'components/common/button';
 import ModalCommon from 'components/common/modal';
 import React, { useMemo } from 'react';
@@ -180,6 +180,20 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
     setMessage("");
   },[open])
 
+  const tooltipTitle = () => {
+    return (
+      <p>
+        <b>Correct state calculation formula</b> <br />
+        <i>Correct state = Current state + the order of the current day in a week. <br />
+            e.g.
+            Current state (checked) = 1; <br />
+            Today is Wednesday, the 3rd day of the week;<br />
+            Correct state = 1 + 3 = 4
+          </i>
+      </p>
+    )
+  }
+
 
   return (
     <Modal
@@ -195,11 +209,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
                 <Text>
                   Can you input correct state?
                 </Text>
-                <CustomWidthTooltip title='Correct state = Current state + the order of the current day in a week.
-                    e.g.
-                    Current state (checked) = 1;
-                    Today is Wednesday, the 3rd day of the week;
-                    Correct state = 1 + 3 = 4' 
+                <CustomWidthTooltip title={tooltipTitle()}
                   arrow
                 >
                   <IconInfo src={Info} alt="" />
@@ -273,13 +283,26 @@ const Wrapper = styled.div`
     padding: 0 16px;
 `;
 
-const Input = styled(TextField)`
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-    }
-`;
+const Input = styled(TextField)<TextFieldProps>({
+  backgroundColor: '#FFFFFF',
+  width: '100%',
+  borderRadius: '8px',
+  input: {
+    padding: '11px 7px',
+    color: '#000000',
+  },
+  '& input': {
+    fontSize: '10px',
+  },
+  '& .MuiOutlinedInput-root': {
+    '&:hover fieldset': {
+      borderColor: '#594AF1',
+    },
+    '&.Mui-focused fieldset': {
+      border: '1px solid #594AF1',
+    },
+  },
+});
 
 const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
