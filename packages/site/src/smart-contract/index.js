@@ -31,7 +31,7 @@ export class Quiz extends SmartContract {
         const currentDayNumber = Field(new Date().getUTCDay());
         const currentState = this.num.get();
         this.num.assertEquals(currentState); // precondition that links this.num.get() to the actual on-chain state
-        answer.assertEquals(currentState.add(currentDayNumber));
+        currentState.add(currentDayNumber).assertEquals(answer);
         this.num.set(answer);
     }
 }

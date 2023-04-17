@@ -43,7 +43,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   const [loadingState, setLoadingState] = useState(false);
   const [message, setMessage] = useState("");
   const [disableSend, setDisableSend] = useState(false);
-  const zkAppAddress = 'B62qrKb58paJEFKWckFZg97aRjk7Bn4cGhzYd5XNjVF7DZGw6eSCWUn';
+  const zkAppAddress = process.env.REACT_APP_ZK_ADDRESS as string;
 
   const submitZkTransaction = async () => { 
     console.log('-start');
@@ -83,7 +83,8 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
           }
         }
         const response = await sendZkTransaction(param);
-        setMessage(response.toString());
+        console.log('response', response);
+        setMessage(JSON.stringify(response));
         setLoadingSend(false);
       } catch (error: any) {
         console.log('error', error);
