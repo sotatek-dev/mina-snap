@@ -10,6 +10,8 @@
 .env
 .env.local
 .env.development
+.env.example
+.env.production
 
 # testing
 /coverage
