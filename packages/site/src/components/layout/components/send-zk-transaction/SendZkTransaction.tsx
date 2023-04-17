@@ -86,6 +86,8 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
         setMessage(response.toString());
         setLoadingSend(false);
       } catch (error: any) {
+        console.log('error', error);
+        
         if(error.code){
           console.log(error);
           console.log(error.message);
@@ -93,7 +95,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
           setMessage(error.message);
         }
         else{
-          setMessage('Please input correct state');
+          setMessage('{"error":{},"partiesJsonUpdate":null}');
         }
         setLoadingSend(false);
       }
