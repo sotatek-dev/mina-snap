@@ -187,11 +187,10 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
     return (
       <p>
         <b>Correct state calculation formula</b> <br />
-        <i>Correct state = Current state + the order of the current day in a week. <br />
+        <i>Correct state = the square of the Current state. <br />
             e.g.
-            Current state (checked) = 1; <br />
-            Today is Wednesday, the 3rd day of the week;<br />
-            Correct state = 1 + 3 = 4
+            Current state (checked) = 3; <br />
+            Correct state = 3*3 = 9<br />
           </i>
       </p>
     )
