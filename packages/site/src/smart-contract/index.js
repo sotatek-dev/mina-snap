@@ -18,31 +18,30 @@ import { Field, SmartContract, state, State, method } from 'snarkyjs';
  *
  * This file is safe to delete and replace with your own contract.
  */
-export class Quiz extends SmartContract {
+export class Square extends SmartContract {
     constructor() {
         super(...arguments);
         this.num = State();
     }
     init() {
         super.init();
-        this.num.set(Field(1));
+        this.num.set(Field(2));
     }
     update(answer) {
-        const currentDayNumber = Field(new Date().getUTCDay());
         const currentState = this.num.get();
-        this.num.assertEquals(currentState); // precondition that links this.num.get() to the actual on-chain state
-        currentState.add(currentDayNumber).assertEquals(answer);
+        this.num.assertEquals(currentState);
+        currentState.square().assertEquals(answer);
         this.num.set(answer);
     }
 }
 __decorate([
     state(Field),
     __metadata("design:type", Object)
-], Quiz.prototype, "num", void 0);
+], Square.prototype, "num", void 0);
 __decorate([
     method,
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Field]),
     __metadata("design:returntype", void 0)
-], Quiz.prototype, "update", null);
-//# sourceMappingURL=Quiz.js.map
+], Square.prototype, "update", null);
+//# sourceMappingURL=Square.js.map
