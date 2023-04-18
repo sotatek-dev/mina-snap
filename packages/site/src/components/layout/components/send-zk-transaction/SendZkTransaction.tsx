@@ -15,7 +15,7 @@ import { useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
 import { useEffect, useState } from 'react';
 import { payloadSendZkTransaction } from 'types/transaction';
-import { Quiz } from 'smart-contract';
+import { Square } from 'smart-contract';
 import Info from'assets/icons/info.png'
 
 // import type { Add } from '../../../../../public/smart-contract/Add'
@@ -54,11 +54,11 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
           'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
         );
       }
-      const zkApp = new Quiz(PublicKey.fromBase58(zkAppAddress));
+      const zkApp = new Square(PublicKey.fromBase58(zkAppAddress));
       console.log('zkApp', zkApp);
       
       Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
-      await Quiz.compile();
+      await Square.compile();
       try {
         const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, 'https://proxy.berkeley.minaexplorer.com/graphql');
         console.log(`-account:`, account);
@@ -118,11 +118,11 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
         'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
       );
     }
-    const zkApp = new Quiz(PublicKey.fromBase58(zkAppAddress));
+    const zkApp = new Square(PublicKey.fromBase58(zkAppAddress));
       console.log('zkApp', zkApp);
       
       Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
-      await Quiz.compile();
+      await Square.compile();
       try {
         const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, 'https://proxy.berkeley.minaexplorer.com/graphql');
         console.log(`-account:`, account);
