@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ISendTx from 'assets/icons/icon-sent-tx.png';
 import IReceivedTx from 'assets/icons/icon-received-tx.png';
 import { formatDateTime } from 'helpers/formatDateTime';
-import ModalTransactionDetail from 'components/modal-app/ModalTranstionDetail';
+import ModalTransactionDetail from 'components/modal-app/ModalTransactionDetail';
 import { useEffect, useState } from 'react';
 import { useMinaSnap } from 'services';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
@@ -12,6 +12,8 @@ import { setTransactions } from 'slices/walletSlice';
 import { ResultTransactionList } from 'types/transaction';
 import { Box } from '@mui/system';
 import ILink from 'assets/icons/icon-link.svg';
+import IZKTx from 'assets/icons/icon-ZK-Tx.png';
+import INATx from 'assets/icons/icon-NA-tx.png';
 
 interface Props {
   status: string;
@@ -59,6 +61,7 @@ const TransactionHistory = () => {
 
   useEffect(() => {
     setMaximumDisplay(10);
+    console.log('tx', transactions);
   }, [activeAccount])
 
   const paddingBt = {
@@ -80,7 +83,9 @@ const TransactionHistory = () => {
                     handleClick(item);
                   }}
                 >
-                  <Icon src={item.source.publicKey == activeAccount ? ISendTx : IReceivedTx} />
+                  {item.kind == 'PAYMENT' && <Icon src={item.source.publicKey == activeAccount ? ISendTx : IReceivedTx} />}
+                  {item.kind == 'ZKAPP' && <Icon src={IZKTx} />}
+                  {item.kind != 'PAYMENT' && item.kind != 'ZKAPP' && <Icon src={INATx} />}
                   <TransactionDetail>
                     <TxInfo>
                       <Address>
