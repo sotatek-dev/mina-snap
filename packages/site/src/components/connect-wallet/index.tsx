@@ -54,9 +54,12 @@ const ConnectWallet: React.FC<Props> = () => {
       
       reduxDispatch(setUnlockWallet(false));
       reduxDispatch(setIsLoadingGlobal(false));
+      reduxDispatch(setIsLoading(false));
     } finally {
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
+      console.log('-end');
+      
     }
   };
 
