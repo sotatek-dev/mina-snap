@@ -92,7 +92,7 @@ const TransactionHistory = () => {
                         {item.source.publicKey == activeAccount ? formatAccountAddress(item.receiver.publicKey) : formatAccountAddress(item.source.publicKey)}
                       </Address>
                       <Amount>
-                        {(item.source.publicKey == activeAccount ? `- ` : `+ `) +
+                        {(item.kind == 'PAYMENT' ? (item.source.publicKey == activeAccount ? `- ` : `+ `) : '') +
                           formatBalance(ethers.utils.formatUnits(item.amount, 'gwei'))}
                       </Amount>
                     </TxInfo>
