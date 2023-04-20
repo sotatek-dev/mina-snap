@@ -1,14 +1,15 @@
 import Button from 'components/common/button';
-import React from 'react';
+import React, { useEffect } from 'react';
 import logoMina from 'assets/logo/logo-mina.svg';
 import { useMinaSnap } from 'services/useMinaSnap';
 import { Box, ButtonProps, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { connectWallet, setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions, setUnlockWallet } from 'slices/walletSlice';
+import { connectWallet, setActiveAccount, setIsLoading, setIsLoadingGlobal, setTransactions, setUnlockWallet, setWalletInstalled } from 'slices/walletSlice';
 import { ethers } from 'ethers';
 import wainning from 'assets/icons/wainning.svg';
 import metamask from 'assets/logo/logo-metamask.png';
 import metamaskFlask from 'assets/logo/logo-metamask-flask.png';
+import detectEthereumProvider from '@metamask/detect-provider';
 
 type Props = {};
 
@@ -50,22 +51,37 @@ const ConnectWallet: React.FC<Props> = () => {
       reduxDispatch(setIsLoadingGlobal(false));
       location.reload()
     } catch (e) {
-      console.log('-lock wallet');
-      
       reduxDispatch(setUnlockWallet(false));
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
     } finally {
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
-      console.log('-end');
-      
     }
   };
 
   const openLinkInstallFlask = () => {
     window.open('https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk', '_blank')?.focus();
   };
+
+  useEffect(() => {
+    setTimeout(async () => {
+      let i =0;
+      while (i<5) {
+        const provider = (await detectEthereumProvider({
+          mustBeMetaMask: false,
+          silent: true,
+        })) as any | undefined;
+        const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
+        if(!isFlask){
+          reduxDispatch(setWalletInstalled(false));
+          reduxDispatch(setUnlockWallet(false));
+        }
+        i++
+      }
+    }, 100)
+  })
+  
 
   return (
     <>
@@ -78,7 +94,7 @@ const ConnectWallet: React.FC<Props> = () => {
         </BoxCenter>
 
         <BoxCenter sx={{ paddingBottom: '25px' }}>
-          {!isInstalledWallet && (
+          {!isInstalledWallet &&(
             <WrapperWarning>
               <WarningMessage>
                 <BoxImg>
@@ -104,7 +120,7 @@ const ConnectWallet: React.FC<Props> = () => {
             </WrapperWarning>
           )}
         </BoxCenter>
-        <BoxCenter>
+        {isInstalledWallet && <BoxCenter>
           <Button
             className={!isInstalledWallet ? 'isUnInstalledWallet' : 'connectMetamask'}
             onClick={handleConnectClick}
@@ -117,7 +133,7 @@ const ConnectWallet: React.FC<Props> = () => {
               'CONNECT TO METAMASK'
             )}
           </Button>
-        </BoxCenter>
+        </BoxCenter>}
       </BoxContent>
     </>
   );
@@ -158,11 +174,11 @@ const WarningMessage = styled(Box)(() => ({
 
 
 const ButtonCustomRequiredMetamask = styled(Button)<ButtonProps>(() => ({
-  background: '#FC6643',
+  background: '#FC6643 !important',
   border: '1px solid #000000',
   display: 'flex',
   justifyContent: 'center',
-  width: '330px',
+  maxWidth: '330px',
   margin: 'auto',
   ':hover': {
     cursor: 'hover',
