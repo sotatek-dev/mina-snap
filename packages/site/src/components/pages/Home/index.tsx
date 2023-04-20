@@ -24,7 +24,7 @@ const HomePage = () => {
   const reduxDispatch = useAppDispatch();
   const { getSnap, connectToSnap, AccountList, getAccountInfors, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState<any>(null);
-  const { connected, isUnlock } = useAppSelector((state) => state.wallet);
+  const { connected, isUnlock, isInstalledWallet } = useAppSelector((state) => state.wallet);
   
 
   useEffect(() => {
@@ -46,7 +46,6 @@ const HomePage = () => {
         })) as any | undefined;
         const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
         if(!isFlask){
-          setIsUnlocked(false);
           reduxDispatch(setWalletInstalled(false));
         }
         i++
@@ -144,7 +143,7 @@ const HomePage = () => {
   if(isUnlocked == null) return (<>
     </>)
 
-  return <div>{(isUnlocked && isUnlock) ? <Home /> : <ConnectWallet />}</div>;
+  return <div>{(isUnlocked && isUnlock && isInstalledWallet) ? <Home /> : <ConnectWallet />}</div>;
 };
 
 export default HomePage;
