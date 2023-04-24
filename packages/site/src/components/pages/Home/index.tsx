@@ -113,26 +113,31 @@ const HomePage = () => {
   }, [connected]);
 
   const onFocus = async () => {
-    const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
-    const unlock = (await getIsUnlocked()) as boolean;
-    const isInstalledSnap = await getSnap();
-    if (unlock && isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]?.enabled){
-      const network = await GetNetworkConfigSnap();
-      const txList = await getTxHistory();
-      const accountList = await AccountList();
-      const accountInfor = await getAccountInfors();
-      reduxDispatch(setNetworks(network));
-      reduxDispatch(setTransactions(txList));
-      reduxDispatch(setListAccounts(accountList));
-      reduxDispatch(
-        setActiveAccount({
-          activeAccount: accountInfor.publicKey as string,
-          balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
-          accountName: accountInfor.name as string,
-          inferredNonce: accountInfor.inferredNonce,
-        }),
-      );
-    }else {
+    try {
+      const getIsUnlocked = async () => await (window as any).ethereum._metamask.isUnlocked();
+      const unlock = (await getIsUnlocked()) as boolean;
+      const isInstalledSnap = await getSnap();
+      if (unlock && isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]?.enabled){
+        const network = await GetNetworkConfigSnap();
+        const txList = await getTxHistory();
+        const accountList = await AccountList();
+        const accountInfor = await getAccountInfors();
+        reduxDispatch(setNetworks(network));
+        reduxDispatch(setTransactions(txList));
+        reduxDispatch(setListAccounts(accountList));
+        reduxDispatch(
+          setActiveAccount({
+            activeAccount: accountInfor.publicKey as string,
+            balance: ethers.utils.formatUnits(accountInfor.balance.total, 'gwei') as string,
+            accountName: accountInfor.name as string,
+            inferredNonce: accountInfor.inferredNonce,
+          }),
+        );
+      }else {
+        setIsUnlocked(false)
+      }
+      
+    } catch (error) {
       setIsUnlocked(false)
     }
   };
