@@ -148,11 +148,13 @@ const HomePage = () => {
       }else {
         console.log('- not installed snap or not unlock wallet');
         setIsUnlocked(false)
+        reduxDispatch(setIsLoading(false));
       }
       
     } catch (error) {
       console.log('-error metamask or not install metamask');
       setIsUnlocked(false)
+      reduxDispatch(setIsLoading(false));
     }
   };
   const onBlur = async () => {
