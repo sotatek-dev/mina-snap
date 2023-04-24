@@ -26,6 +26,8 @@ const ConnectWallet: React.FC<Props> = () => {
 
       reduxDispatch(setIsLoading(true));
       await connectToSnap();
+      console.log('-start connect snap');
+      
       const isInstalledSnap = await getSnap();
       // await SwitchNetwork('Mainnet');
       const accountList = await AccountList();
@@ -51,10 +53,14 @@ const ConnectWallet: React.FC<Props> = () => {
       reduxDispatch(setIsLoadingGlobal(false));
       location.reload()
     } catch (e) {
+      console.log('-connect snap error');
+      
       reduxDispatch(setUnlockWallet(false));
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
     } finally {
+      console.log('-finally connect error');
+      
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
     }
