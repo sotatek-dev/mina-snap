@@ -52,6 +52,8 @@ const HomePage = () => {
       }
 
       if (isUnlocked) {
+        console.log('-unlocked metamask');
+        
         await reduxDispatch(setIsLoadingGlobal(true));
         await reduxDispatch(setIsLoading(false));
         const isInstalledSnap = await getSnap();
@@ -61,22 +63,32 @@ const HomePage = () => {
           isInstalledSnap[process.env.REACT_APP_SNAP_ID as string] &&
           isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]?.version !== version
         ) {
+          console.log('-check check if != current version');
+          
           setIsUnlocked(false);
           try {
+            console.log('-connect to snap');
+            
             await connectToSnap();
             await reduxDispatch(setWalletConnection(true));
             await reduxDispatch(setIsLoadingGlobal(false));
           } catch (error) {
+            console.log('-connect error');
+            
             setIsUnlocked(false);
             await reduxDispatch(setIsLoadingGlobal(false));
             await reduxDispatch(setWalletConnection(false));
           }
         } else {
+          console.log('-normally');
+          
           setIsUnlocked(true);
           await reduxDispatch(setIsLoadingGlobal(false));
         }
 
         if (!isInstalledSnap[process.env.REACT_APP_SNAP_ID as string]) {
+          console.log('-no snap installed');
+          
           setIsUnlocked(false);
           return;
         }
@@ -134,10 +146,12 @@ const HomePage = () => {
           }),
         );
       }else {
+        console.log('- not installed snap or not unlock wallet');
         setIsUnlocked(false)
       }
       
     } catch (error) {
+      console.log('-error metamask or not install metamask');
       setIsUnlocked(false)
     }
   };
