@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ResultAccountList, payloadActiveAccount } from 'types/account';
-import { Erc20TokenBalance, } from 'types';
 import { ethers } from 'ethers';
 import { ResultTransactionList, TypeResponseTxHistory } from 'types/transaction';
 
@@ -15,8 +14,6 @@ export interface WalletState {
   isLoading: boolean;
   forceReconnect: boolean;
   accounts: Array<ResultAccountList>;
-  erc20TokenBalances: Erc20TokenBalance[];
-  erc20TokenBalanceSelected: Erc20TokenBalance;
   detailsAccount?: ResultAccountList;
   transactions: Array<ResultTransactionList>;
   detailTransaction?: ResultTransactionList;
@@ -36,8 +33,6 @@ const initialState: WalletState = {
   isLoading: false,
   forceReconnect: false,
   accounts: [],
-  erc20TokenBalances: [],
-  erc20TokenBalanceSelected: {} as Erc20TokenBalance,
   transactions: [],
   detailsAccount: undefined,
   detailTransaction: undefined,
@@ -108,36 +103,6 @@ export const walletSlice = createSlice({
         state.accounts.push(payload.address);
       }
     },
-    setErc20TokenBalances: (state, { payload }) => {
-      state.erc20TokenBalances = payload;
-    },
-    upsertErc20TokenBalance: (state, { payload }) => {
-      // only update erc20TokenBalances if same chainId as selected token
-      if (state.erc20TokenBalanceSelected.chainId === payload.chainId) {
-        const foundIndex = state.erc20TokenBalances.findIndex(
-          (token) =>
-            ethers.BigNumber.from(token.address).eq(ethers.BigNumber.from(payload.address)) &&
-            ethers.BigNumber.from(token.chainId).eq(ethers.BigNumber.from(payload.chainId)),
-        );
-        if (foundIndex < 0) {
-          state.erc20TokenBalances.push(payload);
-        } else {
-          state.erc20TokenBalances[foundIndex].amount = payload.amount;
-          state.erc20TokenBalances[foundIndex].usdPrice = payload.usdPrice;
-
-          if (
-            state.erc20TokenBalanceSelected.address === state.erc20TokenBalances[foundIndex].address &&
-            state.erc20TokenBalanceSelected.chainId === state.erc20TokenBalances[foundIndex].chainId
-          ) {
-            state.erc20TokenBalanceSelected.amount = state.erc20TokenBalances[foundIndex].amount;
-            state.erc20TokenBalanceSelected.usdPrice = state.erc20TokenBalances[foundIndex].usdPrice;
-          }
-        }
-      }
-    },
-    setErc20TokenBalanceSelected: (state, { payload }) => {
-      state.erc20TokenBalanceSelected = payload;
-    },
     clearAccounts: (state) => {
       state.accounts = [];
     },
@@ -165,9 +130,6 @@ export const {
   setForceReconnect,
   setAccounts,
   clearAccounts,
-  setErc20TokenBalances,
-  setErc20TokenBalanceSelected,
-  upsertErc20TokenBalance,
   setTransactions,
   resetWallet,
   setIsLoadingGlobal,
