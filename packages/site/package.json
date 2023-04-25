@@ -34,7 +34,6 @@
     ]
   },
   "dependencies": {
-    "@consensys/starknet-snap": "^1.2.0",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -65,7 +64,6 @@
     "sass": "^1.58.1",
     "semver": "^7.3.7",
     "snarkyjs": "^0.9.6",
-    "starknet": "^4.17.1",
     "styled-components": "5.3.3",
     "toastr2": "^3.0.0-alpha.18",
     "web-vitals": "^2.1.4",
