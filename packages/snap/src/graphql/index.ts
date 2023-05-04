@@ -1,15 +1,15 @@
-import { GRAPHQL } from '../constants/config.constant';
 import { getOperationName } from '../util/helper';
 
 /**
  * Send GraphQL request.
  *
+ * @param networkConfig - Selected network config.
  * @param query - GraphQL query.
  * @param variables - GraphQL variables.
  */
-export async function gql(query: string, variables = {}) {
+export async function gql(url: string, query: string, variables = {}) {
   try {
-    const response = await fetch(GRAPHQL.URL, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -21,13 +21,13 @@ export async function gql(query: string, variables = {}) {
         variables,
       }),
     });
-    const { data, errors } = await response.json();
-    if (errors) {
-      return { error: errors[0].message };
-    }
 
-    return { data };
+    const { data, errors } = await response.json();
+    if (errors) throw new Error(errors[0].message);
+
+    return data;
   } catch (err) {
-    return { error: err.message };
+    console.error('packages/snap/src/graphql/index.ts:30', err.message);
+    throw err;
   }
 }

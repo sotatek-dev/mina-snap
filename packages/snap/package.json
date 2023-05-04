@@ -1,10 +1,10 @@
 {
   "name": "test-mina-snap",
-  "version": "0.1.1",
-  "description": "The 'Hello, world!' of MetaMask Snaps, now written in TypeScript.",
+  "version": "0.1.36",
+  "description": "This snap helps you interact with Mina protocol using Metamask Flask",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/sotatek-dev/mina-snap-fe"
   },
   "license": "(MIT-0 OR Apache-2.0)",
   "main": "src/index.ts",
@@ -25,6 +25,14 @@
     "serve": "mm-snap serve",
     "start": "mm-snap watch"
   },
+  "dependencies": {
+    "@metamask/key-tree": "^6.2.1",
+    "@metamask/snaps-ui": "^0.29.0",
+    "bignumber.js": "^9.1.1",
+    "bs58check": "^2.1.2",
+    "mina-signer": "^2.0.3",
+    "safe-buffer": "^5.2.1"
+  },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",
     "@metamask/auto-changelog": "^2.6.0",
@@ -33,7 +41,7 @@
     "@metamask/eslint-config-nodejs": "^10.0.0",
     "@metamask/eslint-config-typescript": "^10.0.0",
     "@metamask/snap-types": "^0.22.0",
-    "@metamask/snaps-cli": "^0.22.0",
+    "@metamask/snaps-cli": "^0.30.0",
     "@types/bs58check": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
@@ -56,12 +64,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@metamask/key-tree": "^6.2.1",
-    "bignumber.js": "^9.1.1",
-    "bs58check": "^2.1.2",
-    "mina-signer": "^1.7.0",
-    "safe-buffer": "^5.2.1"
   }
 }

@@ -1,0 +1,169 @@
+@font-face {
+  font-family: 'Inter Regular';
+  src: url(./assets/fonts/Inter/Inter-Regular.ttf);
+  font-style: normal;
+  font-weight: 400;
+  font-display: fallback;
+}
+@font-face {
+  font-family: 'Inter Bold';
+  src: url(./assets/fonts/Inter/Inter-Bold.ttf);
+  font-style: normal;
+  font-weight: 700;
+  font-display: fallback;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00000033;
+  border-radius: 2rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00000066;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+.MuiButtonBase-root.MuiListItem-root.MuiListItem-gutters.MuiListItem-padding.MuiListItem-button.css-bshv44-MuiButtonBase-root-MuiListItem-root {
+
+  padding: 0px 0px 5px 0px;
+}
+
+.disable{
+  opacity: 0.5;
+  pointer-events: none;
+  
+}
+
+.disableButton{
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.isUnInstalledWallet{
+  opacity: 0.5;
+  border: 1px solid #000000 !important;
+  border-radius: 5px 0px !important;
+  background: #FC6643 !important;
+  pointer-events: none;
+  width: 244px !important;
+}
+.connectMetamask{ 
+  border: 1px solid #000000 !important;
+  border-radius: 5px 0px !important;
+  width: 244px !important;
+}
+
+.dot-loadding {
+  margin-left: 25px;
+  margin-top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: white;
+  color: white;
+  animation: dot-loadding 1s infinite linear;
+}
+.dot-loadding::before, .dot-loadding::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+.dot-loadding::before {
+  left: -15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: white;
+  color: white;
+  animation: dot-loadding-before 1s infinite linear;
+}
+.dot-loadding::after {
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: white;
+  color: white;
+  animation: dot-loadding-after 1s infinite linear;
+}
+
+@keyframes dot-loadding-before {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1.5);
+  }
+  50% {
+    transform: scale(1, 0.67);
+  }
+  75% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+@keyframes dot-loadding {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1, 1.5);
+  }
+  75% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+@keyframes dot-loadding-after {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1, 0.67);
+  }
+  75% {
+    transform: scale(1, 1.5);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+
+.css-ja5taz-MuiTooltip-tooltip {
+  background-color: black !important;
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'Inter Regular';
+  padding: 6px 10px !important; 
+  font-size: 0.8875rem !important;
+  max-width: 300px;
+  margin-top: '0' !important;
+  word-wrap: break-word;
+  font-weight: 500;
+}
+.MuiTooltip-popper[data-popper-placement*="bottom"] .css-ja5taz-MuiTooltip-tooltip {
+  transform-origin: center top;
+  margin-top: 8px !important;
+}

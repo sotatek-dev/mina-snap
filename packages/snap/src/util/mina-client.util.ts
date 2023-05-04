@@ -1,14 +1,10 @@
 import Client from 'mina-signer';
-import { cointypes } from '../constants/config.constant';
+import { ENetworkName } from '../constants/config.constant';
+import { NetworkConfig } from '../interfaces';
 
-/**
- * Get MINA Client.
- *
- * @returns `Client`.
- */
-export function getMinaClient() {
-  if (!cointypes.network) {
-    return new Client({ network: 'testnet' });
+export const getMinaClient = (networkConfig: NetworkConfig) => {
+  if (networkConfig.name === ENetworkName.MAINNET) {
+    return new Client({ network: 'mainnet' });
   }
-  return new Client({ network: cointypes.network });
-}
+  return new Client({ network: 'testnet' });
+};

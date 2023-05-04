@@ -1,13 +1,13 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.36",
   "description": "An example Snap written in TypeScript.",
   "proposedName": "Mina Example Snap",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/sotatek-dev/mina-snap-fe"
   },
   "source": {
-    "shasum": "7/m6e37/rHwjWshXwKGP/jFU9mfGeXkgdl4j6+oX1vQ=",
+    "shasum": "OUDf5reZm8e+/djXFqnNRflPrl3ZDYb1egbAobe5cOw=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -19,7 +19,12 @@
   },
   "initialPermissions": {
     "endowment:network-access": {},
-    "snap_confirm": {},
+    "endowment:webassembly": {},
+    "endowment:rpc": {
+      "dapps": true,
+      "snaps": true
+    },
+    "snap_dialog": {},
     "snap_getBip32Entropy": [
       {
         "path": [
@@ -28,9 +33,18 @@
           "12586'"
         ],
         "curve": "secp256k1"
+      },
+      {
+        "path": [
+          "m",
+          "44'",
+          "1'"
+        ],
+        "curve": "secp256k1"
       }
     ],
-    "snap_notify": {}
+    "snap_notify": {},
+    "snap_manageState": {}
   },
   "manifestVersion": "0.1"
 }
