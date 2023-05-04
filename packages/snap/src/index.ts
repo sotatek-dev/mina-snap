@@ -120,7 +120,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.SEND_PAYMENT: {
       const txInput = request.params as TxInput;
       const response = await sendPayment(txInput, networkConfig);
-      console.log('sendTxResponse:', response);
+      console.log('-sendTxResponse:', response);
 
       return response;
     }
@@ -141,7 +141,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.GET_TX_HISTORY: {
       const keyPair = await getKeyPair();
       const history = await getTxHistory(networkConfig, request.params as HistoryOptions, keyPair.publicKey);
-      console.log(history);
+      console.log(`-history:`, history);
 
       return history;
     }
@@ -149,7 +149,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.GET_TX_DETAIL: {
       const { hash } = request.params as { hash: string };
       const payment = await getTxDetail(networkConfig, hash);
-      console.log(payment);
+      console.log(`-payment:`, payment);
 
       return payment;
     }
@@ -157,7 +157,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.GET_TX_STATUS: {
       const { paymentId } = request.params as { paymentId: string };
       const status = await getTxStatus(networkConfig, paymentId);
-      console.log(status);
+      console.log(`-status:`, status);
 
       return status;
     }
@@ -172,7 +172,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.SEND_STAKE_DELEGATION: {
       const stakeTxInput = request.params as StakeTxInput;
       const response = await sendStakeDelegation(stakeTxInput, networkConfig);
-      console.log('sendStakeTxResponse:', response);
+      console.log('-sendStakeTxResponse:', response);
 
       return response;
     }

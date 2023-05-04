@@ -1,6 +1,6 @@
 {
   "name": "test-mina-snap",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "This snap helps you interact with Mina protocol using Metamask Flask",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "@metamask/snaps-ui": "^0.29.0",
     "bignumber.js": "^9.1.1",
     "bs58check": "^2.1.2",
-    "mina-signer": "git+ssh://git@github.com/sotatek-dev/mina-signer-for-snap#v2.0.3",
+    "mina-signer": "^2.0.3",
     "safe-buffer": "^5.2.1"
   },
   "devDependencies": {

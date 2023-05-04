@@ -37,7 +37,6 @@ Connect to the snap by calling `wallet_requestSnaps` method with `npm:test-mina-
     "files": ["./node_modules/@metamask/snap-types/global.d.ts"]
   }
   ```
-- This snap uses a patched version of mina-signer. It may need to update if there's a new version of mina-signer. We are using this repo as the dependency http://www.github.com/sotatek-dev/mina-signer-for-snap
 
 ## Publish snap to NPM
 - Update the `version` in `package.json` then run:
@@ -70,3 +69,56 @@ npm publish
 | mina_sendStakeDelegation       | Send stake delegation                         |
 | mina_verifyMessage             | Verify signed message                         |
 | mina_requestNetwork            | Request network                               |
+| mina_sendTransaction           | Send ZkApp transaction                        |
+
+
+## Implement ZkApp transaction
+- To make ZkApp transactions with your smart contract, you will need to have the built file of the smart contract (the .js file).
+- Install `snarkyjs` on your front-end site and use `snarkyjs` to make the transaction.
+- Then submit your transaction using snap.
+
+Here is an example:
+
+```
+import {
+    Mina,
+    isReady,
+    PublicKey,
+    fetchAccount,
+    Field,
+  } from 'snarkyjs';
+
+(async() => {
+    await isReady;
+    const { <Your smart contract class name> } = await import(<Path to your built smart contract>);
+    const zkAppAddress = <Your deployed smart contract address>
+    const graphqlEndpoint = <replace the graphql endpoint here>
+    const zkApp = new <Your smart contract class name>(PublicKey.fromBase58(zkAppAddress));
+    Mina.setActiveInstance(Mina.Network(<graphqlEndpoint>));
+    <Your smart contract class name>.compile();
+    const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, <graphqlEndpoint>);
+    const tx = await Mina.transaction({
+        sender: PublicKey.fromBase58(<sender address>),
+        fee: <replace the fee here>
+    }, () => {
+        zkApp.update(<your parameter>);
+    });
+    const provedTx = await tx.prove();
+    await ethereum.request({
+      method: 'wallet_invokeSnap',
+      params: {
+        snapId: <the mina snap id>,
+        request: {
+          method: 'mina_sendTransaction',
+          params: {
+            transaction: tx.toJSON(),
+            feePayer: {
+              fee: <replace the fee here>,
+              memo: <user' memo>,
+            }
+          }
+        },
+      },
+    });
+})();
+```
