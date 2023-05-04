@@ -10,7 +10,7 @@ import iconImport from 'assets/icons/icon-import.svg';
 import CardAccount from 'components/modules/CardAccount';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMinaSnap } from 'services';
 import ModalCommon from 'components/common/modal';
 import CreatNameAccount from 'components/children/CreatNameAccount';
@@ -22,13 +22,14 @@ import { ethers } from 'ethers';
 import { setIsShowKebabMenu, setIsShowListAccount } from 'slices/modalSlice';
 
 const Header = () => {
-  const { ChangeAccount, getAccountInfors, getTxHistory } = useMinaSnap();
+  const { ChangeAccount, getAccountInfors, getTxHistory, getSnap } = useMinaSnap();
   const { isShowListAccount } = useAppSelector((state) => state.modals);
   const { accounts, activeAccount, isLoading } = useAppSelector((state) => state.wallet);
   const dispatch = useAppDispatch();
   const [openModal, setOpenModal] = React.useState(false);
   const [typeModal, setTypeModal] = React.useState('create');
   const [isShowDetail, setIsShowDetail] = React.useState(false);
+  const [version, setVersion] = React.useState('');
 
   const handleChangeAccount = async (item: any) => {
     await dispatch(setIsLoadingGlobal(true));
@@ -113,12 +114,26 @@ const Header = () => {
     dispatch(setIsShowKebabMenu(false));
   };
 
+  useEffect(() => {
+    const getVersion = async () => {
+      const infoSnap =  await getSnap();
+      setVersion(infoSnap[process.env.REACT_APP_SNAP_ID as string]?.version)
+    }
+
+    getVersion()
+  }, [])
+
   return (
     <>
       <Wrapper>
         <BoxLogo>
           <Logo />
-          <Title />
+          <WrapVersion>
+            <Title />
+            <Version >
+             Snap version {version}
+            </Version>
+          </WrapVersion>
         </BoxLogo>
         <WDropDown>
           <BoxDropDown onClick={() => handldeCloseAccount()}>
@@ -360,4 +375,16 @@ const Wallet = styled.img.attrs(() => ({
 const LinearProgressCustom = styled(LinearProgress)({
   height: '2px !important',
 });
+
+const Version = styled(Box)({
+  textAlign: 'center',
+  fontSize:'8px',
+  marginTop:'6px',
+  color: '#636B6B',
+})
+
+const WrapVersion = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+})
 export default Header;
