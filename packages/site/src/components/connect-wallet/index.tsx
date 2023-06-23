@@ -27,7 +27,7 @@ const ConnectWallet: React.FC<Props> = () => {
       reduxDispatch(setIsLoading(true));
       await connectToSnap();
       console.log('-start connect snap');
-      
+
       const isInstalledSnap = await getSnap();
       // await SwitchNetwork('Mainnet');
       const accountList = await AccountList();
@@ -54,13 +54,13 @@ const ConnectWallet: React.FC<Props> = () => {
       location.reload()
     } catch (e) {
       console.log('-connect snap error');
-      
+
       reduxDispatch(setUnlockWallet(false));
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
     } finally {
       console.log('-finally connect error');
-      
+
       reduxDispatch(setIsLoadingGlobal(false));
       reduxDispatch(setIsLoading(false));
     }
@@ -87,7 +87,7 @@ const ConnectWallet: React.FC<Props> = () => {
       }
     }, 100)
   })
-  
+
 
   return (
     <>
@@ -106,17 +106,17 @@ const ConnectWallet: React.FC<Props> = () => {
                 <BoxImg>
                   <img src={wainning} />
                 </BoxImg>
-                Please remember to disable 
+                Please remember to disable
                 <BoxIcon>
                   <img src={metamask} />
                 </BoxIcon>
-                Metamask and enable 
+                Metamask and enable
                 <BoxIcon>
                   <img src={metamaskFlask} />
                 </BoxIcon>
-                Metamask Flask only.             
+                Metamask Flask only.
               </WarningMessage>
-              
+
               <ButtonCustomRequiredMetamask onClick={()=> openLinkInstallFlask()}>
                 <BoxImg>
                   <img src={wainning} />

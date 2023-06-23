@@ -1,13 +1,13 @@
 {
-  "version": "0.0.1",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "Mina Example Snap",
+  "version": "0.0.2",
+  "description": "Metamask snap for Mina Protocol.",
+  "proposedName": "Mina Snap",
   "repository": {
     "type": "git",
     "url": "https://github.com/sotatek-dev/mina-snap-fe"
   },
   "source": {
-    "shasum": "2GkwQwsxI0SirQXxu64A8j1f7ssSkFN/QpP+SiIZSss=",
+    "shasum": "qAXY7pQEL2lDCgdvY8S4OkpD4+ecom2JQntp44Bmo8U=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -22,7 +22,7 @@
     "endowment:webassembly": {},
     "endowment:rpc": {
       "dapps": true,
-      "snaps": true
+      "snaps": false
     },
     "snap_dialog": {},
     "snap_getBip32Entropy": [
