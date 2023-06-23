@@ -10,7 +10,7 @@ import {
   sendZkAppTx,
 } from './mina';
 import { HistoryOptions, StakeTxInput, TxInput, VerifyMessageInput, ZkAppTxInput } from './interfaces';
-import { popupDialog } from './util/popup.util';
+import { popupDialog, popupNotify } from './util/popup.util';
 import {
   changeAccount,
   createAccount,
@@ -39,10 +39,9 @@ import { Signed, SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTy
  * @throws If the `snap_confirm` call failed.
  */
 
-export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => {
   const snapConfig = await getSnapConfiguration();
   const networkConfig = await getNetworkConfig(snapConfig);
-  console.log(`-networkConfig:`, networkConfig.name);
   if (Object.keys(networkConfig.generatedAccounts).length === 0) {
     await createAccount('Account 1');
   }
@@ -55,27 +54,23 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       const { publicKey, name } = await getKeyPair();
       const { account } = await getAccountInfo(publicKey, networkConfig);
       account.name = name;
-      console.log(`-account:`, account);
       return account;
     }
 
     case EMinaMethod.ACCOUNT_LIST: {
       const accounts = await getAccounts();
-      console.log(`-accounts:`, accounts);
       return accounts;
     }
 
     case EMinaMethod.CREATE_ACCOUNT: {
       const { name, index } = request.params as { name: string; index?: number };
       const account = await createAccount(name, index);
-      console.log(`-new account:`, account);
       return account;
     }
 
     case EMinaMethod.EDIT_ACCOUNT_NAME: {
       const { index, name, isImported } = request.params as { index: number; name: string; isImported?: boolean };
       const account = await editAccountName(index, name, isImported);
-      console.log(`-edited account:`, account);
       return account;
     }
 
@@ -88,22 +83,29 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.CHANGE_ACCOUNT: {
       const { accountIndex, isImported } = request.params as { accountIndex: number; isImported?: boolean };
       const accountInfo = await changeAccount(accountIndex, isImported);
-      console.log(`-account changed to:`, accountInfo);
       return accountInfo;
     }
 
     case EMinaMethod.IMPORT_ACCOUNT_PK: {
       const { name, privateKey } = request.params as { name: string; privateKey: string };
       const accountInfo = await importAccount(name, privateKey);
-      console.log(`-Imported account:`, accountInfo);
       return accountInfo;
     }
 
     case EMinaMethod.EXPORT_PRIVATE_KEY: {
       const { index, isImported } = request.params as { index?: number; isImported?: boolean };
-      const { privateKey } = await getKeyPair(index, isImported);
-      console.log('-privateKey:', privateKey);
-      return { privateKey };
+      const confirmation = await popupDialog(
+        ESnapDialogType.CONFIRMATION,
+        `Do you want to export your private key?`,
+        `Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.\n(Request origin: ${origin})`,
+      );
+      if (!confirmation) {
+        await popupNotify('Exporting private key is rejected');
+        return null;
+      } else {
+        const { privateKey } = await getKeyPair(index, isImported);
+        return { privateKey };
+      }
     }
 
     case EMinaMethod.NETWORK_CONFIG: {
@@ -120,7 +122,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.SEND_PAYMENT: {
       const txInput = request.params as TxInput;
       const response = await sendPayment(txInput, networkConfig);
-      console.log('-sendTxResponse:', response);
 
       return response;
     }
@@ -130,18 +131,25 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
       const { message } = request.params as { message: string };
       const signature = await signMessage(message, keyPair, networkConfig);
 
-      console.log('-signature', signature);
       return signature;
     }
 
     case EMinaMethod.RESET_CONFIG: {
+      const confirmation = await popupDialog(
+        ESnapDialogType.CONFIRMATION,
+        `Do you want to reset the snap config?`,
+        `This will clear all your snap configs on this device. \n(Request origin: ${origin})`,
+      );
+      if (!confirmation) {
+        await popupNotify('Reset snap config is rejected');
+        return null;
+      }
       return resetSnapConfiguration();
     }
 
     case EMinaMethod.GET_TX_HISTORY: {
       const keyPair = await getKeyPair();
       const history = await getTxHistory(networkConfig, request.params as HistoryOptions, keyPair.publicKey);
-      console.log(`-history:`, history);
 
       return history;
     }
@@ -149,7 +157,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.GET_TX_DETAIL: {
       const { hash } = request.params as { hash: string };
       const payment = await getTxDetail(networkConfig, hash);
-      console.log(`-payment:`, payment);
 
       return payment;
     }
@@ -157,7 +164,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.GET_TX_STATUS: {
       const { paymentId } = request.params as { paymentId: string };
       const status = await getTxStatus(networkConfig, paymentId);
-      console.log(`-status:`, status);
 
       return status;
     }
@@ -165,14 +171,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.VERIFY_MESSAGE: {
       const signedData = request.params as SignedLegacy<any>;
       const verifyResult = verifyMessage(networkConfig, signedData);
-      console.log(`-verifyResult:`, verifyResult);
       return verifyResult;
     }
 
     case EMinaMethod.SEND_STAKE_DELEGATION: {
       const stakeTxInput = request.params as StakeTxInput;
       const response = await sendStakeDelegation(stakeTxInput, networkConfig);
-      console.log('-sendStakeTxResponse:', response);
 
       return response;
     }
@@ -184,7 +188,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
     case EMinaMethod.SEND_TX: {
       const args = request.params as ZkAppTxInput;
       const submitZkAppResult = await sendZkAppTx(args, networkConfig);
-      console.log(`-submitZkAppResult:`, submitZkAppResult);
       return submitZkAppResult;
     }
 
