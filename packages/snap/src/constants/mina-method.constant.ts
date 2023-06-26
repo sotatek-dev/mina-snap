@@ -4,7 +4,6 @@ export enum EMinaMethod {
   IMPORT_ACCOUNT_PK = 'mina_importAccountByPrivateKey',
   CHANGE_ACCOUNT = 'mina_changeAccount',
   CHANGE_NETWORK = 'mina_changeNetwork',
-  HELLO = 'hello',
   NETWORK_CONFIG = 'mina_networkConfig',
   RESET_CONFIG = 'mina_resetSnapConfig',
   SEND_PAYMENT = 'mina_sendPayment',
