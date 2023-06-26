@@ -89,8 +89,11 @@ export const getRealErrorMsg =(error:any) => {
 }
 
 export const getLatestSnapVersion =async () => {
-  const snapId = process.env.REACT_APP_SNAP_ID?.slice(4);
-  const url = `https://registry.npmjs.org/${snapId}/latest`;
+  if (process.env.REACT_APP_SNAP_ID && /local:/.test(process.env.REACT_APP_SNAP_ID)) {
+    return "*"
+  }
+  const packageName = process.env.REACT_APP_SNAP_ID?.slice(4);
+  const url = `https://registry.npmjs.org/${packageName}/latest`;
   const version = await axios.get(url)
   .then( res => {
     const data = res.data;

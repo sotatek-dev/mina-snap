@@ -1,6 +1,7 @@
 import { ENetworkName, defaultSnapConfig, networksConstant } from '../constants/config.constant';
 import { ESnapMethod } from '../constants/snap-method.constant';
 import { NetworkConfig, SnapConfig, SnapState } from '../interfaces';
+import { popupNotify } from '../util/popup.util';
 
 export const getSnapConfiguration = async (): Promise<SnapConfig> => {
   const state = (await snap.request({
@@ -29,8 +30,11 @@ export const getNetworkConfig = async (snapConfig: SnapConfig): Promise<NetworkC
   return networkConfig;
 };
 
-export const changeNetwork = async (networkName: ENetworkName): Promise<NetworkConfig> => {
+export const changeNetwork = async (networkName: ENetworkName): Promise<NetworkConfig|null> => {
   let snapConfig = await getSnapConfiguration();
+  if (!snapConfig.networks[networkName]) {
+    popupNotify('Invalid network');
+  }
   if (networkName != snapConfig.currentNetwork && snapConfig.networks[networkName]) {
     snapConfig.currentNetwork = networkName;
     await updateSnapConfig(snapConfig);
