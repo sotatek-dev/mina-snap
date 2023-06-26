@@ -46,10 +46,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
     await createAccount('Account 1');
   }
   switch (request.method) {
-    case EMinaMethod.HELLO: {
-      return popupDialog(ESnapDialogType.CONFIRMATION, 'Hello Mina', 'Hello');
-    }
-
     case EMinaMethod.ACCOUNT_INFO: {
       const { publicKey, name } = await getKeyPair();
       const { account } = await getAccountInfo(publicKey, networkConfig);
