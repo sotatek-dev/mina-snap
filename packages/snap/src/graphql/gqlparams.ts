@@ -179,6 +179,7 @@ export const getPartyBody = () =>
         zkappCommand {
           memo
         }
+        failureReason
       }
     }
   }

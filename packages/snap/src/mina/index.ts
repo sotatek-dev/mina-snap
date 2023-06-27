@@ -11,7 +11,7 @@ export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig) =
 
   const confirmation = await popupDialog(
     ESnapDialogType.CONFIRMATION,
-    'Confirm transaction',
+    'Confirm payment transaction',
     `| From: ${publicKey}\n| To: ${args.to}\n| Amount: ${args.amount} ${networkConfig.token.symbol}\n| Fee: ${args.fee} ${networkConfig.token.symbol}`,
   );
   if (!confirmation) {
@@ -26,7 +26,7 @@ export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig) =
   }
 
   const payment = await submitPayment(signedPayment, networkConfig);
-  if (!payment) {
+  if (!payment || payment.failureReason) {
     await popupNotify('Submit payment error');
     return null;
   }
@@ -43,19 +43,19 @@ export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: Net
     `Block producer address: ${args.to}\n| From: ${publicKey}\n| Fee: ${args.fee} ${networkConfig.token.symbol}`,
   );
   if (!confirmation) {
-    await popupNotify('Transaction rejected');
+    await popupNotify('Stake delegation transaction rejected');
     return null;
   }
 
   const signedStakeTx = await signStakeDelegation(args, publicKey, privateKey, networkConfig);
   if (!signedStakeTx) {
-    await popupNotify('Sign stake transaction error');
+    await popupNotify('Sign stake delegation transaction error');
     return null;
   }
 
   const stakeTx = await submitStakeDelegation(signedStakeTx, networkConfig);
-  if (!stakeTx) {
-    await popupNotify('Submit stake tx error');
+  if (!stakeTx || stakeTx.failureReason) {
+    await popupNotify('Submit stake delegation error');
     return null;
   }
 
@@ -92,7 +92,7 @@ export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConf
   }
 
   const submitZkAppTxResult = await submitZkAppTx(signedZkAppTx, networkConfig);
-  if (!submitZkAppTxResult) {
+  if (!submitZkAppTxResult || submitZkAppTxResult.failureReason) {
     await popupNotify('Submit ZkApp tx error');
     return null;
   }

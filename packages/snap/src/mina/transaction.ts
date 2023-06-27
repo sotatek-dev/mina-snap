@@ -83,8 +83,8 @@ export async function submitPayment(signedPayment: SignedLegacy<Payment>, networ
   const variables = { ...signedPayment.data, ...signedPayment.signature };
 
   const data = await gql(networkConfig.gqlUrl, query, variables);
-
-  await popupNotify(`Payment ${data.sendPayment.payment.hash.substring(0, 10)}... has been submitted`);
+  const { hash } = data.sendPayment.payment
+  await popupNotify(`Payment ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
   data.sendPayment.payment.memo = decodeMemo(data.sendPayment.payment.memo);
 
   return data.sendPayment.payment;
@@ -175,8 +175,8 @@ export const submitStakeDelegation = async (
   const variables = { ...signedStakeTx.data, ...signedStakeTx.signature };
 
   const data = await gql(networkConfig.gqlUrl, txGql, variables);
-
-  await popupNotify(`Stake delegation ${data.sendDelegation.delegation.hash.substring(0, 10)}... has been submitted`);
+  const { hash } = data.sendDelegation.delegation
+  await popupNotify(`Stake delegation ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
 
   return data.sendDelegation.delegation;
 };
@@ -223,6 +223,8 @@ export const submitZkAppTx = async (signedZkAppTx: Signed<ZkappCommand>, network
       zkappCommandInput: signedZkAppTx.data.zkappCommand,
     };
     const sendPartyRes = await gql(networkConfig.gqlUrl, txGql, variables);
+    const { hash } = sendPartyRes.sendZkapp.zkapp
+    await popupNotify(`ZkApp transaction ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
     return sendPartyRes.sendZkapp.zkapp;
   } catch (error) {
     console.error('Failed to submitZkAppTx:', error.message);
