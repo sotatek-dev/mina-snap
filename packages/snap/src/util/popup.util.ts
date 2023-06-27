@@ -33,8 +33,12 @@ export async function popupDialog(
  * @param message - Notify message.
  */
 export async function popupNotify(message: string) {
-  await snap.request({
-    method: ESnapMethod.SNAP_NOTIFY,
-    params: { type: 'native', message },
-  });
+  try {
+    await snap.request({
+      method: ESnapMethod.SNAP_NOTIFY,
+      params: { type: 'native', message },
+    });
+  } catch (error) {
+    console.error("Failed to display snap notify: ", error);
+  }
 }
