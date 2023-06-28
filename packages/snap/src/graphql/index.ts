@@ -21,7 +21,9 @@ export async function gql(url: string, query: string, variables = {}) {
         variables,
       }),
     });
-
+    if (response.status !== 200) {
+      throw new Error(`${url} response status code: ${response.status}. ${response.statusText}`)
+    }
     const { data, errors } = await response.json();
     if (errors) throw new Error(errors[0].message);
 
