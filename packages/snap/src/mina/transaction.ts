@@ -66,7 +66,7 @@ export const signPayment = async (
     };
     return client.signPayment(payment, privateKey);
   } catch (err) {
-    console.error('packages/snap/src/mina/transaction.ts:51', err.message);
+    console.error('packages/snap/src/mina/transaction.ts', err.message);
     throw err;
   }
 };
