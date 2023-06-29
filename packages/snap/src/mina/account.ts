@@ -128,7 +128,7 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
         address: account.address,
       };
     } else {
-      console.error('packages/snap/src/mina/account.ts:138', 'The account index is invalid');
+      console.error('packages/snap/src/mina/account.ts', 'The account index is invalid');
       throw new Error('The account index is invalid');
     }
   }
@@ -139,7 +139,7 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
     await updateSnapConfig(snapConfig);
     return account;
   } else {
-    console.error('packages/snap/src/mina/account.ts:149', 'The account index is invalid');
+    console.error('packages/snap/src/mina/account.ts', 'The account index is invalid');
     throw new Error('The account index is invalid');
   }
 };
@@ -178,14 +178,14 @@ export const importAccount = async (name: string, privateKey: string) => {
   try {
     publicKey = client.derivePublicKey(privateKey);
   } catch (err) {
-    console.error('packages/snap/src/mina/account.ts:198', err.message);
+    console.error('packages/snap/src/mina/account.ts', err.message);
     throw new Error('Incorrect Private Key');
   }
 
   // Check for duplicate account
   const duplicateAddress = checkDuplicateAddress(networks[currentNetwork], publicKey);
   if (duplicateAddress) {
-    console.error('packages/snap/src/mina/account.ts:205', 'Duplicate address');
+    console.error('packages/snap/src/mina/account.ts', 'Duplicate address');
     throw new Error('Do not import repeatedly');
   }
 
@@ -250,7 +250,7 @@ export const editAccountName = async (index: number, name: string, isImported?: 
     ? networks[currentNetwork].importedAccounts[index]
     : networks[currentNetwork].generatedAccounts[index];
   if (!account) {
-    console.error('packages/snap/src/mina/account.ts:264', 'The account does not exist');
+    console.error('packages/snap/src/mina/account.ts', 'The account does not exist');
     throw new Error('The account does not exist');
   }
   account.name = name;

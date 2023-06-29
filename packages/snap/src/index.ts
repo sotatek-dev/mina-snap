@@ -9,7 +9,7 @@ import {
   getNetworkConfig,
   sendZkAppTx,
 } from './mina';
-import { HistoryOptions, StakeTxInput, TxInput, VerifyMessageInput, ZkAppTxInput } from './interfaces';
+import { HistoryOptions, StakeTxInput, TxInput, ZkAppTxInput } from './interfaces';
 import { popupDialog, popupNotify } from './util/popup.util';
 import {
   changeAccount,
@@ -25,7 +25,7 @@ import {
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
 import { getTxHistory, getTxDetail, getTxStatus, } from './mina/transaction';
-import { Signed, SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
+import { SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import { Mutex } from 'async-mutex';
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -148,8 +148,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
     case EMinaMethod.RESET_CONFIG: {
       const confirmation = await popupDialog(
         ESnapDialogType.CONFIRMATION,
-        `Do you want to reset the snap config?`,
-        `This will clear all your snap configs on this device. \n(Request origin: ${origin})`,
+        `Do you want to reset the Mina snap config?`,
+        `This will clear all your Mina snap configs on this device and may result in loss of access to accounts. \n(Request origin: ${origin})`,
       );
       if (!confirmation) {
         await popupNotify('Reset snap config is rejected');
