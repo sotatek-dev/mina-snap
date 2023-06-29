@@ -144,25 +144,21 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
   }
 };
 
-export const createAccount = async (name: string, index?: number): Promise<any> => {
+export const createAccount = async (name: string): Promise<any> => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
-  let newAccountIndex;
-  if (index) {
-    newAccountIndex = index;
-  } else {
-    const { generatedAccounts } = networks[currentNetwork];
-    if (Object.keys(generatedAccounts).length) {
-      const currentMaxIndex = Math.max(...Object.keys(generatedAccounts).map((key) => Number(key)));
-      newAccountIndex = currentMaxIndex + 1;
-    } else {
-      newAccountIndex = 0;
-    }
+  const { generatedAccounts } = networks[currentNetwork];
+  let newAccountIndex = 0;
+  if (Object.keys(generatedAccounts).length) {
+    const currentMaxIndex = Math.max(...Object.keys(generatedAccounts).map((key) => Number(key)));
+    newAccountIndex = currentMaxIndex + 1;
   }
-  const { publicKey } = await generateKeyPair(networks[currentNetwork], newAccountIndex);
-  const duplicateAddress = checkDuplicateAddress(networks[currentNetwork], publicKey);
-  if (duplicateAddress) {
-    return createAccount(name, newAccountIndex + 1);
+  let { publicKey } = await generateKeyPair(networks[currentNetwork], newAccountIndex);
+  let duplicateAddress = checkDuplicateAddress(networks[currentNetwork], publicKey);
+  while (duplicateAddress) {
+    newAccountIndex++;
+    publicKey = (await generateKeyPair(networks[currentNetwork], newAccountIndex)).publicKey;
+    duplicateAddress = checkDuplicateAddress(networks[currentNetwork], publicKey);
   }
   snapConfig.networks[currentNetwork].currentAccIndex = newAccountIndex;
   snapConfig.networks[currentNetwork].selectedImportedAccount = null;

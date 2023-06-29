@@ -59,8 +59,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
     }
 
     case EMinaMethod.CREATE_ACCOUNT: {
-      const { name, index } = request.params as { name: string; index?: number };
-      const account = await createAccount(name, index);
+      const { name } = request.params as { name: string };
+      const account = await createAccount(name);
       return account;
     }
 
