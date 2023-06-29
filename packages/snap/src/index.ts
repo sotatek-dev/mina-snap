@@ -26,7 +26,7 @@ import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
 import { getTxHistory, getTxDetail, getTxStatus, } from './mina/transaction';
 import { Signed, SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
-
+import { Mutex } from 'async-mutex';
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
@@ -38,12 +38,17 @@ import { Signed, SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTy
  * @throws If the request method is not valid for this snap.
  * @throws If the `snap_confirm` call failed.
  */
-
+const mutex = new Mutex();
 export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => {
+  if (mutex.isLocked()) {
+    await mutex.waitForUnlock();
+  }
   const snapConfig = await getSnapConfiguration();
   const networkConfig = await getNetworkConfig(snapConfig);
-  if (Object.keys(networkConfig.generatedAccounts).length === 0) {
-    await createAccount('Account 1');
+  if (Object.keys(networkConfig.generatedAccounts).length === 0 && !mutex.isLocked()) {
+    await mutex.runExclusive(async () => {
+      await createAccount('Account 1');
+    });
   }
   switch (request.method) {
     case EMinaMethod.ACCOUNT_INFO: {
@@ -59,33 +64,43 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
     }
 
     case EMinaMethod.CREATE_ACCOUNT: {
-      const { name } = request.params as { name: string };
-      const account = await createAccount(name);
-      return account;
+      return mutex.runExclusive(async () => {
+        const { name } = request.params as { name: string };
+        const account = await createAccount(name);
+        return account;
+      });
     }
 
     case EMinaMethod.EDIT_ACCOUNT_NAME: {
-      const { index, name, isImported } = request.params as { index: number; name: string; isImported?: boolean };
-      const account = await editAccountName(index, name, isImported);
-      return account;
+      return mutex.runExclusive(async () => {
+        const { index, name, isImported } = request.params as { index: number; name: string; isImported?: boolean };
+        const account = await editAccountName(index, name, isImported);
+        return account;
+      });
     }
 
     case EMinaMethod.CHANGE_NETWORK: {
-      const { networkName } = request.params as { networkName: ENetworkName };
-      const newNetwork = await changeNetwork(networkName);
-      return newNetwork;
+      return mutex.runExclusive(async () => {
+        const { networkName } = request.params as { networkName: ENetworkName };
+        const newNetwork = await changeNetwork(networkName);
+        return newNetwork;
+      });
     }
 
     case EMinaMethod.CHANGE_ACCOUNT: {
-      const { accountIndex, isImported } = request.params as { accountIndex: number; isImported?: boolean };
-      const accountInfo = await changeAccount(accountIndex, isImported);
-      return accountInfo;
+      return mutex.runExclusive(async () => {
+        const { accountIndex, isImported } = request.params as { accountIndex: number; isImported?: boolean };
+        const accountInfo = await changeAccount(accountIndex, isImported);
+        return accountInfo;
+      });
     }
 
     case EMinaMethod.IMPORT_ACCOUNT_PK: {
-      const { name, privateKey } = request.params as { name: string; privateKey: string };
-      const accountInfo = await importAccount(name, privateKey);
-      return accountInfo;
+      return mutex.runExclusive(async () => {
+        const { name, privateKey } = request.params as { name: string; privateKey: string };
+        const accountInfo = await importAccount(name, privateKey);
+        return accountInfo;
+      });
     }
 
     case EMinaMethod.EXPORT_PRIVATE_KEY: {
@@ -140,7 +155,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
         await popupNotify('Reset snap config is rejected');
         return null;
       }
-      return resetSnapConfiguration();
+      return mutex.runExclusive(async () => {
+        const defaultConfig = await resetSnapConfiguration();
+        return defaultConfig;
+      })
     }
 
     case EMinaMethod.GET_TX_HISTORY: {
