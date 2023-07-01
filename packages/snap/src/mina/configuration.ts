@@ -33,7 +33,9 @@ export const getNetworkConfig = async (snapConfig: SnapConfig): Promise<NetworkC
 export const changeNetwork = async (networkName: ENetworkName): Promise<NetworkConfig|null> => {
   let snapConfig = await getSnapConfiguration();
   if (!snapConfig.networks[networkName]) {
-    popupNotify('Invalid network');
+    const errorMsg = `Invalid network. Cannot change the network.`;
+    await popupNotify(errorMsg);
+    throw new Error(errorMsg);
   }
   if (networkName != snapConfig.currentNetwork && snapConfig.networks[networkName]) {
     snapConfig.currentNetwork = networkName;
