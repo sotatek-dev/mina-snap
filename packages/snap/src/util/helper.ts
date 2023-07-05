@@ -1,10 +1,10 @@
 import { Buffer } from 'safe-buffer';
 import bs58check from 'bs58check';
 
-export const reverse = (bytes: any) => {
+export const reverse = (bytes: Uint8Array) => {
   const reversed = Buffer.alloc(bytes.length);
   for (let i = bytes.length; i > 0; i--) {
-    reversed[bytes.length - i] = bytes[i - 1];
+    reversed.writeUInt8(bytes[i - 1], bytes.length - i)
   }
   return reversed;
 };
@@ -28,7 +28,7 @@ export function getOperationName(query: string) {
 export const decodeMemo = (encode: string) => {
   try {
     const encoded = bs58check.decode(encode);
-    const res = encoded.slice(3, 3 + encoded[2]).toString('utf-8');
+    const res = encoded.subarray(3, 3 + encoded[2]).toString('utf-8');
     return res;
   } catch (err) {
     return encode;

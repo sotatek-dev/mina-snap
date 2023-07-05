@@ -60,10 +60,10 @@ export const generateKeyPair = async (networkConfig: NetworkConfig, index?: numb
   const minaSlip10Node = await SLIP10Node.fromJSON(bip32Node);
   const accountIndex = index ? index : networkConfig.currentAccIndex;
   const accountKey0 = await minaSlip10Node.derive([`bip32:${accountIndex}'`]);
-  if (accountKey0.privateKeyBytes) {
-    // eslint-disable-next-line no-bitwise
-    accountKey0.privateKeyBytes[0] &= 0x3f;
+  if (!accountKey0.privateKeyBytes) {
+    throw new Error('Error happens when generating the key pair. No privateKeyBytes.');
   }
+  accountKey0.privateKeyBytes[0] &= 0x3f;
   const childPrivateKey = reverse(accountKey0.privateKeyBytes);
   const privateKeyHex = `5a01${childPrivateKey.toString('hex')}`;
   const privateKey = bs58check.encode(Buffer.from(privateKeyHex, 'hex'));
