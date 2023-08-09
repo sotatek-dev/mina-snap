@@ -1,5 +1,5 @@
 import { ESnapDialogType, ESnapMethod } from '../constants/snap-method.constant';
-import { panel, text, heading } from '@metamask/snaps-ui';
+import { panel, text, heading, divider, copyable } from '@metamask/snaps-ui';
 
 /**
  * Handle popUpConfirm.
@@ -12,16 +12,23 @@ import { panel, text, heading } from '@metamask/snaps-ui';
 export async function popupDialog(
   type: ESnapDialogType,
   prompt: string,
-  textAreaContent: string,
+  contents: {text?: string, copyable?: string, divider?: boolean}[]
 ) {
+  let panelContent: any = [heading(prompt)];
+  for (const content of contents) {
+    if (content.text) {
+      panelContent.push(text(content.text));
+    }
+    if (content.copyable) {
+      panelContent.push(copyable(content.copyable));
+    }
+    if (content.divider) panelContent.push(divider());
+  }
   const response = await snap.request({
     method: ESnapMethod.SNAP_DIALOG,
     params: {
       type,
-      content: panel([
-        heading(prompt),
-        text(textAreaContent),
-      ])
+      content: panel(panelContent)
     }
   });
   return response;

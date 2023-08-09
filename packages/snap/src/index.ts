@@ -24,7 +24,7 @@ import {
 } from './mina/account';
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
-import { getTxHistory, getTxDetail, getTxStatus, } from './mina/transaction';
+import { getTxHistory, getTxDetail, getTxStatus } from './mina/transaction';
 import { SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
 import { Mutex } from 'async-mutex';
 /**
@@ -94,7 +94,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
         const confirmation = await popupDialog(
           ESnapDialogType.CONFIRMATION,
           `Do you want to export your private key?`,
-          `Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.\n(Request origin: ${origin})`,
+          [
+            {
+              text: `Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account.`, divider: true
+            },
+            { text: 'Request origin:', copyable: `${origin}` },
+          ],
         );
         if (!confirmation) {
           await popupNotify('Exporting private key is rejected');
@@ -118,7 +123,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
 
       case EMinaMethod.SEND_PAYMENT: {
         const txInput = request.params as TxInput;
-        const response = await sendPayment(txInput, networkConfig);
+        const response = await sendPayment(txInput, networkConfig, origin);
 
         return response;
       }
@@ -126,7 +131,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
       case EMinaMethod.SIGN_MESSAGE: {
         const keyPair = await getKeyPair();
         const { message } = request.params as { message: string };
-        const signature = await signMessage(message, keyPair, networkConfig);
+        const signature = await signMessage(message, keyPair, networkConfig, origin);
 
         return signature;
       }
@@ -135,7 +140,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
         const confirmation = await popupDialog(
           ESnapDialogType.CONFIRMATION,
           `Do you want to reset the Mina snap config?`,
-          `This will clear all your Mina snap configs on this device and may result in loss of access to accounts. \n(Request origin: ${origin})`,
+          [
+            {
+              text: `Warning: This will clear all your Mina snap configs on this device and may result in loss of access to accounts.`, divider: true
+            },
+            { text: 'Request origin:', copyable: `${origin}` },
+          ],
         );
         if (!confirmation) {
           await popupNotify('Reset snap config is rejected');
@@ -174,7 +184,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
 
       case EMinaMethod.SEND_STAKE_DELEGATION: {
         const stakeTxInput = request.params as StakeTxInput;
-        const response = await sendStakeDelegation(stakeTxInput, networkConfig);
+        const response = await sendStakeDelegation(stakeTxInput, networkConfig, origin);
 
         return response;
       }
@@ -185,7 +195,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
 
       case EMinaMethod.SEND_TX: {
         const args = request.params as ZkAppTxInput;
-        const submitZkAppResult = await sendZkAppTx(args, networkConfig);
+        const submitZkAppResult = await sendZkAppTx(args, networkConfig, origin);
         return submitZkAppResult;
       }
 

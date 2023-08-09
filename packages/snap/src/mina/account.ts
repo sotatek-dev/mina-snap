@@ -74,8 +74,13 @@ export const generateKeyPair = async (networkConfig: NetworkConfig, index?: numb
   };
 };
 
-export const signMessage = async (message: string, keypair: Keypair, networkConfig: NetworkConfig) => {
-  const confirmSignMsg = await popupDialog(ESnapDialogType.CONFIRMATION, 'Sign this message?', message);
+export const signMessage = async (message: string, keypair: Keypair, networkConfig: NetworkConfig, origin: string) => {
+  const confirmSignMsg = await popupDialog(ESnapDialogType.CONFIRMATION, 'Sign this message?', [
+    {
+      text: `Message:`, copyable: message, divider: true
+    },
+    { text: 'Request origin:', copyable: `${origin}` },
+  ]);
   if (confirmSignMsg) {
     const client = getMinaClient(networkConfig);
     const signed = client.signMessage(message, keypair.privateKey);
@@ -106,7 +111,7 @@ export async function getAccountInfo(publicKey: string, networkConfig: NetworkCo
       nonce: '0',
       inferredNonce: '0',
       delegateAccount: {
-        publicKey
+        publicKey,
       },
       publicKey,
     };
@@ -213,24 +218,24 @@ export const getAccounts = async () => {
   const generatedAccountsArr =
     Object.keys(generatedAccounts).length > 0
       ? Object.entries(generatedAccounts).map(([index, account]) => {
-        return {
-          ...account,
-          index,
-          isImported: false,
-        } as any;
-      })
+          return {
+            ...account,
+            index,
+            isImported: false,
+          } as any;
+        })
       : [];
   const importedAccountsArr =
     Object.keys(importedAccounts).length > 0
       ? Object.entries(importedAccounts).map(([index, account]) => {
-        const { name, address } = account;
-        return {
-          name,
-          address,
-          index,
-          isImported: true,
-        } as any;
-      })
+          const { name, address } = account;
+          return {
+            name,
+            address,
+            index,
+            isImported: true,
+          } as any;
+        })
       : [];
   const allAccounts = [...generatedAccountsArr, ...importedAccountsArr];
   await Promise.all(
