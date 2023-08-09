@@ -1,5 +1,5 @@
 {
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Metamask snap for Mina Protocol.",
   "proposedName": "Mina Snap",
   "repository": {
@@ -7,11 +7,11 @@
     "url": "https://github.com/sotatek-dev/mina-snap-fe"
   },
   "source": {
-    "shasum": "pcvpFmQA5W16o94BiNkCHHP/Px6v2klakiQOBLnT55o=",
+    "shasum": "J08iLuu3jAlgzQnDOvQ3N799hGcWRvZ34a9Pxkff+VE=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
-        "iconPath": "images/icon.svg",
+        "iconPath": "images/Mina_Icon.svg",
         "packageName": "mina-snap",
         "registry": "https://registry.npmjs.org/"
       }
