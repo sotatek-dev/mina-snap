@@ -11,7 +11,7 @@ export const getMinaClient = (networkConfig: NetworkConfig) => {
     case ENetworkName.DEVNET:
       return new Client({ network: 'testnet' });
     default:
-      popupNotify("Cannot find the corresponding network type")
-      break
+      const errorMsg = "Cannot find the corresponding network type"
+      throw new Error(errorMsg)
   }
 };

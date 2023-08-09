@@ -1,6 +1,6 @@
 {
   "name": "mina-snap",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "This snap helps you interact with Mina protocol using Metamask Flask",
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
   "dependencies": {
     "@metamask/key-tree": "^6.2.1",
     "@metamask/snaps-ui": "^0.29.0",
+    "async-mutex": "^0.4.0",
     "bignumber.js": "^9.1.1",
     "bs58check": "^2.1.2",
     "mina-signer": "^2.0.3",
