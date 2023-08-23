@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ConnectWallet from 'components/connect-wallet/index';
-import { useHasMetamaskFlask } from 'hooks/useHasMetamaskFlask';
+import { useHasMetamask } from 'hooks/useHasMetamask';
 import Home from 'components/layout/index';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
@@ -20,7 +20,7 @@ import { setNetworks } from 'slices/networkSlice';
 import detectEthereumProvider from '@metamask/detect-provider';
 
 const HomePage = () => {
-  useHasMetamaskFlask();
+  useHasMetamask();
   const reduxDispatch = useAppDispatch();
   const { getSnap, connectToSnap, AccountList, getAccountInfors, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState<any>(null);
@@ -55,7 +55,7 @@ const HomePage = () => {
         silent: true,
       })) as any | undefined;
 
-      const isMetaMask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
+      const isMetaMask = (await provider?.request({ method: 'web3_clientVersion' }));
       if(!isMetaMask){
         reduxDispatch(setWalletInstalled(false));
       }

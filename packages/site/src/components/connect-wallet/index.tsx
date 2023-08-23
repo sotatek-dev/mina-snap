@@ -101,7 +101,7 @@ const ConnectWallet: React.FC<Props> = () => {
         <BoxCenter sx={{ paddingBottom: '25px' }}>
           {!isInstalledWallet &&(
             <WrapperWarning>
-              <WarningMessage>
+              {/* <WarningMessage>
                 <BoxImg>
                   <img src={wainning} />
                 </BoxImg>
@@ -114,7 +114,7 @@ const ConnectWallet: React.FC<Props> = () => {
                   <img src={metamaskFlask} />
                 </BoxIcon>
                 Metamask Flask only.
-              </WarningMessage>
+              </WarningMessage> */}
 
               <ButtonCustomRequiredMetamask onClick={()=> openLinkInstallFlask()}>
                 <BoxImg>
