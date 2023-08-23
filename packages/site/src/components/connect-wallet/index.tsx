@@ -11,9 +11,11 @@ import metamask from 'assets/logo/logo-metamask.png';
 import metamaskFlask from 'assets/logo/logo-metamask-flask.png';
 import detectEthereumProvider from '@metamask/detect-provider';
 
-type Props = {};
+interface Props {
+  disable: boolean
+}
 
-const ConnectWallet: React.FC<Props> = () => {
+const ConnectWallet: React.FC<Props> = ({disable}) => {
   const reduxDispatch = useAppDispatch();
   const { connectToSnap, getSnap, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
 
@@ -70,24 +72,23 @@ const ConnectWallet: React.FC<Props> = () => {
     window.open('https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk', '_blank')?.focus();
   };
 
-  useEffect(() => {
-    setTimeout(async () => {
-      let i =0;
-      while (i<5) {
-        const provider = (await detectEthereumProvider({
-          mustBeMetaMask: false,
-          silent: true,
-        })) as any | undefined;
-        const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
-        if(!isFlask){
-          reduxDispatch(setWalletInstalled(false));
-          reduxDispatch(setUnlockWallet(false));
-        }
-        i++
-      }
-    }, 100)
-  })
-
+  // useEffect(() => {
+  //   setTimeout(async () => {
+  //     let i =0;
+  //     while (i<5) {
+  //       const provider = (await detectEthereumProvider({
+  //         mustBeMetaMask: false,
+  //         silent: true,
+  //       })) as any | undefined;
+  //       const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
+  //       if(!isFlask){
+  //         reduxDispatch(setWalletInstalled(false));
+  //         reduxDispatch(setUnlockWallet(false));
+  //       }
+  //       i++
+  //     }
+  //   }, 100)
+  // })
 
   return (
     <>
@@ -102,7 +103,7 @@ const ConnectWallet: React.FC<Props> = () => {
         <BoxCenter sx={{ paddingBottom: '25px' }}>
           {!isInstalledWallet &&(
             <WrapperWarning>
-              <WarningMessage>
+              {/* <WarningMessage>
                 <BoxImg>
                   <img src={wainning} />
                 </BoxImg>
@@ -115,7 +116,7 @@ const ConnectWallet: React.FC<Props> = () => {
                   <img src={metamaskFlask} />
                 </BoxIcon>
                 Metamask Flask only.
-              </WarningMessage>
+              </WarningMessage> */}
 
               <ButtonCustomRequiredMetamask onClick={()=> openLinkInstallFlask()}>
                 <BoxImg>
@@ -130,6 +131,10 @@ const ConnectWallet: React.FC<Props> = () => {
           <Button
             className={!isInstalledWallet ? 'isUnInstalledWallet' : 'connectMetamask'}
             onClick={handleConnectClick}
+            style={{
+              opacity: disable ? '0.5' : '1',
+              pointerEvents: disable ? 'none': 'all',
+            }}
           >
             {isLoading ? (
               <BoxConnecting>
