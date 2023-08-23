@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ConnectWallet from 'components/connect-wallet/index';
 import { useHasMetamask } from 'hooks/useHasMetamask';
 import Home from 'components/layout/index';
@@ -25,6 +25,7 @@ const HomePage = () => {
   const { getSnap, connectToSnap, AccountList, getAccountInfors, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState<any>(null);
   const { connected, isUnlock, isInstalledWallet } = useAppSelector((state) => state.wallet);
+  const [disableConnect, setDisableConnect] = useState(false);
   
 
   useEffect(() => {
@@ -148,6 +149,7 @@ const HomePage = () => {
       }
       
     } catch (error) {
+      setDisableConnect(true);
       setIsUnlocked(false)
       reduxDispatch(setIsLoading(false));
     }
@@ -159,7 +161,7 @@ const HomePage = () => {
   if(isUnlocked == null) return (<>
     </>)
 
-  return <div>{(isUnlocked && isUnlock && isInstalledWallet) ? <Home /> : <ConnectWallet />}</div>;
+  return <div>{(isUnlocked && isUnlock && isInstalledWallet) ? <Home /> : <ConnectWallet disable={disableConnect} />}</div>;
 };
 
 export default HomePage;

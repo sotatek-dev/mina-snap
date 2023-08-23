@@ -11,9 +11,11 @@ import metamask from 'assets/logo/logo-metamask.png';
 import metamaskFlask from 'assets/logo/logo-metamask-flask.png';
 import detectEthereumProvider from '@metamask/detect-provider';
 
-type Props = {};
+interface Props {
+  disable: boolean
+}
 
-const ConnectWallet: React.FC<Props> = () => {
+const ConnectWallet: React.FC<Props> = ({disable}) => {
   const reduxDispatch = useAppDispatch();
   const { connectToSnap, getSnap, AccountList, getAccountInfors, getTxHistory } = useMinaSnap();
 
@@ -129,6 +131,10 @@ const ConnectWallet: React.FC<Props> = () => {
           <Button
             className={!isInstalledWallet ? 'isUnInstalledWallet' : 'connectMetamask'}
             onClick={handleConnectClick}
+            style={{
+              opacity: disable ? '0.5' : '1',
+              pointerEvents: disable ? 'none': 'all',
+            }}
           >
             {isLoading ? (
               <BoxConnecting>
