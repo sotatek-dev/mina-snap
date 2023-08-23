@@ -21,6 +21,45 @@ export const useMinaSnap = () => {
   const snapId = process.env.REACT_APP_SNAP_ID ? process.env.REACT_APP_SNAP_ID : 'npm:test-mina-snap';
   const snapVersion = process.env.REACT_APP_SNAP_VERSION ? process.env.REACT_APP_SNAP_VERSION : '*';
 
+  const getProvider = async () => {
+    let mmFound = false; 
+    if ('detected' in ethereum) {
+      for (const provider of ethereum.detected) {
+        try {
+          // Detect snaps support
+          await provider.request({
+            method: 'wallet_getSnaps',
+          });
+          // enforces MetaMask as provider 
+          ethereum.setProvider(provider);
+  
+          mmFound = true; 
+          return provider;
+        } catch {
+          // no-op
+        }
+      }
+    }
+  
+    if(!mmFound && 'providers' in ethereum) { 
+      for (const provider of ethereum.providers) { 
+        try {
+          // Detect snaps support
+          await provider.request({
+            method: 'wallet_getSnaps',
+          });
+          window.ethereum = provider
+          mmFound = true; 
+          return provider;
+        } catch {
+          // no-op
+        }
+      }
+    }
+  
+    return ethereum;
+  };
+
 
   const connectToSnap = async () => {
       const latestSnapVersion = await getLatestSnapVersion();
@@ -31,7 +70,8 @@ export const useMinaSnap = () => {
   };
 
   const getSnap = async () => {
-    return await ethereum.request({ method: 'wallet_getSnaps' });
+    const provider = await getProvider(); 
+    return await provider.request({ method: 'wallet_getSnaps' });
   };
 
   const getAccountInfors = async (): Promise<Account> => {

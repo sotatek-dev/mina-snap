@@ -70,24 +70,23 @@ const ConnectWallet: React.FC<Props> = () => {
     window.open('https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk', '_blank')?.focus();
   };
 
-  useEffect(() => {
-    setTimeout(async () => {
-      let i =0;
-      while (i<5) {
-        const provider = (await detectEthereumProvider({
-          mustBeMetaMask: false,
-          silent: true,
-        })) as any | undefined;
-        const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
-        if(!isFlask){
-          reduxDispatch(setWalletInstalled(false));
-          reduxDispatch(setUnlockWallet(false));
-        }
-        i++
-      }
-    }, 100)
-  })
-
+  // useEffect(() => {
+  //   setTimeout(async () => {
+  //     let i =0;
+  //     while (i<5) {
+  //       const provider = (await detectEthereumProvider({
+  //         mustBeMetaMask: false,
+  //         silent: true,
+  //       })) as any | undefined;
+  //       const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
+  //       if(!isFlask){
+  //         reduxDispatch(setWalletInstalled(false));
+  //         reduxDispatch(setUnlockWallet(false));
+  //       }
+  //       i++
+  //     }
+  //   }, 100)
+  // })
 
   return (
     <>

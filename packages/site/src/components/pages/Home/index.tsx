@@ -38,17 +38,26 @@ const HomePage = () => {
         reduxDispatch(setWalletInstalled(false));
       }
       localStorage.clear();
-      let i =0;
-      while (i<3) {
-        const provider = (await detectEthereumProvider({
-          mustBeMetaMask: false,
-          silent: true,
-        })) as any | undefined;
-        const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
-        if(!isFlask){
-          reduxDispatch(setWalletInstalled(false));
-        }
-        i++
+      // let i =0;
+      // while (i<3) {
+      //   const provider = (await detectEthereumProvider({
+      //     mustBeMetaMask: false,
+      //     silent: true,
+      //   })) as any | undefined;
+      //   const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
+      //   if(!isFlask){
+      //     reduxDispatch(setWalletInstalled(false));
+      //   }
+      //   i++
+      // }
+      const provider = (await detectEthereumProvider({
+        mustBeMetaMask: false,
+        silent: true,
+      })) as any | undefined;
+
+      const isMetaMask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
+      if(!isMetaMask){
+        reduxDispatch(setWalletInstalled(false));
       }
 
       if (isUnlocked) {
