@@ -1,7 +1,7 @@
 {
-  "name": "mina-snap",
-  "version": "0.0.3",
-  "description": "This snap helps you interact with Mina protocol using Metamask Flask",
+  "name": "mina-portal",
+  "version": "0.0.1",
+  "description": "This snap helps you interact with Mina protocol using Metamask",
   "repository": {
     "type": "git",
     "url": "https://github.com/sotatek-dev/mina-snap-fe"
