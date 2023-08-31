@@ -1,6 +1,6 @@
 import Modal from 'components/common/modal';
 import styled from 'styled-components';
-import { MINA_BERKELEY_EXPLORER, TRANSACTION_STATUS } from 'utils/constants';
+import { TRANSACTION_STATUS } from 'utils/constants';
 import ILink from 'assets/icons/icon-link.svg';
 import { ethers } from 'ethers';
 import { ResultTransactionList } from 'types/transaction';
@@ -12,6 +12,7 @@ interface ModalProps {
   clickOutSide: boolean;
   setOpenModal: () => void;
   transaction?: ResultTransactionList | undefined;
+  explorerUrl?: string;
 }
 
 interface Props {
@@ -29,7 +30,7 @@ const getStatus = (status: string | undefined) => {
   }
 };
 
-const ModalTransactionDetail = ({ open, clickOutSide, setOpenModal, transaction }: ModalProps) => {
+const ModalTransactionDetail = ({ open, clickOutSide, setOpenModal, transaction, explorerUrl }: ModalProps) => {
   return (
     <Modal open={open} title="Transaction Details" clickOutSide={clickOutSide} setOpenModal={setOpenModal}>
       <Wrapper>
@@ -51,10 +52,12 @@ const ModalTransactionDetail = ({ open, clickOutSide, setOpenModal, transaction 
           From
           <Content>{transaction?.source.publicKey}</Content>
         </BoxInfo>
-        {transaction?.memo && <BoxInfo>
-          Memo
-          <Content>{transaction?.memo}</Content>
-        </BoxInfo>}
+        {transaction?.memo && (
+          <BoxInfo>
+            Memo
+            <Content>{transaction?.memo}</Content>
+          </BoxInfo>
+        )}
         <BoxInfo>
           Fee
           <Content>{formatBalance(ethers.utils.formatUnits(transaction?.fee || 0, 'gwei'))} MINA</Content>
@@ -73,7 +76,7 @@ const ModalTransactionDetail = ({ open, clickOutSide, setOpenModal, transaction 
           Transaction Hash
           <Content>{transaction?.hash}</Content>
         </BoxInfo>
-        <QueryDetails href={MINA_BERKELEY_EXPLORER + 'transaction/' + transaction?.hash} target="_blank">
+        <QueryDetails href={explorerUrl + 'transaction/' + transaction?.hash} target="_blank">
           Query Details
           <IconLink src={ILink} />
         </QueryDetails>

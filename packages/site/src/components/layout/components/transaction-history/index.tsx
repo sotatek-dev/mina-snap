@@ -23,12 +23,11 @@ const TransactionHistory = () => {
   const [showTxDetail, setShowTxDetail] = useState(false);
   const [detailTx, setDetailTx] = useState<ResultTransactionList | undefined>(undefined);
   const { activeAccount, transactions } = useAppSelector((state) => state.wallet);
-  const  { items } = useAppSelector((state) => state.networks);
+  const { items } = useAppSelector((state) => state.networks);
   const { getTxHistory } = useMinaSnap();
   const reduxDispatch = useAppDispatch();
 
   const [maximumDisplay, setMaximumDisplay] = useState(10);
-
 
   const handleClick = (item: ResultTransactionList) => {
     setDetailTx(item);
@@ -45,8 +44,8 @@ const TransactionHistory = () => {
   };
 
   const loadMoreTx = () => {
-    setMaximumDisplay(maximumDisplay+10);
-  } 
+    setMaximumDisplay(maximumDisplay + 10);
+  };
 
   useEffect(() => {
     const getListTxHistory = () => {
@@ -62,12 +61,11 @@ const TransactionHistory = () => {
   useEffect(() => {
     setMaximumDisplay(10);
     console.log('tx', transactions);
-  }, [activeAccount])
+  }, [activeAccount]);
 
   const paddingBt = {
     marginBottom: '20px',
   };
-
 
   return (
     <>
@@ -77,19 +75,23 @@ const TransactionHistory = () => {
           {transactions.length > 0 ? (
             transactions.slice(0, maximumDisplay).map((item, index) => {
               return (
-                <TracsactionItem
+                <TransactionItem
                   key={index}
                   onClick={() => {
                     handleClick(item);
                   }}
                 >
-                  {item.kind == 'PAYMENT' && <Icon src={item.source.publicKey == activeAccount ? ISendTx : IReceivedTx} />}
+                  {item.kind == 'PAYMENT' && (
+                    <Icon src={item.source.publicKey == activeAccount ? ISendTx : IReceivedTx} />
+                  )}
                   {item.kind == 'ZKAPP' && <Icon src={IZKTx} />}
                   {item.kind != 'PAYMENT' && item.kind != 'ZKAPP' && <Icon src={INATx} />}
                   <TransactionDetail>
                     <TxInfo>
                       <Address>
-                        {item.source.publicKey == activeAccount ? formatAccountAddress(item.receiver.publicKey) : formatAccountAddress(item.source.publicKey)}
+                        {item.source.publicKey == activeAccount
+                          ? formatAccountAddress(item.receiver.publicKey)
+                          : formatAccountAddress(item.source.publicKey)}
                       </Address>
                       <Amount>
                         {(item.kind == 'PAYMENT' ? (item.source.publicKey == activeAccount ? `- ` : `+ `) : '') +
@@ -105,7 +107,7 @@ const TransactionHistory = () => {
                       <TxStatus status={item.status}>{item.status}</TxStatus>
                     </Status>
                   </TransactionDetail>
-                </TracsactionItem>
+                </TransactionItem>
               );
             })
           ) : (
@@ -116,14 +118,15 @@ const TransactionHistory = () => {
             clickOutSide={true}
             setOpenModal={handleClickOutSideTxDetail}
             transaction={detailTx}
+            explorerUrl={items.explorerUrl}
           />
         </TransactionList>
       </Wrapper>
       <BoxLoadmoreTx>
-        {transactions.length > 10 && maximumDisplay < transactions.length && maximumDisplay <= 40  && (
+        {transactions.length > 10 && maximumDisplay < transactions.length && maximumDisplay <= 40 && (
           <CheckmoreTx onClick={() => loadMoreTx()}>Load more</CheckmoreTx>
         )}
-        {transactions.length > 50 && maximumDisplay == 50 &&(
+        {transactions.length > 50 && maximumDisplay == 50 && (
           <CheckmoreTx onClick={() => hanldeViewAccount()}>
             Check more transaction history
             <IconLink src={ILink} />
@@ -182,7 +185,7 @@ const TransactionList = styled.div`
   text-align: center;
 `;
 
-const TracsactionItem = styled.div`
+const TransactionItem = styled.div`
   border-bottom: 1.6px solid #d9d9d9;
   display: flex;
   padding: 10px 10px;
