@@ -1,10 +1,10 @@
-# Mina Snap
+# Mina Portal
 
 This snap helps you interact with Mina protocol using Metamask Flask
 
 **Important**
 
-This snap only works with Metamask Flask. If you have normal Metamask enabled, please disable it and install Metamask Flask before using this snap.
+Please install Metamask before using this snap.
 
 ## Setup
 ```shell
@@ -25,7 +25,7 @@ Your DApp now can connect to the snap by calling `wallet_requestSnaps` method wi
 (Reference: https://docs.metamask.io/guide/snaps-rpc-api.html#wallet-requestsnaps)
 
 ## Using published snap
-Connect to the snap by calling `wallet_requestSnaps` method with `npm:test-mina-snap` as the snapId
+Connect to the snap by calling `wallet_requestSnaps` method with `npm:mina-portal` as the snapId
 
 ## Notes
 
@@ -107,7 +107,7 @@ import {
     await ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
-        snapId: <the mina snap id>,
+        snapId: <the mina-portal snap id>,
         request: {
           method: 'mina_sendTransaction',
           params: {

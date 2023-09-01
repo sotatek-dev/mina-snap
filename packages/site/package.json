@@ -6,10 +6,10 @@
   "scripts": {
     "setup": "yarn install --frozen-lockfile && yarn allow-scripts",
     "start:all": "yarn clean && yarn install && yarn build && yarn start",
-    "start": "env-cmd -f .env.production react-scripts start",
-    "build": "env-cmd -f .env.production react-scripts build",
-    "test": "react-scripts test --coverage --passWithNoTests",
-    "eject": "react-scripts eject",
+    "start": "env-cmd -f .env.production craco start",
+    "build": "env-cmd -f .env.production craco build",
+    "test": "craco test --coverage --passWithNoTests",
+    "eject": "craco eject",
     "lint:react": "eslint ./src/**/*.ts ./src/**/*.tsx -f json -o eslint-report.json",
     "lint:misc": "prettier --check ./src/**/*.js ./src/**/*.ts ./src/**/*.tsx",
     "pretty": "prettier --write ./src/**/*.js  ./src/**/*.ts ./src/**/*.tsx",
@@ -19,7 +19,7 @@
     "build-storybook": "build-storybook",
     "type:check": "tsc --pretty --noEmit",
     "release": "sh ../../scripts/release.sh",
-    "dev": "env-cmd -f .env.development react-scripts build && env-cmd -f .env.development react-scripts start"
+    "dev": "env-cmd -f .env.development craco build && env-cmd -f .env.development craco start"
   },
   "browserslist": {
     "production": [
@@ -63,13 +63,14 @@
     "redux-persist": "^6.0.0",
     "sass": "^1.58.1",
     "semver": "^7.3.7",
-    "snarkyjs": "^0.9.6",
+    "snarkyjs": "^0.12.1",
     "styled-components": "5.3.3",
     "toastr2": "^3.0.0-alpha.18",
     "web-vitals": "^2.1.4",
     "web3": "^1.8.2"
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "@metamask/eslint-config": "^10.0.0",
     "@metamask/eslint-config-jest": "^10.0.0",
     "@metamask/eslint-config-nodejs": "^10.0.0",
