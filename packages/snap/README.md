@@ -1,6 +1,6 @@
 # Mina Portal
 
-This snap helps you interact with Mina protocol using Metamask Flask
+This snap helps you interact with Mina protocol using Metamask
 
 **Important**
 
@@ -82,14 +82,12 @@ Here is an example:
 ```
 import {
     Mina,
-    isReady,
     PublicKey,
     fetchAccount,
     Field,
   } from 'snarkyjs';
 
 (async() => {
-    await isReady;
     const { <Your smart contract class name> } = await import(<Path to your built smart contract>);
     const zkAppAddress = <Your deployed smart contract address>
     const graphqlEndpoint = <replace the graphql endpoint here>
