@@ -5,9 +5,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import {
   Mina,
-  isReady,
   PublicKey,
-  PrivateKey,
   fetchAccount,
   Field
 } from 'snarkyjs';
@@ -15,10 +13,7 @@ import { useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
 import { useEffect, useState } from 'react';
 import { payloadSendZkTransaction } from 'types/transaction';
-import { Square } from 'smart-contract';
 import Info from'assets/icons/info.png'
-
-// import type { Add } from '../../../../../public/smart-contract/Add'
 
 interface ModalProps {
   open: boolean;
@@ -45,31 +40,35 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   const [disableSend, setDisableSend] = useState(false);
   const zkAppAddress = process.env.REACT_APP_ZK_ADDRESS as string;
 
-  const submitZkTransaction = async () => { 
-    console.log('-start');
+  const submitZkTransaction = async () => {
       // Update this to use the address (public key) for your zkApp account
       // This should be removed once the zkAppAddress is updated.
+      const { Square } = await import('../../../../smart-contract');
+
       if (!zkAppAddress) {
         console.error(
           'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
         );
       }
+      console.log('Compiling zkApp...');
+      await Square.compile();
+      console.log('zkApp compiled');
+
       const zkApp = new Square(PublicKey.fromBase58(zkAppAddress));
       console.log('zkApp', zkApp);
-      
+
       Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
-      await Square.compile();
       try {
-        const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, 'https://proxy.berkeley.minaexplorer.com/graphql');
+        const account = await fetchAccount({publicKey: zkAppAddress});
         console.log(`-account:`, account);
-        
+
       } catch (error) {
         console.log(error);
         setLoadingSend(false);
-        
+
       }
       try {
-        let tx = await Mina.transaction({ sender: PublicKey.fromBase58(activeAccount), fee: 0.1e9 }, () => {
+        let tx = await Mina.transaction(() => {
           zkApp.update(Field(newState));
         });
         console.log(`tx:`, tx);
@@ -78,7 +77,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
         const param: payloadSendZkTransaction = {
           transaction: tx.toJSON(),
           feePayer: {
-            fee: '0.01',
+            fee: '0.1',
             memo: "",
           }
         }
@@ -88,7 +87,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
         setLoadingSend(false);
       } catch (error: any) {
         console.log('error', error);
-        
+
         if(error.code){
           console.log(error);
           console.log(error.message);
@@ -100,37 +99,36 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
         }
         setLoadingSend(false);
       }
-
-    console.log('-end');
   }
 
   const handleSendZKTransaction = () => {
     setLoadingSend(true);
     setTimeout(async() => {
-      await isReady
+      // await isReady
       submitZkTransaction()
     }, 500)
   }
-  
+
   const checkCurrentState = async () => {
     if (!zkAppAddress) {
       console.error(
         'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
       );
     }
+    const { Square } = await import('../../../../smart-contract');
     const zkApp = new Square(PublicKey.fromBase58(zkAppAddress));
       console.log('zkApp', zkApp);
-      
+
       Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
       await Square.compile();
       try {
         const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, 'https://proxy.berkeley.minaexplorer.com/graphql');
         console.log(`-account:`, account);
-        
+
       } catch (error) {
         console.log(error);
         setLoadingState(false);
-        
+
       }
       const zkState = zkApp.num.get().toString();
       console.log('zkState', zkState);
@@ -142,12 +140,10 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   const handleCheckCurrentState = () => {
     setLoadingState(true);
     setTimeout(async() => {
-      await isReady
+      // await isReady
       checkCurrentState()
     }, 500)
   }
-
-  
 
   const handleClickOutSide = () => {
     setShowModal(false);
@@ -164,7 +160,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   }
 
   const onChangeValue = (event:any) => {
-    
+
     setNewState(event.target.value)
   }
 
@@ -249,7 +245,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
 
                 <BoxContent>Current State: {currentState}</BoxContent>
               </ModalCurrentState>
-              
+
             </BoxButton>
             <BoxResult>Send Result: {message}</BoxResult>
 
@@ -367,53 +363,53 @@ const CustomLoader = styled.div`
     height: 100%;
     border-radius: 50%;
   }
-  
+
   .inner.one {
     left: 0%;
     top: 0%;
     animation: rotate-one 1s linear infinite;
     border-bottom: 3px solid #ff6bcb;
   }
-  
+
   .inner.two {
     right: 0%;
     top: 0%;
     animation: rotate-two 1s linear infinite;
     border-right: 3px solid #ffb86c;
   }
-  
+
   .inner.three {
     right: 0%;
     bottom: 0%;
     animation: rotate-three 1s linear infinite;
     border-top: 3px solid #2cccff;
   }
-  
+
   @keyframes rotate-one {
     0% {
       transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
     }
-  
+
     100% {
       transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
     }
   }
-  
+
   @keyframes rotate-two {
     0% {
       transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
     }
-  
+
     100% {
       transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
     }
   }
-  
+
   @keyframes rotate-three {
     0% {
       transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
     }
-  
+
     100% {
       transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
     }
