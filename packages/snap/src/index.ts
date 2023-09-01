@@ -139,10 +139,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
       case EMinaMethod.RESET_CONFIG: {
         const confirmation = await popupDialog(
           ESnapDialogType.CONFIRMATION,
-          `Do you want to reset the Mina snap config?`,
+          `Do you want to reset the Mina Portal config?`,
           [
             {
-              text: `Warning: This will clear all your Mina snap configs on this device and may result in loss of access to accounts.`, divider: true
+              text: `Warning: This will clear all your Mina Portal configs on this device and may result in loss of access to accounts.`, divider: true
             },
             { text: 'Request origin:', copyable: `${origin}` },
           ],
