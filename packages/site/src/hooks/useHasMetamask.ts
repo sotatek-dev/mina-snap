@@ -3,7 +3,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { useEffect, useRef } from 'react';
 import { setWalletInstalled } from 'slices/walletSlice';
 
-export const useHasMetamaskFlask = () => {
+export const useHasMetamask = () => {
   const firstTimeRun = useRef<any>(null);
   const dispatch = useAppDispatch()
   const detectMetamaskFlask = async () => {
@@ -13,8 +13,8 @@ export const useHasMetamaskFlask = () => {
         mustBeMetaMask: false,
         silent: true,
       })) as any | undefined;
-      const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
-      if (provider && isFlask) {
+      const isMetamask = (await provider?.request({ method: 'web3_clientVersion' }));
+      if (provider && isMetamask) {
         dispatch(setWalletInstalled(true))
       } else
         dispatch(setWalletInstalled(false))

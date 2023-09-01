@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ConnectWallet from 'components/connect-wallet/index';
-import { useHasMetamaskFlask } from 'hooks/useHasMetamaskFlask';
+import { useHasMetamask } from 'hooks/useHasMetamask';
 import Home from 'components/layout/index';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
@@ -20,11 +20,12 @@ import { setNetworks } from 'slices/networkSlice';
 import detectEthereumProvider from '@metamask/detect-provider';
 
 const HomePage = () => {
-  useHasMetamaskFlask();
+  useHasMetamask();
   const reduxDispatch = useAppDispatch();
   const { getSnap, connectToSnap, AccountList, getAccountInfors, GetNetworkConfigSnap, getTxHistory } = useMinaSnap();
   const [isUnlocked, setIsUnlocked] = React.useState<any>(null);
   const { connected, isUnlock, isInstalledWallet } = useAppSelector((state) => state.wallet);
+  const [disableConnect, setDisableConnect] = useState(false);
   
 
   useEffect(() => {
@@ -38,17 +39,26 @@ const HomePage = () => {
         reduxDispatch(setWalletInstalled(false));
       }
       localStorage.clear();
-      let i =0;
-      while (i<3) {
-        const provider = (await detectEthereumProvider({
-          mustBeMetaMask: false,
-          silent: true,
-        })) as any | undefined;
-        const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
-        if(!isFlask){
-          reduxDispatch(setWalletInstalled(false));
-        }
-        i++
+      // let i =0;
+      // while (i<3) {
+      //   const provider = (await detectEthereumProvider({
+      //     mustBeMetaMask: false,
+      //     silent: true,
+      //   })) as any | undefined;
+      //   const isFlask = (await provider?.request({ method: 'web3_clientVersion' }))?.includes('flask');
+      //   if(!isFlask){
+      //     reduxDispatch(setWalletInstalled(false));
+      //   }
+      //   i++
+      // }
+      const provider = (await detectEthereumProvider({
+        mustBeMetaMask: false,
+        silent: true,
+      })) as any | undefined;
+
+      const isMetaMask = (await provider?.request({ method: 'web3_clientVersion' }));
+      if(!isMetaMask){
+        reduxDispatch(setWalletInstalled(false));
       }
 
       if (isUnlocked) {
@@ -139,6 +149,7 @@ const HomePage = () => {
       }
       
     } catch (error) {
+      setDisableConnect(true);
       setIsUnlocked(false)
       reduxDispatch(setIsLoading(false));
     }
@@ -150,7 +161,7 @@ const HomePage = () => {
   if(isUnlocked == null) return (<>
     </>)
 
-  return <div>{(isUnlocked && isUnlock && isInstalledWallet) ? <Home /> : <ConnectWallet />}</div>;
+  return <div>{(isUnlocked && isUnlock && isInstalledWallet) ? <Home /> : <ConnectWallet disable={disableConnect} />}</div>;
 };
 
 export default HomePage;
