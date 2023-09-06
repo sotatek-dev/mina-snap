@@ -74,7 +74,7 @@ npm publish
 
 ## Implement ZkApp transaction
 - To make ZkApp transactions with your smart contract, you will need to have the built file of the smart contract (the .js file).
-- Install `snarkyjs` on your front-end site and use `snarkyjs` to make the transaction.
+- Install `o1js` on your front-end site and use `o1js` to make the transaction.
 - Then submit your transaction using snap.
 
 Here is an example:
@@ -85,7 +85,7 @@ import {
     PublicKey,
     fetchAccount,
     Field,
-  } from 'snarkyjs';
+  } from 'o1js';
 
 (async() => {
     const { <Your smart contract class name> } = await import(<Path to your built smart contract>);

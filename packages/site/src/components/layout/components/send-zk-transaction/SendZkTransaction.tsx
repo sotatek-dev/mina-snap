@@ -8,7 +8,7 @@ import {
   PublicKey,
   fetchAccount,
   Field
-} from 'snarkyjs';
+} from 'o1js';
 import { useAppSelector } from 'hooks/redux';
 import { useMinaSnap } from 'services';
 import { useEffect, useState } from 'react';
