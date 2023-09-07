@@ -9,29 +9,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
   if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Field, SmartContract, state, State, method } from 'o1js';
-export class Square extends SmartContract {
+export class AddOne extends SmartContract {
   constructor() {
       super(...arguments);
       this.num = State();
   }
   init() {
       super.init();
-      this.num.set(Field(2));
+      this.num.set(Field(0));
   }
   update(answer) {
       const currentState = this.num.getAndAssertEquals();
-      currentState.square().assertEquals(answer);
+      currentState.add(1).assertEquals(answer);
       this.num.set(answer);
   }
 }
 __decorate([
   state(Field),
   __metadata("design:type", Object)
-], Square.prototype, "num", void 0);
+], AddOne.prototype, "num", void 0);
 __decorate([
   method,
   __metadata("design:type", Function),
   __metadata("design:paramtypes", [Field]),
   __metadata("design:returntype", void 0)
-], Square.prototype, "update", null);
-//# sourceMappingURL=Square.js.map
+], AddOne.prototype, "update", null);
+//# sourceMappingURL=AddOne.js.map
