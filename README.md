@@ -2,7 +2,7 @@
 
 MetaMask Snaps is a system that allows anyone to safely expand the capabilities of MetaMask. A _snap_ is a program that we run in an isolated environment that can customize the wallet experience.
 
-This snap helps you interact with Mina protocol using Metamask
+This snap helps you interact with Mina protocol using MetaMask
 
 ## Snaps is pre-release software
 
