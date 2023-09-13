@@ -1,10 +1,10 @@
 # Mina Portal
 
-This snap helps you interact with Mina protocol using Metamask
+This snap helps you interact with Mina protocol using MetaMask
 
 **Important**
 
-Please install Metamask before using this snap.
+Please install MetaMask before using this snap.
 
 ## Setup
 ```shell

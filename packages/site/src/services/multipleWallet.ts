@@ -13,7 +13,7 @@ import {
 import { TypeResponseSendTransaction, payloadSendTransaction, TypeResponseSignature, TypeResponseTxHistory, TypeResponseSwtichNetwork } from 'types/transaction';
 import { ResponseNetworkConfig } from 'types/snap';
 const { ethereum } = window as any;
-const snapId = process.env.REACT_APP_SNAP_ID ? process.env.REACT_APP_SNAP_ID : 'npm:test-mina-snap';
+const snapId = process.env.REACT_APP_SNAP_ID ? process.env.REACT_APP_SNAP_ID : 'npm:mina-portal';
 const snapVersion = process.env.REACT_APP_SNAP_VERSION ? process.env.REACT_APP_SNAP_VERSION : '*';
 
 type MethodsType = {
@@ -232,7 +232,7 @@ export const WALLET = {
                 return await ethereum.request({
                     method: 'wallet_requestSnaps',
                     params: {
-                        'npm:test-mina-snap': {
+                        'npm:mina-portal': {
                         },
                     },
                 });
