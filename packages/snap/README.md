@@ -1,10 +1,10 @@
 # Mina Portal
 
-This snap helps you interact with Mina protocol using Metamask
+This snap helps you interact with Mina Protocol using MetaMask.
 
 **Important**
 
-Please install Metamask before using this snap.
+You must install MetaMask before using this snap.
 
 ## Setup
 ```shell
@@ -18,32 +18,33 @@ Run `yarn build:clean` to remove old dist folder and re-build snap
 ## Start local snap
 Run `yarn serve` to start local snap
 
-The snap will be running on `http://localhost:8080`. You can change port number in `snap.config.js` as well
+By default, the snap runs on `http://localhost:8080`. You can change port number in `snap.config.js`.
 
-Your DApp now can connect to the snap by calling `wallet_requestSnaps` method with `http://localhost:8080` as the snapId
+To connect your DApp to the local snap, call the `wallet_requestSnaps` method with `http://localhost:8080` as the `snapId`.
 
-(Reference: https://docs.metamask.io/guide/snaps-rpc-api.html#wallet-requestsnaps)
+To learn more about Snaps JSON-RPC API, see https://docs.metamask.io/guide/snaps-rpc-api.html#wallet-requestsnaps.
 
 ## Using published snap
-Connect to the snap by calling `wallet_requestSnaps` method with `npm:mina-portal` as the snapId
+
+Connect to the published snap, call the `wallet_requestSnaps` method with `npm:mina-portal` as the `snapId`.
 
 ## Notes
 
-- Babel is used for transpiling TypeScript to JavaScript, so when building with the CLI,
-  `transpilationMode` must be set to `localOnly` (default) or `localAndDeps`.
-- For the global `wallet` type to work, you have to add the following to your `tsconfig.json`:
+- Babel is used for transpiling TypeScript to JavaScript. When building with the CLI,
+  set `transpilationMode` to `localOnly` (default) or `localAndDeps`.
+- For the global `wallet` type to work, you must add the following entry to your `tsconfig.json` file:
   ```json
   {
     "files": ["./node_modules/@metamask/snap-types/global.d.ts"]
   }
   ```
 
-## Publish snap to NPM
-- Update the `version` in `package.json` then run:
+## Publish snap to npm
+- Update the `version` in `package.json`, then run:
 ```
 yarn build
 ```
-- Run the below command to publish to NPM:
+- Run the following command to publish to NPM:
 ```
 npm publish
 ```
@@ -61,7 +62,7 @@ npm publish
 | mina_editAccountName           | Edit account name                             |
 | mina_networkConfig             | Return current network config                 |
 | mina_signMessage               | Sign custom message                           |
-| mina_sendPayment               | Transfer Mina Token                           |
+| mina_sendPayment               | Transfer MINA Token                           |
 | mina_resetSnapConfig           | Reset snap config to default                  |
 | mina_getTxHistory              | Return transaction history by user address    |
 | mina_getTxDetail               | Return transaction detail by transaction hash |
@@ -69,12 +70,12 @@ npm publish
 | mina_sendStakeDelegation       | Send stake delegation                         |
 | mina_verifyMessage             | Verify signed message                         |
 | mina_requestNetwork            | Request network                               |
-| mina_sendTransaction           | Send ZkApp transaction                        |
+| mina_sendTransaction           | Send zkApp transaction                        |
 
 
-## Implement ZkApp transaction
-- To make ZkApp transactions with your smart contract, you will need to have the built file of the smart contract (the .js file).
-- Install `o1js` on your front-end site and use `o1js` to make the transaction.
+## Implement zkApp transaction
+- To make zkApp transactions with your smart contract, you use the smart contract `.js` file. See [How zkApps Work](https://docs.minaprotocol.com/zkapps/how-zkapps-work).
+- Install [o1js](https://www.npmjs.com/package/o1js) on your front-end site and use `o1js` to make the transaction.
 - Then submit your transaction using snap.
 
 Here is an example:
