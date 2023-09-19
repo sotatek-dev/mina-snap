@@ -75,7 +75,7 @@ npm publish
 
 ## Implement zkApp transaction
 - To make zkApp transactions with your smart contract, you use the smart contract `.js` file. See [How zkApps Work](https://docs.minaprotocol.com/zkapps/how-zkapps-work).
-- Install `o1js` on your front-end site and use `o1js` to make the transaction.
+- Install [o1js](https://www.npmjs.com/package/o1js) on your front-end site and use `o1js` to make the transaction.
 - Then submit your transaction using snap.
 
 Here is an example:
