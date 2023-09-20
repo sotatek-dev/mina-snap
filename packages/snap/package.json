@@ -1,10 +1,10 @@
 {
   "name": "mina-portal",
-  "version": "0.1.0",
-  "description": "This snap helps you interact with Mina protocol using Metamask",
+  "version": "0.1.1",
+  "description": "This snap helps you interact with Mina protocol using MetaMask",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sotatek-dev/mina-snap-fe"
+    "url": "https://github.com/sotatek-dev/mina-snap"
   },
   "license": "(MIT-0 OR Apache-2.0)",
   "main": "src/index.ts",
@@ -31,7 +31,7 @@
     "async-mutex": "^0.4.0",
     "bignumber.js": "^9.1.1",
     "bs58check": "^2.1.2",
-    "mina-signer": "^2.0.3",
+    "mina-signer": "^2.1.1",
     "safe-buffer": "^5.2.1"
   },
   "devDependencies": {

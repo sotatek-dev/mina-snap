@@ -93,11 +93,11 @@ const Address = () => {
       <KebabMenu
         closeTrigger="click"
         offSet={[50, 10]}
-        content={isShowKebabMenu && 
+        content={isShowKebabMenu &&
           <MenuContent>
             <MenuItem onClick={() => hanldeViewAccount()}>
               <IconLink src={ILink} />
-              View Account on Minascan
+              View Account on Explorer
             </MenuItem>
             <MenuItem onClick={() => handleOpenModal()}>
               <IconLink src={IAccount} />

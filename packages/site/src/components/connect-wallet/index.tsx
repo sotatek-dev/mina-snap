@@ -97,7 +97,7 @@ const ConnectWallet: React.FC<Props> = ({disable}) => {
           <img src={logoMina} />
         </BoxLogo>
         <BoxCenter>
-          <BoxInsideMetamask>Mina Portal enable Mina network inside Metamask</BoxInsideMetamask>
+          <BoxInsideMetamask>Mina Portal enable Mina network inside MetaMask</BoxInsideMetamask>
         </BoxCenter>
 
         <BoxCenter sx={{ paddingBottom: '25px' }}>
@@ -111,18 +111,18 @@ const ConnectWallet: React.FC<Props> = ({disable}) => {
                 <BoxIcon>
                   <img src={metamask} />
                 </BoxIcon>
-                Metamask and enable
+                MetaMask and enable
                 <BoxIcon>
                   <img src={metamaskFlask} />
                 </BoxIcon>
-                Metamask Flask only.
+                MetaMask Flask only.
               </WarningMessage> */}
 
               <ButtonCustomRequiredMetamask onClick={()=> openLinkInstallFlask()}>
                 <BoxImg>
                   <img src={wainning} />
                 </BoxImg>
-                Metamask is required to run snap!
+                MetaMask is required to run snap!
               </ButtonCustomRequiredMetamask>
             </WrapperWarning>
           )}

@@ -43,7 +43,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   const submitZkTransaction = async () => {
       // Update this to use the address (public key) for your zkApp account
       // This should be removed once the zkAppAddress is updated.
-      const { Square } = await import('../../../../smart-contract');
+      const { AddOne } = await import('../../../../smart-contract');
 
       if (!zkAppAddress) {
         console.error(
@@ -51,10 +51,10 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
         );
       }
       console.log('Compiling zkApp...');
-      await Square.compile();
+      await AddOne.compile();
       console.log('zkApp compiled');
 
-      const zkApp = new Square(PublicKey.fromBase58(zkAppAddress));
+      const zkApp = new AddOne(PublicKey.fromBase58(zkAppAddress));
       console.log('zkApp', zkApp);
 
       Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
@@ -115,12 +115,12 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
         'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
       );
     }
-    const { Square } = await import('../../../../smart-contract');
-    const zkApp = new Square(PublicKey.fromBase58(zkAppAddress));
+    const { AddOne } = await import('../../../../smart-contract');
+    const zkApp = new AddOne(PublicKey.fromBase58(zkAppAddress));
       console.log('zkApp', zkApp);
 
       Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
-      await Square.compile();
+      await AddOne.compile();
       try {
         const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, 'https://proxy.berkeley.minaexplorer.com/graphql');
         console.log(`-account:`, account);
@@ -183,10 +183,10 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
     return (
       <p>
         <b>Correct state calculation formula</b> <br />
-        <i>Correct state = the square of the Current state. <br />
+        <i>Correct state = The Current state plus one. <br />
             e.g.
-            Current state (checked) = 3; <br />
-            Correct state = 3*3 = 9<br />
+            Current state (checked) = 1; <br />
+            Correct state = 1 + 1 = 2<br />
           </i>
       </p>
     )
