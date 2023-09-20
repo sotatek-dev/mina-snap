@@ -7,6 +7,7 @@ This snap helps you interact with Mina protocol using MetaMask
 ## Snaps is pre-release software
 
 To interact with (your) Snaps, you will need to install [MetaMask](https://metamask.io/).
+Note: To interact with the snap hosted on your local machine, you will neeed to install [MetaMask Flask](https://metamask.io/flask/)
 
 ## Getting Started
 You can run and test the snap by running these commands
