@@ -16,6 +16,8 @@ Run `yarn build` to build this snap
 Run `yarn build:clean` to remove old dist folder and re-build snap
 
 ## Start local snap
+Note: To interact with the snap hosted on your local machine, you will need to use [MetaMask Flask](https://metamask.io/flask/) and make sure to disable the normal MetaMask before using the Flask version.
+
 Run `yarn serve` to start local snap
 
 The snap will be running on `http://localhost:8080`. You can change port number in `snap.config.js` as well
