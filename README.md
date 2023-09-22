@@ -3,16 +3,16 @@
 
 The mina-snap repository contains two packages:
 
-- the `MinaPortal`, an open beta wallet built using the `mina-snap`.
-- the `mina-snap`, a snap.
+- the `MinaPortal`, an open beta wallet built using the `mina-snap`. See /packages/site.
+- the `mina-snap`, a snap. See /packages/snap.
 
 [MetaMask Snaps](https://metamask.io/snaps/) is an open source system that allows anyone to safely extend the functionality of MetaMask, creating new web3 end user experiences.
 
 A snap is a JavaScript program run in an isolated environment that customizes the [MetaMask](https://metamask.io/) wallet experience. Snaps have access to a limited set of capabilities, determined by the permissions the user grants them during installation.
 
-The `mina-snap` is a community built snap which allows [MetaMask](https://metamask.io/) users to interact with the Mina Protocol.   
+The `mina-snap` is a snap which allows [MetaMask](https://metamask.io/) users to interact with the Mina Protocol.   
 
-The `MinaPortal` is an open beta wallet, allowing [MetaMask](https://metamask.io/) users to interact with the Mina blockchain. 
+The `MinaPortal` is an open beta wallet, built using the `mina-snap` allowing [MetaMask](https://metamask.io/) users to interact with the Mina blockchain. 
 
 ## Snaps is pre-release software
 
