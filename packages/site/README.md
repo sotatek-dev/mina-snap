@@ -1,4 +1,4 @@
-# TypeScript Example Snap Front-end
+# Mina Portal -  A TypeScript Example Snap Front-end
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

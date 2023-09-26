@@ -1,6 +1,6 @@
-# Mina Portal
+# Mina Portal Snap
 
-This snap helps you interact with Mina protocol using MetaMask
+This `mina-portal snap` helps you interact with Mina protocol using MetaMask
 
 **Important**
 
