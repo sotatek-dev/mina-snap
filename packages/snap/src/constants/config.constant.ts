@@ -4,12 +4,13 @@ export enum ENetworkName {
   MAINNET = 'Mainnet',
   DEVNET = 'Devnet',
   BERKELEY = 'Berkeley',
+  TESTWORLD = 'Testworld',
 }
 
-export const networksConstant ={
+export const networksConstant = {
   [ENetworkName.MAINNET]: {
     name: ENetworkName.MAINNET,
-    gqlUrl: 'https://proxy.minaexplorer.com/',
+    gqlUrl: 'https://proxy.minaexplorer.com/graphql/',
     gqlTxUrl: 'https://graphql.minaexplorer.com/',
     explorerUrl: 'https://minaexplorer.com/',
     token: {
@@ -44,6 +45,22 @@ export const networksConstant ={
     gqlUrl: 'https://proxy.berkeley.minaexplorer.com',
     gqlTxUrl: 'https://berkeley.graphql.minaexplorer.com/',
     explorerUrl: 'https://berkeley.minaexplorer.com/',
+    token: {
+      name: 'MINA',
+      coinType: 1,
+      symbol: 'MINA',
+      decimals: 9,
+    },
+    currentAccIndex: 0,
+    generatedAccounts: {},
+    selectedImportedAccount: null,
+    importedAccounts: {},
+  },
+  [ENetworkName.TESTWORLD]: {
+    name: ENetworkName.TESTWORLD,
+    gqlUrl: 'https://proxy.testworld.minaexplorer.com/graphql',
+    gqlTxUrl: 'https://testworld.graphql.minaexplorer.com/',
+    explorerUrl: 'https://minascan.io/testworld/',
     token: {
       name: 'MINA',
       coinType: 1,
