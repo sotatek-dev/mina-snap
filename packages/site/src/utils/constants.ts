@@ -29,7 +29,7 @@ export const TOKEN_BALANCE_REFRESH_FREQUENCY = 60000;
 
 export const TIMEOUT_DURATION = 10000;
 
-export const OPTIONS_NETWORK = ['Mainnet', 'Devnet', 'Berkeley'];
+export const OPTIONS_NETWORK = ['Mainnet', 'Devnet', 'Berkeley', 'Testworld'];
 
 export const GAS_FEE = {
   slow: 0.0011,

@@ -29,7 +29,7 @@ export async function gql(url: string, query: string, variables = {}) {
 
     return data;
   } catch (err) {
-    console.error('packages/snap/src/graphql/index.ts:30', err.message);
+    console.error('packages/snap/src/graphql/index.ts', err.message);
     throw err;
   }
 }
