@@ -52,7 +52,7 @@ const TransactionHistory = () => {
       setTimeout(async () => {
         const txList = await getTxHistory();
         reduxDispatch(setTransactions(txList));
-      }, 1000);
+      }, 5000);
     };
     getListTxHistory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
