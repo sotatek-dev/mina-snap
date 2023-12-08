@@ -100,7 +100,9 @@ export async function getAccountInfo(publicKey: string, networkConfig: NetworkCo
   const query = getAccountInfoQuery(networkConfig.name === ENetworkName.BERKELEY);
   const variables = { publicKey };
 
-  const data = await gql(networkConfig.gqlUrl, query, variables);
+  const data = await gql(networkConfig.gqlUrl, query, variables).catch((error)=>{
+    return {}
+  });
 
   /**return default data if the account does not have any tx */
   if (!data.account) {
