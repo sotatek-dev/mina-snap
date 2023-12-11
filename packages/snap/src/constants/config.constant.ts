@@ -9,7 +9,7 @@ export enum ENetworkName {
 export const networksConstant ={
   [ENetworkName.MAINNET]: {
     name: ENetworkName.MAINNET,
-    gqlUrl: 'https://proxy.minaexplorer.com/',
+    gqlUrl: 'https://proxy.minaexplorer.com/graphql',
     gqlTxUrl: 'https://graphql.minaexplorer.com/',
     explorerUrl: 'https://minaexplorer.com/',
     token: {
