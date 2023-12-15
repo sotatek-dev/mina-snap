@@ -106,7 +106,6 @@ export const resetSnapConfiguration = async (): Promise<NetworkConfig> => {
 };
 
 export const updateSnapConfig = async (snapConfig: SnapConfig) => {
-  console.log(`===UPDATE:`, snapConfig);
   await snap.request({
     method: ESnapMethod.SNAP_MANAGE_STATE,
     params: { operation: 'update', newState: { mina: snapConfig } },
