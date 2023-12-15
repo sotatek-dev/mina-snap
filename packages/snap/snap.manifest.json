@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MetaMask snap for Mina Protocol.",
   "proposedName": "MinaPortal",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/sotatek-dev/mina-snap"
   },
   "source": {
-    "shasum": "SZYe7fY1/31ROYJedpOHg2JA4clXRQ1/HLBbqDgedPI=",
+    "shasum": "0FI6kXhMAOfPBv6hfmE6EEsZBWjRKbC2m7z0KfslRUU=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

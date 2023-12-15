@@ -91,13 +91,13 @@ export async function submitPayment(signedPayment: SignedLegacy<Payment>, networ
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
-  let getPendingTxList = gql(networkConfig.gqlUrl, TxPendingQuery(), { address });
-  let getTxList = gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address });
+  let getPendingTxList = gql(networkConfig.gqlUrl, TxPendingQuery(), { address }).catch(()=> { return { pooledUserCommands: [] } });
+  let getTxList = gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address }).catch(()=> { return { transactions: [] } });
   let getZkAppTxList: any = { zkapps: [] };
   let getZkAppPending: any = { pooledZkappCommands: [] };
   if (networkConfig.name === ENetworkName.BERKELEY) {
-    getZkAppTxList = gql(networkConfig.gqlTxUrl, getZkAppTransactionListBody(), { ...options, address });
-    getZkAppPending = gql(networkConfig.gqlUrl, getPendingZkAppTxBody(), { ...options, address });
+    getZkAppTxList = gql(networkConfig.gqlTxUrl, getZkAppTransactionListBody(), { ...options, address }).catch(()=>{ return  { zkapps: [] } });
+    getZkAppPending = gql(networkConfig.gqlUrl, getPendingZkAppTxBody(), { ...options, address }).catch(()=>{ return { pooledZkappCommands: [] } });
   }
   const [{ pooledUserCommands }, { transactions }, { zkapps }, { pooledZkappCommands }] = await Promise.all([
     getPendingTxList,
