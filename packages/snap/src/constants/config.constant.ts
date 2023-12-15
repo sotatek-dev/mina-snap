@@ -4,7 +4,6 @@ export enum ENetworkName {
   MAINNET = 'Mainnet',
   DEVNET = 'Devnet',
   BERKELEY = 'Berkeley',
-  TESTWORLD = 'Testworld',
 }
 
 export const networksConstant = {
@@ -55,23 +54,7 @@ export const networksConstant = {
     generatedAccounts: {},
     selectedImportedAccount: null,
     importedAccounts: {},
-  },
-  [ENetworkName.TESTWORLD]: {
-    name: ENetworkName.TESTWORLD,
-    gqlUrl: 'https://proxy.testworld.minaexplorer.com/graphql',
-    gqlTxUrl: 'https://testworld.graphql.minaexplorer.com/',
-    explorerUrl: 'https://minascan.io/testworld/',
-    token: {
-      name: 'MINA',
-      coinType: 1,
-      symbol: 'MINA',
-      decimals: 9,
-    },
-    currentAccIndex: 0,
-    generatedAccounts: {},
-    selectedImportedAccount: null,
-    importedAccounts: {},
-  },
+  }
 };
 
 export const defaultSnapConfig: SnapConfig = {
