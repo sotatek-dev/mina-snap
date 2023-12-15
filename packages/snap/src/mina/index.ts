@@ -16,17 +16,13 @@ export { getSnapConfiguration, changeNetwork, getNetworkConfig, resetSnapConfigu
 export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, origin: string) => {
   const { publicKey, privateKey } = await getKeyPair();
 
-  const confirmation = await popupDialog(
-    ESnapDialogType.CONFIRMATION,
-    'Confirm payment transaction',
-    [
-      { text: 'From:', copyable: publicKey },
-      { text: 'To:', copyable: `${args.to}` },
-      { text: 'Amount:', copyable: `${args.amount}` },
-      { text: 'Fee', copyable: `${args.fee} ${networkConfig.token.symbol}`, divider: true },
-      { text: 'Request origin:', copyable: `${origin}` },
-    ],
-  );
+  const confirmation = await popupDialog(ESnapDialogType.CONFIRMATION, 'Confirm payment transaction', [
+    { text: 'From:', copyable: publicKey },
+    { text: 'To:', copyable: `${args.to}` },
+    { text: 'Amount:', copyable: `${args.amount}` },
+    { text: 'Fee', copyable: `${args.fee} ${networkConfig.token.symbol}`, divider: true },
+    { text: 'Request origin:', copyable: `${origin}` },
+  ]);
   if (!confirmation) {
     await popupNotify('Payment rejected');
     return null;
@@ -50,16 +46,12 @@ export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, o
 export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: NetworkConfig, origin: string) => {
   const { publicKey, privateKey } = await getKeyPair();
 
-  const confirmation = await popupDialog(
-    ESnapDialogType.CONFIRMATION,
-    'Confirm stake delegation transaction',
-    [
-      { text: 'Block producer address:', copyable: `${args.to}` },
-      { text: 'From:', copyable: `${publicKey}` },
-      { text: 'Fee', copyable: `${args.fee} ${networkConfig.token.symbol}`, divider: true },
-      { text: 'Request origin:', copyable: `${origin}` },
-    ],
-  );
+  const confirmation = await popupDialog(ESnapDialogType.CONFIRMATION, 'Confirm stake delegation transaction', [
+    { text: 'Block producer address:', copyable: `${args.to}` },
+    { text: 'From:', copyable: `${publicKey}` },
+    { text: 'Fee', copyable: `${args.fee} ${networkConfig.token.symbol}`, divider: true },
+    { text: 'Request origin:', copyable: `${origin}` },
+  ]);
   if (!confirmation) {
     await popupNotify('Stake delegation transaction rejected');
     return null;
@@ -95,17 +87,13 @@ export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConf
     zkAppTransactionDetails = '\n| Failed to parse the zkApp transaction';
     console.error('Failed to parse the zkApp transaction details:', args.transaction);
   }
-  const confirmation = await popupDialog(
-    ESnapDialogType.CONFIRMATION,
-    'Confirm ZKApp transaction',
-    [
-      { text: `You are going to submit a ZkApp transaction on ${networkConfig.name}`, divider: true },
-      { text: 'From:', copyable: publicKey },
-      { text: 'Fee', copyable: `${args.feePayer.fee} ${networkConfig.token.symbol}` },
-      { text: 'Data', copyable: `${zkAppTransactionDetails}`, divider: true },
-      { text: 'Request origin:', copyable: `${origin}` },
-    ],
-  );
+  const confirmation = await popupDialog(ESnapDialogType.CONFIRMATION, 'Confirm ZKApp transaction', [
+    { text: `You are going to submit a ZkApp transaction on ${networkConfig.name}`, divider: true },
+    { text: 'From:', copyable: publicKey },
+    { text: 'Fee', copyable: `${args.feePayer.fee} ${networkConfig.token.symbol}` },
+    { text: 'Data', copyable: `${zkAppTransactionDetails}`, divider: true },
+    { text: 'Request origin:', copyable: `${origin}` },
+  ]);
   if (!confirmation) {
     await popupNotify('Transaction rejected');
     return null;

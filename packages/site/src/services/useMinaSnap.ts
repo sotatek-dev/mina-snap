@@ -64,7 +64,9 @@ export const useMinaSnap = () => {
   const connectToSnap = async () => {
       const latestSnapVersion = await getLatestSnapVersion();
       let version = snapVersion;
-      if (process.env.REACT_APP_NEED_UPDATE && (snapVersion != latestSnapVersion)) {
+      if (!/local:/.test(snapId) &&
+        process.env.REACT_APP_NEED_UPDATE &&
+        (snapVersion != latestSnapVersion)) {
         version = latestSnapVersion;
       }
       return await ethereum.request({
