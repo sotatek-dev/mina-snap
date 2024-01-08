@@ -11,6 +11,7 @@ import { NetworkConfig } from '../interfaces';
 import { getSnapConfiguration, updateSnapConfig } from './configuration';
 import { popupDialog } from '../util/popup.util';
 import { ENetworkName } from '../constants/config.constant';
+import { AccountResponse, AccountsListResponse, ChangeAccountResponse } from 'mina-portal-types';
 
 export const getKeyPair = async (index?: number, isImported?: boolean) => {
   const snapConfig = await getSnapConfiguration();
@@ -96,32 +97,32 @@ export const signMessage = async (message: string, keypair: Keypair, networkConf
  * @param networkConfig - Selected network config.
  * @returns `null` if get account info fail.
  */
-export async function getAccountInfo(publicKey: string, networkConfig: NetworkConfig) {
+export async function getAccountInfo(publicKey: string, networkConfig: NetworkConfig): Promise<{ account: AccountResponse }>  {
   const query = getAccountInfoQuery(networkConfig.name === ENetworkName.BERKELEY);
   const variables = { publicKey };
-
+  const defaultData = {
+    balance: {
+      total: '0',
+    },
+    nonce: '0',
+    inferredNonce: '0',
+    delegateAccount: {
+      publicKey,
+    },
+    publicKey,
+  };
   const data = await gql(networkConfig.gqlUrl, query, variables).catch((error)=>{
-    return {}
+    return { account: defaultData }
   });
 
-  /**return default data if the account does not have any tx */
+  /**return default data if the account does not exist */
   if (!data.account) {
-    data.account = {
-      balance: {
-        total: '0',
-      },
-      nonce: '0',
-      inferredNonce: '0',
-      delegateAccount: {
-        publicKey,
-      },
-      publicKey,
-    };
+    data.account = defaultData;
   }
   return data;
 }
 
-export const changeAccount = async (index: number, isImported?: boolean) => {
+export const changeAccount = async (index: number, isImported?: boolean): Promise<ChangeAccountResponse> => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
   const { generatedAccounts, importedAccounts } = networks[currentNetwork];
@@ -151,7 +152,7 @@ export const changeAccount = async (index: number, isImported?: boolean) => {
   }
 };
 
-export const createAccount = async (name: string): Promise<any> => {
+export const createAccount = async (name: string): Promise<ChangeAccountResponse> => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
   const { generatedAccounts } = networks[currentNetwork];
@@ -174,7 +175,7 @@ export const createAccount = async (name: string): Promise<any> => {
   return { name, address: publicKey };
 };
 
-export const importAccount = async (name: string, privateKey: string) => {
+export const importAccount = async (name: string, privateKey: string): Promise<ChangeAccountResponse> => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
   const { importedAccounts, generatedAccounts } = networks[currentNetwork];
@@ -213,7 +214,7 @@ export const importAccount = async (name: string, privateKey: string) => {
   return { name, address: publicKey };
 };
 
-export const getAccounts = async () => {
+export const getAccounts = async (): Promise<AccountsListResponse> => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
   const { generatedAccounts, importedAccounts } = networks[currentNetwork];
@@ -250,7 +251,7 @@ export const getAccounts = async () => {
   return allAccounts;
 };
 
-export const editAccountName = async (index: number, name: string, isImported?: boolean) => {
+export const editAccountName = async (index: number, name: string, isImported?: boolean): Promise<ChangeAccountResponse> => {
   const snapConfig = await getSnapConfiguration();
   const { networks, currentNetwork } = snapConfig;
   const account = isImported

@@ -1,3 +1,4 @@
+import { SendTransactionResponse } from 'mina-portal-types';
 import { ESnapDialogType } from '../constants/snap-method.constant';
 import { NetworkConfig, StakeTxInput, TxInput, ZkAppTxInput } from '../interfaces';
 import { popupDialog, popupNotify } from '../util/popup.util';
@@ -13,7 +14,7 @@ import {
 
 export { getSnapConfiguration, changeNetwork, getNetworkConfig, resetSnapConfiguration } from './configuration';
 
-export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, origin: string) => {
+export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, origin: string): Promise<SendTransactionResponse| null> => {
   const { publicKey, privateKey } = await getKeyPair();
 
   const confirmation = await popupDialog(ESnapDialogType.CONFIRMATION, 'Confirm payment transaction', [
@@ -43,7 +44,7 @@ export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, o
   return payment;
 };
 
-export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: NetworkConfig, origin: string) => {
+export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: NetworkConfig, origin: string): Promise<SendTransactionResponse| null> => {
   const { publicKey, privateKey } = await getKeyPair();
 
   const confirmation = await popupDialog(ESnapDialogType.CONFIRMATION, 'Confirm stake delegation transaction', [
@@ -72,7 +73,7 @@ export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: Net
   return stakeTx;
 };
 
-export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConfig, origin: string) => {
+export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConfig, origin: string): Promise<SendTransactionResponse| null> => {
   const { publicKey, privateKey } = await getKeyPair();
   let zkAppTransactionDetails = '';
   try {

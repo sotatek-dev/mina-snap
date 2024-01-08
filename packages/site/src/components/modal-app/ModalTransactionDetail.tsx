@@ -76,7 +76,7 @@ const ModalTransactionDetail = ({ open, clickOutSide, setOpenModal, transaction,
           Transaction Hash
           <Content>{transaction?.hash}</Content>
         </BoxInfo>
-        <QueryDetails href={explorerUrl + 'transaction/' + transaction?.hash} target="_blank">
+        <QueryDetails href={explorerUrl + 'tx/' + transaction?.hash} target="_blank">
           Query Details
           <IconLink src={ILink} />
         </QueryDetails>

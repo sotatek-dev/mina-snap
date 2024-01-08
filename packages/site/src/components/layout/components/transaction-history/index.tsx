@@ -35,8 +35,7 @@ const TransactionHistory = () => {
   };
 
   const hanldeViewAccount = () => {
-    const type = 'wallet';
-    window.open(items.explorerUrl + type + '/' + activeAccount, '_blank')?.focus();
+    window.open(items.explorerUrl + 'account' + '/' + activeAccount, '_blank')?.focus();
   };
 
   const handleClickOutSideTxDetail = () => {
