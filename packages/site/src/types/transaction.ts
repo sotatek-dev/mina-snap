@@ -64,7 +64,13 @@ export type TypeResponseSwtichNetwork = {
         coinType: number
         symbol: string
         decimals: number
-
     }
 }
 
+export type TypeResponseCustomToken = {
+  tokenId: string
+  tokenSymbol: string
+  balance: {
+    total: string
+  }
+}

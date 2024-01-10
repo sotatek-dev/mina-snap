@@ -23,9 +23,11 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
     ],
     "development": [
       "last 1 chrome version",
@@ -52,7 +54,7 @@
     "env-cmd": "^10.1.0",
     "ethers": "^5.6.8",
     "moment": "^2.29.4",
-    "o1js": "^0.14.1",
+    "o1js": "0.15.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropdown": "^1.10.0",
@@ -75,7 +77,6 @@
     "@metamask/eslint-config-jest": "^10.0.0",
     "@metamask/eslint-config-nodejs": "^10.0.0",
     "@metamask/eslint-config-typescript": "^10.0.0",
-    "@svgr/webpack": "^6.4.0",
     "@testing-library/dom": "^8.17.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",

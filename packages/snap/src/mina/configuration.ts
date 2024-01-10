@@ -32,7 +32,7 @@ export const getSnapConfiguration = async (): Promise<SnapConfig> => {
         gqlTxUrl: defaultGqlTxUrl,
         explorerUrl: defaultExplorerUrl,
         token: defaultToken,
-      } = state.mina.networks[networkKey];
+      } = defaultSnapConfig.networks[networkKey];
       if (
         oldGqlUrl !== defaultGqlUrl ||
         oldGqlTxUrl !== defaultGqlTxUrl ||
@@ -63,6 +63,7 @@ export const getSnapConfiguration = async (): Promise<SnapConfig> => {
   }
   if (needToUpdate) {
     state.mina.networks = newNetworksConfig
+    console.log("Networks configs are updated!");
     await updateSnapConfig(state.mina);
   }
   return state.mina;

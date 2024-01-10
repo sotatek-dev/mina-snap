@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/setupProxy.js
+/src/setupProxy.js
 /.pnp
 .pnp.js
 

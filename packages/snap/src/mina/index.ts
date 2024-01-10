@@ -1,3 +1,4 @@
+import { SendTransactionResponse } from 'mina-portal-types';
 import { ESnapDialogType } from '../constants/snap-method.constant';
 import { NetworkConfig, StakeTxInput, TxInput, ZkAppTxInput } from '../interfaces';
 import { popupDialog, popupNotify } from '../util/popup.util';
@@ -13,7 +14,7 @@ import {
 
 export { getSnapConfiguration, changeNetwork, getNetworkConfig, resetSnapConfiguration } from './configuration';
 
-export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, origin: string) => {
+export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, origin: string): Promise<SendTransactionResponse| null> => {
   const { publicKey, privateKey } = await getKeyPair();
 
   const confirmation = await popupDialog(ESnapDialogType.CONFIRMATION, 'Confirm payment transaction', [
@@ -35,7 +36,7 @@ export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, o
   }
 
   const payment = await submitPayment(signedPayment, networkConfig);
-  if (!payment || payment.failureReason) {
+  if (!payment || payment?.failureReason) {
     await popupNotify('Submit payment error');
     return null;
   }
@@ -43,7 +44,7 @@ export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, o
   return payment;
 };
 
-export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: NetworkConfig, origin: string) => {
+export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: NetworkConfig, origin: string): Promise<SendTransactionResponse| null> => {
   const { publicKey, privateKey } = await getKeyPair();
 
   const confirmation = await popupDialog(ESnapDialogType.CONFIRMATION, 'Confirm stake delegation transaction', [
@@ -72,14 +73,14 @@ export const sendStakeDelegation = async (args: StakeTxInput, networkConfig: Net
   return stakeTx;
 };
 
-export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConfig, origin: string) => {
+export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConfig, origin: string): Promise<SendTransactionResponse| null> => {
   const { publicKey, privateKey } = await getKeyPair();
   let zkAppTransactionDetails = '';
   try {
     const transactionObject = JSON.parse(args.transaction);
     for (const updateData of transactionObject.accountUpdates) {
       const { publicKey, update } = updateData?.body;
-      zkAppTransactionDetails += `\n| ZkApp address: ${publicKey} \n| Update states: ${JSON.stringify(
+      zkAppTransactionDetails += `ZkApp address: ${publicKey} \n| Update states: ${JSON.stringify(
         update?.appState,
       )}`;
     }
@@ -105,10 +106,12 @@ export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConf
     return null;
   }
 
-  const submitZkAppTxResult = await submitZkAppTx(signedZkAppTx, networkConfig);
+  const submitZkAppTxResult = await submitZkAppTx(signedZkAppTx, networkConfig).catch(error => { return {
+    failureReason: error.message,
+  }});
   if (!submitZkAppTxResult || submitZkAppTxResult.failureReason) {
     await popupNotify('Submit ZkApp tx error');
-    return null;
+    return submitZkAppTxResult.failureReason;
   }
 
   return submitZkAppTxResult;

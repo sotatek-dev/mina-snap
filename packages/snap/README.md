@@ -51,6 +51,8 @@ npm publish
 ```
 
 ## Methods
+To learn more about how to interact with these methods from your ZkApp, please check out the documentation in our [wiki](https://github.com/sotatek-dev/mina-snap/wiki/API-Documentation)
+
 | Method                         | Description                                   |
 | ------------------------------ | --------------------------------------------- |
 | mina_accountInfo               | Get current account info                      |

@@ -62,13 +62,11 @@ export const useMinaSnap = () => {
 
 
   const connectToSnap = async () => {
-      const latestSnapVersion = await getLatestSnapVersion();
       let version = snapVersion;
-      if (!/local:/.test(snapId) &&
-        process.env.REACT_APP_NEED_UPDATE &&
-        (snapVersion != latestSnapVersion)) {
-        version = latestSnapVersion;
+      if (/local:/.test(snapId)) {
+        version = '*';
       }
+      console.log({ version })
       return await ethereum.request({
         method: 'wallet_requestSnaps',
         params: { [snapId]: { version: `${version}` } } })
@@ -79,13 +77,14 @@ export const useMinaSnap = () => {
     return await provider.request({ method: 'wallet_getSnaps' });
   };
 
-  const getAccountInfors = async (): Promise<Account> => {
+  const getAccountInfors = async (tokenId?: string): Promise<Account> => {
     return await ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
         snapId: snapId,
         request: {
           method: 'mina_accountInfo',
+          params: { tokenId }
         },
       },
     });

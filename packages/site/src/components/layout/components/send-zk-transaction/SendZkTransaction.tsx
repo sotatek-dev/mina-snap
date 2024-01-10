@@ -14,6 +14,7 @@ import { useMinaSnap } from 'services';
 import { useEffect, useState } from 'react';
 import { payloadSendZkTransaction } from 'types/transaction';
 import Info from'assets/icons/info.png'
+import { AddOne } from '../../../../smart-contract/';
 
 interface ModalProps {
   open: boolean;
@@ -40,10 +41,10 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   const [disableSend, setDisableSend] = useState(false);
   const zkAppAddress = process.env.REACT_APP_ZK_ADDRESS as string;
 
+  const graphqlUrl = useAppSelector((state)=> (state.networks)).items.gqlUrl;
   const submitZkTransaction = async () => {
       // Update this to use the address (public key) for your zkApp account
       // This should be removed once the zkAppAddress is updated.
-      const { AddOne } = await import('../../../../smart-contract');
 
       if (!zkAppAddress) {
         console.error(
@@ -57,7 +58,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
       const zkApp = new AddOne(PublicKey.fromBase58(zkAppAddress));
       console.log('zkApp', zkApp);
 
-      Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
+      Mina.setActiveInstance(Mina.Network(graphqlUrl));
       try {
         const account = await fetchAccount({publicKey: zkAppAddress});
         console.log(`-account:`, account);
@@ -115,26 +116,23 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
         'The following error is caused because the zkAppAddress has an empty string as the public key. Update the zkAppAddress with the public key for your zkApp account, or try this address for an example "Add" smart contract that we deployed to Berkeley Testnet: B62qqkb7hD1We6gEfrcqosKt9C398VLp1WXeTo1i9boPoqF7B1LxHg4'
       );
     }
-    const { AddOne } = await import('../../../../smart-contract');
     const zkApp = new AddOne(PublicKey.fromBase58(zkAppAddress));
-      console.log('zkApp', zkApp);
+    console.log('zkApp', zkApp);
 
-      Mina.setActiveInstance(Mina.Network('https://proxy.berkeley.minaexplorer.com/graphql'));
-      await AddOne.compile();
-      try {
-        const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, 'https://proxy.berkeley.minaexplorer.com/graphql');
-        console.log(`-account:`, account);
-
-      } catch (error) {
-        console.log(error);
-        setLoadingState(false);
-
-      }
-      const zkState = zkApp.num.get().toString();
-      console.log('zkState', zkState);
-      setCurrentState(zkState);
+    Mina.setActiveInstance(Mina.Network(graphqlUrl));
+    await AddOne.compile();
+    try {
+      const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, graphqlUrl);
+      console.log(`-account:`, account);
+    } catch (error) {
+      console.log(error);
       setLoadingState(false);
-      setShowModal(true);
+    }
+    const zkState = zkApp.num.get().toString();
+    console.log('zkState', zkState);
+    setCurrentState(zkState);
+    setLoadingState(false);
+    setShowModal(true);
   }
 
   const handleCheckCurrentState = () => {
