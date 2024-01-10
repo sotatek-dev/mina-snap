@@ -46,7 +46,7 @@ const CustomTokens = () => {
     <>
       <Wrapper>
         <CustomTokensList>
-          {customTokens.length > 0 ? (
+          {customTokens && customTokens.length > 0 ? (
             customTokens.map((item, index) => {
               return (
                 <CustomTokenItem
