@@ -36,7 +36,7 @@ export const sendPayment = async (args: TxInput, networkConfig: NetworkConfig, o
   }
 
   const payment = await submitPayment(signedPayment, networkConfig);
-  if (!payment || payment.failureReason) {
+  if (!payment || payment?.failureReason) {
     await popupNotify('Submit payment error');
     return null;
   }
@@ -80,7 +80,7 @@ export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConf
     const transactionObject = JSON.parse(args.transaction);
     for (const updateData of transactionObject.accountUpdates) {
       const { publicKey, update } = updateData?.body;
-      zkAppTransactionDetails += `\n| ZkApp address: ${publicKey} \n| Update states: ${JSON.stringify(
+      zkAppTransactionDetails += `ZkApp address: ${publicKey} \n| Update states: ${JSON.stringify(
         update?.appState,
       )}`;
     }
@@ -106,10 +106,12 @@ export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConf
     return null;
   }
 
-  const submitZkAppTxResult = await submitZkAppTx(signedZkAppTx, networkConfig);
+  const submitZkAppTxResult = await submitZkAppTx(signedZkAppTx, networkConfig).catch(error => { return {
+    failureReason: error.message,
+  }});
   if (!submitZkAppTxResult || submitZkAppTxResult.failureReason) {
     await popupNotify('Submit ZkApp tx error');
-    return null;
+    return submitZkAppTxResult.failureReason;
   }
 
   return submitZkAppTxResult;

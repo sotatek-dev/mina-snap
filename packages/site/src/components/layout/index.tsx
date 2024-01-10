@@ -1,21 +1,28 @@
 import { Modal } from '@mui/material';
 import { Box } from '@mui/system';
 import { useAppSelector } from 'hooks/redux';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Address from './components/address';
 import Balance from './components/balance';
 import TransactionHistory from './components/transaction-history';
 import Header from './header';
+import CustomTokens from './components/custom-tokens';
 
 const Home = () => {
   const { isLoadingGlobal, activeAccount } = useAppSelector((state) => state.wallet);
+  const [activeTab, setActiveTab] = useState(2);
+
   const divRef = useRef(null as any);
   const scrollToTop = () => {
     divRef.current.scroll({
       top: 0,
       behavior: "smooth"
     });
+  };
+
+  const handleTabClick = (tabIndex: number) => {
+    setActiveTab(tabIndex);
   };
 
   useEffect(()=> {
@@ -28,7 +35,19 @@ const Home = () => {
         <Content>
           <Address />
           <Balance />
-          <TransactionHistory />
+          <TabsWrapper>
+            <TabButton active={activeTab === 1} onClick={() => handleTabClick(1)}>
+              Custom Tokens
+            </TabButton>
+            <TabButton active={activeTab === 2} onClick={() => handleTabClick(2)}>
+              History
+            </TabButton>
+          </TabsWrapper>
+          <TabContent>
+            { activeTab === 1 && <CustomTokens /> }
+            { activeTab === 2 && <TransactionHistory /> }
+          </TabContent>
+
         </Content>
       </ColMiddle>
       <Modal sx={{ outline: 'none' }} open={isLoadingGlobal}>
@@ -83,5 +102,23 @@ const Content = styled.div`
   box-shadow: 0px 50px 70px -28px rgba(106, 115, 125, 0.2);
   border-radius: ${(props) => props.theme.corner.small};
 `;
+
+const TabsWrapper = styled.div`
+  padding: 10px;
+  display: flex;
+  align-items: center;
+`;
+
+const TabButton = styled.div<{active: boolean}>`
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  border-bottom: ${(props) => (props.active ? '3px solid #594af1' : 'none')};;
+  cursor: pointer;
+  width: 100%;
+`;
+
+const TabContent = styled.div``;
 
 export default Home;

@@ -17,6 +17,8 @@ yarn install && yarn start
 Please check out the documentation in our [wiki](https://github.com/sotatek-dev/mina-snap/wiki/API-Documentation)
 
 ## Notes
+- To load o1js code in your UI, you must set the COOP and COEP headers. These headers enable o1js to use SharedArrayBuffer that o1js relies on to enable important WebAssembly (Wasm) features. Please checkout this [link](https://docs.minaprotocol.com/zkapps/how-to-write-a-zkapp-ui#enabling-coop-and-coep-headers). In the local environment, create a `setupProxy.js` file inside `packages/site/src`. You can find the content of the file in the `packages/site/src/setupProxy.example.js`
+
 - Babel is used for transpiling TypeScript to JavaScript, so when building with the CLI,
   `transpilationMode` must be set to `localOnly` (default) or `localAndDeps`.
 - For the global `wallet` type to work, you have to add the following to your `tsconfig.json`:
@@ -25,3 +27,4 @@ Please check out the documentation in our [wiki](https://github.com/sotatek-dev/
     "files": ["./node_modules/@metamask/snap-types/global.d.ts"]
   }
   ```
+

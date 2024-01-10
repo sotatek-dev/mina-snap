@@ -5,7 +5,7 @@ import { Buffer } from 'safe-buffer';
 import { ESnapDialogType, ESnapMethod } from '../constants/snap-method.constant';
 import { reverse } from '../util/helper';
 import { getMinaClient } from '../util/mina-client.util';
-import { getAccountInfoQuery } from '../graphql/gqlparams';
+import { getAccountInfoQuery, getTokenAccountInfoQuery } from '../graphql/gqlparams';
 import { gql } from '../graphql';
 import { NetworkConfig } from '../interfaces';
 import { getSnapConfiguration, updateSnapConfig } from './configuration';
@@ -97,9 +97,14 @@ export const signMessage = async (message: string, keypair: Keypair, networkConf
  * @param networkConfig - Selected network config.
  * @returns `null` if get account info fail.
  */
-export async function getAccountInfo(publicKey: string, networkConfig: NetworkConfig): Promise<{ account: AccountResponse }>  {
-  const query = getAccountInfoQuery(networkConfig.name === ENetworkName.BERKELEY);
-  const variables = { publicKey };
+export async function getAccountInfo(publicKey: string, networkConfig: NetworkConfig, tokenId?: string): Promise<{ account: AccountResponse }>  {
+  let query = getAccountInfoQuery(networkConfig.name === ENetworkName.BERKELEY);
+  const variables: any = { publicKey };
+  /**Get token account */
+  if (tokenId) {
+    query = getTokenAccountInfoQuery();
+    variables.token = tokenId;
+  }
   const defaultData = {
     balance: {
       total: '0',

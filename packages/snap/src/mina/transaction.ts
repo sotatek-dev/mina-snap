@@ -81,8 +81,13 @@ export const signPayment = async (
 export async function submitPayment(signedPayment: SignedLegacy<Payment>, networkConfig: NetworkConfig) {
   const query = sendPaymentQuery(false);
   const variables = { ...signedPayment.data, ...signedPayment.signature };
-
-  const data = await gql(networkConfig.gqlUrl, query, variables);
+  const data = await gql(networkConfig.gqlUrl, query, variables).catch(error => {
+    console.log(`Submit payment error:`, error);
+    return null;
+  });
+  if (!data) {
+    return data;
+  }
   const { hash } = data.sendPayment.payment
   await popupNotify(`Payment ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
   data.sendPayment.payment.memo = decodeMemo(data.sendPayment.payment.memo);
@@ -224,7 +229,7 @@ export const submitZkAppTx = async (signedZkAppTx: Signed<ZkappCommand>, network
     };
     const sendPartyRes = await gql(networkConfig.gqlUrl, txGql, variables);
     const { hash } = sendPartyRes.sendZkapp.zkapp
-    await popupNotify(`ZkApp transaction ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
+    await popupNotify(`ZkApp tx ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
     return sendPartyRes.sendZkapp.zkapp;
   } catch (error) {
     console.error('Failed to submitZkAppTx:', error.message);

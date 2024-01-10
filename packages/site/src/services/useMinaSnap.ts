@@ -77,13 +77,14 @@ export const useMinaSnap = () => {
     return await provider.request({ method: 'wallet_getSnaps' });
   };
 
-  const getAccountInfors = async (): Promise<Account> => {
+  const getAccountInfors = async (tokenId?: string): Promise<Account> => {
     return await ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
         snapId: snapId,
         request: {
           method: 'mina_accountInfo',
+          params: { tokenId }
         },
       },
     });

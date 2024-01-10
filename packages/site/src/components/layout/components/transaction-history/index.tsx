@@ -59,7 +59,6 @@ const TransactionHistory = () => {
 
   useEffect(() => {
     setMaximumDisplay(10);
-    console.log('tx', transactions);
   }, [activeAccount]);
 
   const paddingBt = {
@@ -69,7 +68,6 @@ const TransactionHistory = () => {
   return (
     <>
       <Wrapper>
-        <Label>HISTORY</Label>
         <TransactionList>
           {transactions.length > 0 ? (
             transactions.slice(0, maximumDisplay).map((item, index) => {
@@ -167,7 +165,7 @@ const IconLink = styled.img`
 `;
 
 const Wrapper = styled.div`
-  margin-top: 32px;
+  margin-top: 15px;
 `;
 
 const Label = styled.div`

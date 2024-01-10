@@ -1,3 +1,5 @@
-export { AddOne } from './addOne';
-export { Token } from './customToken';
+import { AddOne } from './addOne';
 
+export {
+  AddOne,
+}
