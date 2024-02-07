@@ -13263,7 +13263,7 @@ __metadata:
     eslint-plugin-node: ^11.1.0
     eslint-plugin-prettier: ^4.2.1
     mina-portal-types: "workspace:^"
-    mina-signer: ^2.1.1
+    mina-signer: 3.0.0
     prettier: ^2.2.1
     prettier-plugin-packagejson: ^2.2.11
     rimraf: ^3.0.2
@@ -13272,13 +13272,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"mina-signer@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "mina-signer@npm:2.1.1"
+"mina-signer@npm:3.0.0":
+  version: 3.0.0
+  resolution: "mina-signer@npm:3.0.0"
   dependencies:
     blakejs: ^1.2.1
     js-sha256: ^0.9.0
-  checksum: eb13a2a76748c09795b3f96e1ff3361f3f6c21c1ad2b05f3a18cb5d0e66f2c57de09967e82e8f326b5e4d8b3df7d2ded3de4bf9dcb9cee13b1257916f70e7db7
+  checksum: fb2d9db5fcf88208f4f3628cfd7a395b438dff6887e9581c2fda2f14eacede21619783bfd219c092cde8307653ee4fad1cfda6a9d310f2680aba336ab13b5fd0
   languageName: node
   linkType: hard
 
@@ -13948,9 +13948,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"o1js@npm:0.15.1":
-  version: 0.15.1
-  resolution: "o1js@npm:0.15.1"
+"o1js@npm:0.16.0":
+  version: 0.16.0
+  resolution: "o1js@npm:0.16.0"
   dependencies:
     blakejs: 1.2.1
     cachedir: ^2.4.0
@@ -13961,7 +13961,7 @@ __metadata:
     tslib: ^2.3.0
   bin:
     snarky-run: src/build/run.js
-  checksum: 04b31f4333711f576f61f954e13982b11b9908ac1347e4e5c28bc51771d78562139dea382a2ed6aa948766fe46146df6ae4bba30481df884c40d0f895a61be3e
+  checksum: d70e4a0c55feda57651541b104a9751fd5540394c6acfce5e8d759c590e1bb57b530f1a0d49b8f0c0032a58c255c72064ae1177924c76e2494c1027dbdda63ca
   languageName: node
   linkType: hard
 
@@ -17069,7 +17069,7 @@ __metadata:
     eslint-plugin-react-hooks: ^4.6.0
     ethers: ^5.6.8
     moment: ^2.29.4
-    o1js: 0.15.1
+    o1js: 0.16.0
     prettier: ^2.2.1
     prettier-plugin-packagejson: ^2.2.18
     react: ^18.2.0

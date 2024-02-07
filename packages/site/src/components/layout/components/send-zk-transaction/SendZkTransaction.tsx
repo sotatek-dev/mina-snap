@@ -203,7 +203,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
             <Content>
               <Title>
                 <Text>
-                  Can you input correct state?
+                  Can you input the correct state?
                 </Text>
                 <CustomWidthTooltip title={tooltipTitle()}
                   arrow
