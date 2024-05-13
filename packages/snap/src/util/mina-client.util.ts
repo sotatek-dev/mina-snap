@@ -1,7 +1,6 @@
 import Client from 'mina-signer';
 import { ENetworkName } from '../constants/config.constant';
 import { NetworkConfig } from '../interfaces';
-import { popupNotify } from './popup.util';
 
 export const getMinaClient = (networkConfig: NetworkConfig) => {
   switch(networkConfig.name) {

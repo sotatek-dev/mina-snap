@@ -1,4 +1,4 @@
-import { AddOne } from './addOne';
+import { AddOne } from './AddOne';
 
 export {
   AddOne,

@@ -48,7 +48,8 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
     }
     switch (request.method) {
       case EMinaMethod.ACCOUNT_INFO: {
-        const { tokenId } = request.params as { tokenId?: string };
+        const params = request?.params as { tokenId?: string };
+        const tokenId = params?.tokenId;
         const { publicKey, name } = await getKeyPair();
         const { account } = await getAccountInfo(publicKey, networkConfig, tokenId);
         account.name = name;
