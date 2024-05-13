@@ -105,10 +105,11 @@ export const sendZkAppTx = async (args: ZkAppTxInput, networkConfig: NetworkConf
     await popupNotify('Sign ZkApp transaction error');
     return null;
   }
-
-  const submitZkAppTxResult = await submitZkAppTx(signedZkAppTx, networkConfig).catch(error => { return {
-    failureReason: error.message,
-  }});
+  const submitZkAppTxResult = await submitZkAppTx(signedZkAppTx, networkConfig).catch(error => {
+    return {
+      failureReason: error.message,
+    }
+  });
   if (!submitZkAppTxResult || submitZkAppTxResult.failureReason) {
     await popupNotify('Submit ZkApp tx error');
     return submitZkAppTxResult.failureReason;

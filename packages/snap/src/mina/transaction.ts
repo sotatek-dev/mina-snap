@@ -5,7 +5,7 @@ import {
   SignedLegacy,
   StakeDelegation,
   ZkappCommand,
-} from 'mina-signer/dist/node/mina-signer/src/TSTypes';
+} from 'mina-signer/dist/node/mina-signer/src/types';
 import { gql } from '../graphql';
 import {
   getTxHistoryQuery,
@@ -100,7 +100,7 @@ export async function getTxHistory(networkConfig: NetworkConfig, options: Histor
   let getTxList = gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address }).catch(()=> { return { transactions: [] } });
   let getZkAppTxList: any = { zkapps: [] };
   let getZkAppPending: any = { pooledZkappCommands: [] };
-  if (networkConfig.name === ENetworkName.BERKELEY) {
+  if (networkConfig.name === ENetworkName.DEVNET || networkConfig.name === ENetworkName.BERKELEY) {
     getZkAppTxList = gql(networkConfig.gqlTxUrl, getZkAppTransactionListBody(), { ...options, address }).catch(()=>{ return  { zkapps: [] } });
     getZkAppPending = gql(networkConfig.gqlUrl, getPendingZkAppTxBody(), { ...options, address }).catch(()=>{ return { pooledZkappCommands: [] } });
   }
@@ -192,8 +192,8 @@ export const signZkAppTx = async (
   privateKey: string,
   networkConfig: NetworkConfig,
 ): Promise<Signed<ZkappCommand>> => {
-  if (networkConfig.name !== ENetworkName.BERKELEY) {
-    throw new Error('ZkApp transaction only available on Berkeley');
+  if (networkConfig.name !== ENetworkName.DEVNET) {
+    throw new Error('ZkApp transaction only available on Devnet');
   }
   try {
     const client = getMinaClient(networkConfig);
@@ -219,8 +219,8 @@ export const signZkAppTx = async (
 };
 
 export const submitZkAppTx = async (signedZkAppTx: Signed<ZkappCommand>, networkConfig: NetworkConfig) => {
-  if (networkConfig.name !== ENetworkName.BERKELEY) {
-    throw new Error('ZkApp transaction only available on Berkeley');
+  if (networkConfig.name !== ENetworkName.DEVNET) {
+    throw new Error('ZkApp transaction only available on Devnet');
   }
   try {
     const txGql = getPartyBody();
