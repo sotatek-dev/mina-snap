@@ -13,6 +13,7 @@ import ModalSign from 'components/common/modal-sign';
 import SignMessage from 'components/modal-app/SignMessage';
 import { formatBalance } from 'helpers/formatAccountAddress';
 import ZkTransaction from '../send-zk-transaction';
+import { ENetworkName } from 'utils/constants';
 
 const Balance = () => {
   const reduxDispatch = useAppDispatch();
@@ -72,7 +73,7 @@ const Balance = () => {
           <IconSign src={ISign} />
           Sign
         </Sign>
-        {items?.name == 'Berkeley' && <ZkTransaction/>}
+        {(items?.name == ENetworkName.DEVNET) && <ZkTransaction/>}
       </Action>
       <ModalSign
         open={openModal}

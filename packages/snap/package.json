@@ -1,6 +1,6 @@
 {
   "name": "mina-portal",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "This snap helps you interact with Mina protocol using MetaMask",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
     "async-mutex": "^0.4.0",
     "bignumber.js": "^9.1.1",
     "bs58check": "^2.1.2",
-    "mina-signer": "3.0.0",
+    "mina-signer": "^3.0.7",
     "safe-buffer": "^5.2.1"
   },
   "devDependencies": {

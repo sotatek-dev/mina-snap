@@ -17,9 +17,19 @@ const CustomTokens = () => {
 
   useEffect(() => {
     const getListCustomTokens = () => {
-      const tokenId = process.env.REACT_APP_CUSTOM_TOKEN_ID as string;
       setTimeout(async () => {
         if (currentNetwork.name === ENetworkName.BERKELEY) {
+          const tokenId = process.env.REACT_APP_CUSTOM_TOKEN_ID as string;
+          const tokenAccount = await getAccountInfors(tokenId);
+          reduxDispatch(setCustomTokens(
+            [{
+              tokenId,
+              tokenSymbol: process.env.REACT_APP_CUSTOM_TOKEN_SYMBOL as string,
+              balance: tokenAccount.balance
+            }]
+          ));
+        } else if (currentNetwork.name === ENetworkName.DEVNET) {
+          const tokenId = process.env.REACT_APP_DEVNET_CUSTOM_TOKEN_ID as string;
           const tokenAccount = await getAccountInfors(tokenId);
           reduxDispatch(setCustomTokens(
             [{

@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { payloadSendZkTransaction } from 'types/transaction';
 import Info from'assets/icons/info.png'
 import { AddOne } from '../../../../smart-contract/';
+import { ENetworkName } from 'utils/constants';
 
 interface ModalProps {
   open: boolean;
@@ -39,7 +40,11 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
   const [loadingState, setLoadingState] = useState(false);
   const [message, setMessage] = useState("");
   const [disableSend, setDisableSend] = useState(false);
-  const zkAppAddress = process.env.REACT_APP_ZK_ADDRESS as string;
+  let zkAppAddress = process.env.REACT_APP_ZK_ADDRESS as string;
+  const currentNetwork = useAppSelector((state) => state.networks).items.name;
+  if (currentNetwork === ENetworkName.DEVNET) {
+    zkAppAddress = process.env.REACT_APP_ZK_DEVNET_ADDRESS as string;
+  }
 
   const graphqlUrl = useAppSelector((state)=> (state.networks)).items.gqlUrl;
   const submitZkTransaction = async () => {
@@ -69,8 +74,8 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
 
       }
       try {
-        let tx = await Mina.transaction(() => {
-          zkApp.update(Field(newState));
+        let tx = await Mina.transaction(async () => {
+          await zkApp.update(Field(newState));
         });
         console.log(`tx:`, tx);
         // console.log(`tx:`, tx.toJSON());
@@ -122,7 +127,7 @@ const SendZkTransaction = ({ open, clickOutSide, setOpenModal }: ModalProps) => 
     Mina.setActiveInstance(Mina.Network(graphqlUrl));
     await AddOne.compile();
     try {
-      const account = await fetchAccount({publicKey: zkAppAddress, ...zkApp}, graphqlUrl);
+      const account = await fetchAccount({publicKey: zkAppAddress}, graphqlUrl);
       console.log(`-account:`, account);
     } catch (error) {
       console.log(error);

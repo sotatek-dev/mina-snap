@@ -25,7 +25,7 @@ export const networksConstant = {
   },
   [ENetworkName.DEVNET]: {
     name: ENetworkName.DEVNET,
-    gqlUrl: 'https://proxy.devnet.minaexplorer.com/',
+    gqlUrl: 'https://api.minascan.io/node/devnet/v1/graphql',
     gqlTxUrl: 'https://devnet.graphql.minaexplorer.com/',
     explorerUrl: 'https://minascan.io/devnet/',
     token: {
