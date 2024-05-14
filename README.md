@@ -1,21 +1,11 @@
-# mina-snap
+# Mina-Portal
+MetaMask Snaps is a system that allows anyone to safely expand the capabilities of MetaMask. A _snap_ is a program that we run in an isolated environment that can customize the wallet experience.
 
+This snap helps you interact with Mina protocol using MetaMask
 
-The mina-snap repository contains two packages:
-
-- the `MinaPortal`, an open beta wallet built using the `mina-portal snap`. See /packages/site.
-- the `mina-portal snap`, a snap. See /packages/snap.
-
-[MetaMask Snaps](https://metamask.io/snaps/) is an open source system that allows anyone to safely extend the functionality of MetaMask, creating new web3 end user experiences.
-
-A snap is a JavaScript program run in an isolated environment that customizes the [MetaMask](https://metamask.io/) wallet experience. Snaps have access to a limited set of capabilities, determined by the permissions the user grants them during installation.
-
-The `mina-portal snap` is a snap which allows [MetaMask](https://metamask.io/) users to interact with the Mina Protocol.   
-
-The `MinaPortal` is an open beta wallet, built using the `mina-portal snap` allowing [MetaMask](https://metamask.io/) users to interact with the Mina blockchain. 
-
+## Snaps is pre-release software
 To interact with (your) Snaps, you will need to install [MetaMask](https://metamask.io/).
-
+Note: To interact with the snap hosted on your local machine, you will neeed to install [MetaMask Flask](https://metamask.io/flask/)
 
 ## Getting Started
 You can run and test the snap by running these commands
@@ -23,7 +13,11 @@ You can run and test the snap by running these commands
 yarn install && yarn start
 ```
 
+## Interact with mina-portal snap
+Please check out the documentation in our [wiki](https://github.com/sotatek-dev/mina-snap/wiki/API-Documentation)
+
 ## Notes
+- To load o1js code in your UI, you must set the COOP and COEP headers. These headers enable o1js to use SharedArrayBuffer that o1js relies on to enable important WebAssembly (Wasm) features. Please checkout this [link](https://docs.minaprotocol.com/zkapps/how-to-write-a-zkapp-ui#enabling-coop-and-coep-headers). In the local environment, create a `setupProxy.js` file inside `packages/site/src`. You can find the content of the file in the `packages/site/src/setupProxy.example.js`
 
 - Babel is used for transpiling TypeScript to JavaScript, so when building with the CLI,
   `transpilationMode` must be set to `localOnly` (default) or `localAndDeps`.
