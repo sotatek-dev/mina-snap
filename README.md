@@ -27,3 +27,4 @@ Please check out the documentation in our [wiki](https://github.com/sotatek-dev/
     "files": ["./node_modules/@metamask/snap-types/global.d.ts"]
   }
   ```
+

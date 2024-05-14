@@ -5,7 +5,7 @@ import {
   SignedLegacy,
   StakeDelegation,
   ZkappCommand,
-} from 'mina-signer/dist/node/mina-signer/src/TSTypes';
+} from 'mina-signer/dist/node/mina-signer/src/types';
 import { gql } from '../graphql';
 import {
   getTxHistoryQuery,
@@ -81,8 +81,13 @@ export const signPayment = async (
 export async function submitPayment(signedPayment: SignedLegacy<Payment>, networkConfig: NetworkConfig) {
   const query = sendPaymentQuery(false);
   const variables = { ...signedPayment.data, ...signedPayment.signature };
-
-  const data = await gql(networkConfig.gqlUrl, query, variables);
+  const data = await gql(networkConfig.gqlUrl, query, variables).catch(error => {
+    console.log(`Submit payment error:`, error);
+    return null;
+  });
+  if (!data) {
+    return data;
+  }
   const { hash } = data.sendPayment.payment
   await popupNotify(`Payment ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
   data.sendPayment.payment.memo = decodeMemo(data.sendPayment.payment.memo);
@@ -91,13 +96,13 @@ export async function submitPayment(signedPayment: SignedLegacy<Payment>, networ
 }
 
 export async function getTxHistory(networkConfig: NetworkConfig, options: HistoryOptions, address: string) {
-  let getPendingTxList = gql(networkConfig.gqlUrl, TxPendingQuery(), { address });
-  let getTxList = gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address });
+  let getPendingTxList = gql(networkConfig.gqlUrl, TxPendingQuery(), { address }).catch(()=> { return { pooledUserCommands: [] } });
+  let getTxList = gql(networkConfig.gqlTxUrl, getTxHistoryQuery(), { ...options, address }).catch(()=> { return { transactions: [] } });
   let getZkAppTxList: any = { zkapps: [] };
   let getZkAppPending: any = { pooledZkappCommands: [] };
-  if (networkConfig.name === ENetworkName.BERKELEY) {
-    getZkAppTxList = gql(networkConfig.gqlTxUrl, getZkAppTransactionListBody(), { ...options, address });
-    getZkAppPending = gql(networkConfig.gqlUrl, getPendingZkAppTxBody(), { ...options, address });
+  if (networkConfig.name === ENetworkName.DEVNET || networkConfig.name === ENetworkName.BERKELEY) {
+    getZkAppTxList = gql(networkConfig.gqlTxUrl, getZkAppTransactionListBody(), { ...options, address }).catch(()=>{ return  { zkapps: [] } });
+    getZkAppPending = gql(networkConfig.gqlUrl, getPendingZkAppTxBody(), { ...options, address }).catch(()=>{ return { pooledZkappCommands: [] } });
   }
   const [{ pooledUserCommands }, { transactions }, { zkapps }, { pooledZkappCommands }] = await Promise.all([
     getPendingTxList,
@@ -187,8 +192,8 @@ export const signZkAppTx = async (
   privateKey: string,
   networkConfig: NetworkConfig,
 ): Promise<Signed<ZkappCommand>> => {
-  if (networkConfig.name !== ENetworkName.BERKELEY) {
-    throw new Error('ZkApp transaction only available on Berkeley');
+  if (networkConfig.name !== ENetworkName.DEVNET) {
+    throw new Error('ZkApp transaction only available on Devnet');
   }
   try {
     const client = getMinaClient(networkConfig);
@@ -214,8 +219,8 @@ export const signZkAppTx = async (
 };
 
 export const submitZkAppTx = async (signedZkAppTx: Signed<ZkappCommand>, networkConfig: NetworkConfig) => {
-  if (networkConfig.name !== ENetworkName.BERKELEY) {
-    throw new Error('ZkApp transaction only available on Berkeley');
+  if (networkConfig.name !== ENetworkName.DEVNET) {
+    throw new Error('ZkApp transaction only available on Devnet');
   }
   try {
     const txGql = getPartyBody();
@@ -224,7 +229,7 @@ export const submitZkAppTx = async (signedZkAppTx: Signed<ZkappCommand>, network
     };
     const sendPartyRes = await gql(networkConfig.gqlUrl, txGql, variables);
     const { hash } = sendPartyRes.sendZkapp.zkapp
-    await popupNotify(`ZkApp transaction ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
+    await popupNotify(`ZkApp tx ${hash.slice(0,5) + "..." + hash.slice(-5)} has been submitted`);
     return sendPartyRes.sendZkapp.zkapp;
   } catch (error) {
     console.error('Failed to submitZkAppTx:', error.message);

@@ -1,11 +1,12 @@
 {
   "name": "mina-portal",
-  "version": "0.1.1",
+  "version": "0.1.6",
   "description": "This snap helps you interact with Mina protocol using MetaMask",
   "repository": {
     "type": "git",
     "url": "https://github.com/sotatek-dev/mina-snap"
   },
+  "author": "SotaTek",
   "license": "(MIT-0 OR Apache-2.0)",
   "main": "src/index.ts",
   "files": [
@@ -31,7 +32,7 @@
     "async-mutex": "^0.4.0",
     "bignumber.js": "^9.1.1",
     "bs58check": "^2.1.2",
-    "mina-signer": "^2.1.1",
+    "mina-signer": "^3.0.7",
     "safe-buffer": "^5.2.1"
   },
   "devDependencies": {
@@ -53,6 +54,7 @@
     "eslint-plugin-jsdoc": "^39.2.9",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "mina-portal-types": "workspace:^",
     "prettier": "^2.2.1",
     "prettier-plugin-packagejson": "^2.2.11",
     "rimraf": "^3.0.2",
@@ -65,5 +67,12 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "keywords": [
+    "mina",
+    "metamask",
+    "snap",
+    "zkapp",
+    "dapp"
+  ]
 }

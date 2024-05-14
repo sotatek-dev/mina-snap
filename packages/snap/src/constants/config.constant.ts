@@ -6,12 +6,12 @@ export enum ENetworkName {
   BERKELEY = 'Berkeley',
 }
 
-export const networksConstant ={
+export const networksConstant = {
   [ENetworkName.MAINNET]: {
     name: ENetworkName.MAINNET,
-    gqlUrl: 'https://proxy.minaexplorer.com/',
+    gqlUrl: 'https://proxy.minaexplorer.com/graphql/',
     gqlTxUrl: 'https://graphql.minaexplorer.com/',
-    explorerUrl: 'https://minaexplorer.com/',
+    explorerUrl: 'https://minascan.io/mainnet/',
     token: {
       name: 'MINA',
       coinType: 12586,
@@ -25,9 +25,9 @@ export const networksConstant ={
   },
   [ENetworkName.DEVNET]: {
     name: ENetworkName.DEVNET,
-    gqlUrl: 'https://proxy.devnet.minaexplorer.com/',
+    gqlUrl: 'https://api.minascan.io/node/devnet/v1/graphql',
     gqlTxUrl: 'https://devnet.graphql.minaexplorer.com/',
-    explorerUrl: 'https://devnet.minaexplorer.com/',
+    explorerUrl: 'https://minascan.io/devnet/',
     token: {
       name: 'MINA',
       coinType: 1,
@@ -41,9 +41,9 @@ export const networksConstant ={
   },
   [ENetworkName.BERKELEY]: {
     name: ENetworkName.BERKELEY,
-    gqlUrl: 'https://proxy.berkeley.minaexplorer.com',
+    gqlUrl: 'https://api.minascan.io/node/berkeley/v1/graphql',
     gqlTxUrl: 'https://berkeley.graphql.minaexplorer.com/',
-    explorerUrl: 'https://berkeley.minaexplorer.com/',
+    explorerUrl: 'https://minascan.io/berkeley/',
     token: {
       name: 'MINA',
       coinType: 1,
@@ -54,7 +54,7 @@ export const networksConstant ={
     generatedAccounts: {},
     selectedImportedAccount: null,
     importedAccounts: {},
-  },
+  }
 };
 
 export const defaultSnapConfig: SnapConfig = {

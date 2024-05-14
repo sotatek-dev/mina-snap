@@ -26,7 +26,7 @@ const HomePage = () => {
   const [isUnlocked, setIsUnlocked] = React.useState<any>(null);
   const { connected, isUnlock, isInstalledWallet } = useAppSelector((state) => state.wallet);
   const [disableConnect, setDisableConnect] = useState(false);
-  
+
 
   useEffect(() => {
     reduxDispatch(setUnlockWallet(true));
@@ -65,7 +65,7 @@ const HomePage = () => {
         await reduxDispatch(setIsLoadingGlobal(true));
         await reduxDispatch(setIsLoading(false));
         const isInstalledSnap = await getSnap();
-        const version = await getLatestSnapVersion();
+        const version = process.env.REACT_APP_SNAP_VERSION;
 
         if (
           isInstalledSnap[process.env.REACT_APP_SNAP_ID as string] &&
@@ -102,7 +102,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const WindowFocusHandler = () => {
-      window.addEventListener("focus", onFocus); 
+      window.addEventListener("focus", onFocus);
       window.addEventListener("blur", onBlur);
       // Calls onFocus when the window first loads
       onFocus();
@@ -147,7 +147,6 @@ const HomePage = () => {
         setIsUnlocked(false)
         reduxDispatch(setIsLoading(false));
       }
-      
     } catch (error) {
       setDisableConnect(true);
       setIsUnlocked(false)

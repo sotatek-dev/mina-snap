@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ResultAccountList, payloadActiveAccount } from 'types/account';
-import { ethers } from 'ethers';
-import { ResultTransactionList, TypeResponseTxHistory } from 'types/transaction';
+import { ResultTransactionList, TypeResponseCustomToken, TypeResponseTxHistory } from 'types/transaction';
 
 export interface WalletState {
   accountName: string,
@@ -19,6 +18,7 @@ export interface WalletState {
   detailTransaction?: ResultTransactionList;
   isLoadingGlobal: boolean;
   isUnlock: boolean;
+  customTokens: Array<TypeResponseCustomToken>
 }
 
 const initialState: WalletState = {
@@ -37,6 +37,7 @@ const initialState: WalletState = {
   detailsAccount: undefined,
   detailTransaction: undefined,
   isUnlock: false,
+  customTokens: [],
 };
 
 type ConnectWalletParams = {
@@ -116,6 +117,10 @@ export const walletSlice = createSlice({
       state.transactions = payload
       return state;
     },
+    setCustomTokens: (state, { payload }: PayloadAction<TypeResponseCustomToken[]>) => {
+      state.customTokens = payload
+      return state;
+    },
   },
 });
 
@@ -133,7 +138,8 @@ export const {
   setTransactions,
   resetWallet,
   setIsLoadingGlobal,
-  setUnlockWallet
+  setUnlockWallet,
+  setCustomTokens,
 } = walletSlice.actions;
 
 export default walletSlice.reducer;

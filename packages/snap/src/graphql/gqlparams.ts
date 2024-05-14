@@ -35,7 +35,7 @@ query accountInfo($publicKey: PublicKey!) {
     publicKey
     balance {
       total
-    },
+    }
     nonce
     inferredNonce
     delegateAccount {
@@ -43,6 +43,23 @@ query accountInfo($publicKey: PublicKey!) {
     }
     publicKey
     ${ isBerkeley ? 'zkappState' : '' }
+  }
+}
+`;
+
+export const getTokenAccountInfoQuery = () => `
+query accountInfo($publicKey: PublicKey!, $token: TokenId) {
+  account(publicKey: $publicKey, token: $token) {
+    publicKey
+    balance {
+      total
+    }
+    nonce
+    inferredNonce
+    delegateAccount {
+      publicKey
+    }
+    publicKey
   }
 }
 `;

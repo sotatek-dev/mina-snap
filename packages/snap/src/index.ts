@@ -25,7 +25,7 @@ import {
 import { ESnapDialogType } from './constants/snap-method.constant';
 import { ENetworkName } from './constants/config.constant';
 import { getTxHistory, getTxDetail, getTxStatus } from './mina/transaction';
-import { SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/TSTypes';
+import { SignedLegacy } from 'mina-signer/dist/node/mina-signer/src/types';
 import { Mutex } from 'async-mutex';
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -48,8 +48,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request, origin }) => 
     }
     switch (request.method) {
       case EMinaMethod.ACCOUNT_INFO: {
+        const params = request?.params as { tokenId?: string };
+        const tokenId = params?.tokenId;
         const { publicKey, name } = await getKeyPair();
-        const { account } = await getAccountInfo(publicKey, networkConfig);
+        const { account } = await getAccountInfo(publicKey, networkConfig, tokenId);
         account.name = name;
         return account;
       }
